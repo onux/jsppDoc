@@ -1,0 +1,15 @@
+[submodule "libs/jspp-parser"]
+	path = libs/jspp-parser
+	url = https://gitlab.com/onux/jspp/parser.git
+[submodule "libs/jspp-common"]
+	path = libs/jspp-common
+	url = https://gitlab.com/onux/jspp/common.git
+[submodule "libs/jspp-symbol-table"]
+	path = libs/jspp-symbol-table
+	url = https://gitlab.com/onux/jspp/symbol-table.git
+[submodule "libs/libs-catch"]
+	path = libs/libs-catch
+	url = https://gitlab.com/onux/jspp/libs.catch.git
+[submodule "libs/pcre"]
+	path = libs/pcre
+	url = https://github.com/svn2github/pcre.git
