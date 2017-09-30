@@ -40,6 +40,10 @@ namespace docgen
 		 * Adds a <summary> tag to the output XML document.
 		 */
 		void addSummary(const std::string& text);
+		/**
+		 * Adds a <description> tag to the output XML document.
+		 */
+		void addDescription(const std::string& text);
 	};
 }
 }

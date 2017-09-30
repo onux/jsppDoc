@@ -2,7 +2,7 @@
 #include "CommentParser.h"
 #include "Utils.h"
 
-jspp::docgen::CommentData::CommentData(	jspp::parser::Node* node,
+jspp::docgen::CommentData::CommentData(	jspp::parser::Node const* node,
 										const std::string& fqn,
 										const std::string& docComment,
 										const std::bitset<10>& modifiers)
@@ -31,4 +31,7 @@ std::shared_ptr<jspp::parser::Node> jspp::docgen::CommentData::getNode() const {
 }
 std::shared_ptr<jspp::docgen::DocCommentTags> jspp::docgen::CommentData::getTags() const {
 	return this->tags;
+}
+std::string jspp::docgen::CommentData::getBodyText() const {
+	return this->description;
 }

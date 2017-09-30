@@ -22,3 +22,9 @@ void jspp::docgen::OutputBuilder::addSummary(const std::string& text) {
 	this->output << cdata(text);
 	this->output << "</summary>";
 }
+
+void jspp::docgen::OutputBuilder::addDescription(const std::string& text) {
+	this->output << "<description>";
+	this->output << cdata(text);
+	this->output << "</description>";
+}

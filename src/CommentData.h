@@ -22,7 +22,7 @@ namespace docgen
 	class CommentData
 	{
 	public:
-		CommentData(jspp::parser::Node* node,
+		CommentData(jspp::parser::Node const* node,
 					const std::string& fqn,
 					const std::string& docComment,
 					const std::bitset<10>& modifiers);
@@ -47,6 +47,10 @@ namespace docgen
 		 * Get the documentation tags and their parsed associated data.
 		 */
 		std::shared_ptr<jspp::docgen::DocCommentTags> getTags() const;
+		/**
+		 * Get the documentation body text.
+		 */
+		std::string getBodyText() const;
 	private:
 		std::string text;
 		std::string fqn;
