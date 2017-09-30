@@ -14,7 +14,6 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 
 	auto node = dynamic_cast<ModuleDeclaration *>(comment.getNode().get());
 
-	this->fqnBuilder.push_back(node->id->name);
 	const bool isPrefixModule = node->isSplit;
 	if (isPrefixModule) {
 		return;
@@ -37,8 +36,6 @@ void jspp::docgen::OutputBuilder::addTitle(ModuleDeclaration* const node) {
 	this->output << "<title>";
 	this->output << cdata(node->id->name);
 	this->output << "</title>";
-
-	fqnBuilder.clear();
 }
 
 void jspp::docgen::OutputBuilder::addTitle(ClassDeclaration* const node) {

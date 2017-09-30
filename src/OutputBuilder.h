@@ -7,7 +7,6 @@
 
 #include "CommentData.h"
 #include <sstream>
-#include <vector>
 
 namespace jspp
 {
@@ -32,7 +31,6 @@ namespace docgen
 		void buildModule(const CommentData& comment);
 	private:
 		std::ostringstream output;
-		std::vector<std::string> fqnBuilder;
 
 		/**
 		 * Wraps the string in an XML CDATA section.
