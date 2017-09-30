@@ -13,3 +13,6 @@
 [submodule "libs/pcre"]
 	path = libs/pcre
 	url = https://github.com/svn2github/pcre.git
+[submodule "libs/pugixml"]
+	path = libs/pugixml
+	url = https://gitlab.com/onux/jspp/libs.pugixml.git
