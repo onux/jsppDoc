@@ -40,6 +40,21 @@ TEST_CASE("Module Name - Multiple modules separated by dot (.)") {
 	}
 }
 
+TEST_CASE("Undocumented module generates nothing") {
+	auto xml = generate(
+		R"(
+			module Foo
+			{
+			}
+		)"
+	);
+
+	SECTION("No documentation generated") {
+		size_t count = xml->select_nodes("module").size();
+		REQUIRE(count == 0);
+	}
+}
+
 TEST_CASE("Module Summary") {
 	auto xml = generate(
 		R"(
