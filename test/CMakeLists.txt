@@ -1,4 +1,7 @@
+include(build-pugixml.cmake)  
+
 include_directories(../libs/libs-catch/include)
+include_directories(../libs/pugixml/src)
 
 set(
     SOURCE_FILES
@@ -10,4 +13,4 @@ set(
 
 add_executable(tests ${SOURCE_FILES})
 
-target_link_libraries(tests jspp-docgen-lib pcrecpp gcov ${DEPENDS_LIB_LIST})
+target_link_libraries(tests jspp-docgen-lib pcrecpp gcov pugixml ${DEPENDS_LIB_LIST})
