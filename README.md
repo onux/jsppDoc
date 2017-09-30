@@ -14,11 +14,11 @@ $ make
 
 ### Code Coverage
 
-Code coverage is available for Linux only via `lcov`/`gcov`.
+Code coverage is only available for Linux `gcc` via `lcov`/`gcov`.
 
 ```
 $ mkdir build && cd $_
-$ cmake ..
+$ cmake -DCMAKE_BUILD_TYPE=Coverage ..
 $ make
 $ make docgen_coverage
 ```
