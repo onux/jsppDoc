@@ -51,6 +51,13 @@ namespace docgen
 		 * Adds a <description> tag to the output XML document.
 		 */
 		void addDescription(const std::string& text);
+		/**
+		 * Adds a <example> tag to the output XML document.
+		 *
+		 * @param The title of the example.
+		 * @param The code for the example.
+		 */
+		void addExample(const std::string& title, const std::string& code);
 	};
 }
 }

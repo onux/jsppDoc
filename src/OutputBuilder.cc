@@ -25,6 +25,11 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 	this->addTitle(node);
 	this->addSummary(tags->summary != "" ? tags->summary : description);
 	this->addDescription(description);
+	this->output << "<examples>";
+	for(auto example : tags->examples) {
+		this->addExample(example->title, example->code);
+	}
+	this->output << "<examples>";
 	this->output << "</module>";
 }
 
@@ -54,4 +59,10 @@ void jspp::docgen::OutputBuilder::addDescription(const std::string& text) {
 	this->output << "<description>";
 	this->output << cdata(text);
 	this->output << "</description>";
+}
+
+void jspp::docgen::OutputBuilder::addExample(const std::string& title, const std::string& code) {
+	this->output << "<example name=\"" << title << "\">";
+	this->output << cdata(code);
+	this->output << "</example>";
 }

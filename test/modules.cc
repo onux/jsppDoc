@@ -86,3 +86,53 @@ TEST_CASE("Module Description") {
 		REQUIRE(description == "This is the long description.\n\nSome more text goes here.");
 	}
 }
+
+TEST_CASE("Module Examples") {
+	auto xml = generate(
+		R"(
+			/**
+			 * This is the long description.
+			 *
+			 * Some more text goes here.
+			 *
+			 * @example First Example
+			 * import System;
+			 *
+			 * Console.log("Example1");
+			 *
+			 * @example Second Example
+			 * import System;
+			 *
+			 * Console.log("Example2");
+			 */
+			module Foo
+			{
+			}
+		)"
+	);
+
+	SECTION("Generates two <example> nodes") {
+		size_t count = xml->child("module").child("examples").select_nodes("example").size();
+		REQUIRE(count == 2);
+	}
+
+	SECTION("Example 1") {
+		auto it = xml->child("module").child("examples").children("example").begin();
+
+		std::string title = it->attribute("name").value();
+		REQUIRE(title == "First Example");
+
+		std::string code = it->child_value();
+		REQUIRE(code == "import System;\n\nConsole.log(\"Example1\");");
+	}
+
+	SECTION("Example 2") {
+		auto it = xml->child("module").child("examples").children("example").begin();
+		++it;
+
+		std::string title = it->attribute("name").value();
+		REQUIRE(title == "Second Example");
+		std::string code = it->child_value();
+		REQUIRE(code == "import System;\n\nConsole.log(\"Example2\");");
+	}
+}
