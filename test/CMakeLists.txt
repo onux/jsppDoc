@@ -7,6 +7,7 @@ set(
     SOURCE_FILES
     main.cc
     modules.cc
+    test.cc
     CommentParser.test.cc
     Utils.test.cc
 )
