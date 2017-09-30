@@ -7,6 +7,7 @@
 
 #include "CommentData.h"
 #include <sstream>
+#include <vector>
 
 namespace jspp
 {
@@ -31,11 +32,19 @@ namespace docgen
 		void buildModule(const CommentData& comment);
 	private:
 		std::ostringstream output;
+		std::vector<std::string> fqnBuilder;
 
 		/**
 		 * Wraps the string in an XML CDATA section.
 		 */
 		std::string cdata(const std::string& s) const;
+		/**
+		 * Adds a <title> tag to the output XML document.
+		 *
+		 * @param node The AST node to extract the identifier from for the <title> tag.
+		 */
+		void addTitle(jspp::parser::ModuleDeclaration* const node);
+		void addTitle(jspp::parser::ClassDeclaration* const node);
 		/**
 		 * Adds a <summary> tag to the output XML document.
 		 */
