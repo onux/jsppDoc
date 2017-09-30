@@ -124,8 +124,8 @@ TEST_CASE("jspp::docgen::CommentParser") {
 		);
 	}
 
-	SECTION("parseDocCommentDescription") {
-		std::string body1 = parser.parseDocCommentDescription(
+	SECTION("parseDocCommentBodyText") {
+		std::string body1 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				R"(
 				/** One line */
@@ -134,7 +134,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
 		);
 		REQUIRE(body1 == "One line");
 
-		std::string body2 = parser.parseDocCommentDescription(
+		std::string body2 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				R"(
 				/**
@@ -145,7 +145,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
 		);
 		REQUIRE(body2 == "One line");
 
-		std::string body3 = parser.parseDocCommentDescription(
+		std::string body3 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				R"(
 				/**
@@ -156,7 +156,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
 		);
 		REQUIRE(body3 == "One line");
 
-		std::string body4 = parser.parseDocCommentDescription(
+		std::string body4 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				R"(
 				/**
@@ -184,7 +184,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
 			"And even more text."
 		);
 
-		std::string body5 = parser.parseDocCommentDescription(
+		std::string body5 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				"/**\n"
 				"My description goes here.\n"
@@ -210,7 +210,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
 			"And even more text."
 		);
 
-		std::string body6 = parser.parseDocCommentDescription(
+		std::string body6 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				R"(
 				/**
@@ -231,7 +231,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
 			"... Before the first tag."
 		);
 
-		std::string body7 = parser.parseDocCommentDescription(
+		std::string body7 = parser.parseDocCommentBodyText(
 			parser.parseDocCommentText(
 				R"(
 				/**

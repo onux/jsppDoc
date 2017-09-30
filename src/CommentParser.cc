@@ -149,10 +149,10 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
 	return tags;
 }
 
-std::string CommentParser::parseDocCommentDescription(const std::string& text) const {
-	std::string description;
-	pcrecpp::RE re_description(
-		"(?# Require the description match to start from the very beginning)^"
+std::string CommentParser::parseDocCommentBodyText(const std::string& text) const {
+	std::string body;
+	pcrecpp::RE re_body(
+		"(?# Require the body text match to start from the very beginning)^"
 		"(?# Start group A)("
 		"(?# Start group B)(?:"
 		"(?# Capture any character until the first @tag)(?!@[a-z]+)[\\s\\S]"
@@ -160,9 +160,9 @@ std::string CommentParser::parseDocCommentDescription(const std::string& text) c
 		"(?# Capture one or more of everything specified inside capture group B)+"
 		"(?# End group A))"
 	);
-	re_description.PartialMatch(text, &description);
+	re_body.PartialMatch(text, &body);
 
-	return utils::trimWhitespace(description);
+	return utils::trimWhitespace(body);
 }
 
 std::string CommentParser::markdown(const std::string& text) const {

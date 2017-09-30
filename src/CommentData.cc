@@ -14,7 +14,7 @@ jspp::docgen::CommentData::CommentData(	jspp::parser::Node const* node,
 	this->text 			=	parser.parseDocCommentText(docComment);
 	this->modifiers 	= 	std::move(parser.parseModifiers(modifiers));
 	this->tags 			=	parser.parseDocCommentTags(this->text);
-	this->description 	= 	parser.parseDocCommentDescription(this->text);
+	this->body_text 	= 	parser.parseDocCommentBodyText(this->text);
 }
 
 std::string jspp::docgen::CommentData::getText() const {
@@ -33,5 +33,5 @@ std::shared_ptr<jspp::docgen::DocCommentTags> jspp::docgen::CommentData::getTags
 	return this->tags;
 }
 std::string jspp::docgen::CommentData::getBodyText() const {
-	return this->description;
+	return this->body_text;
 }

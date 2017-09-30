@@ -54,7 +54,7 @@ namespace docgen
 	private:
 		std::string text;
 		std::string fqn;
-		std::string description;
+		std::string body_text;
 		std::shared_ptr<jspp::docgen::Modifiers> modifiers;
 		std::shared_ptr<jspp::parser::Node> node;
 		std::shared_ptr<jspp::docgen::DocCommentTags> tags;
