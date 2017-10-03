@@ -1,3 +1,5 @@
+![js++Doc](logo.png)
+
 ## JS++ Documentation Generator
 
 This is the *new* JS++ documentation generator. The previous documentation 
