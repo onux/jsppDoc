@@ -29,7 +29,7 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 	for(auto example : tags->examples) {
 		this->addExample(example->title, example->code);
 	}
-	this->output << "<examples>";
+	this->output << "</examples>";
 	this->output << "</module>";
 }
 
