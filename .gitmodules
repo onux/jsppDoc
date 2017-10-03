@@ -2,10 +2,10 @@
 	path = libs/jspp-parser
 	url = https://gitlab.com/onux/jspp/parser.git
 [submodule "libs/jspp-common"]
-	path = libs/jspp-common
+	path = libs/common
 	url = https://gitlab.com/onux/jspp/common.git
 [submodule "libs/jspp-symbol-table"]
-	path = libs/jspp-symbol-table
+	path = libs/symbol-table
 	url = https://gitlab.com/onux/jspp/symbol-table.git
 [submodule "libs/libs-catch"]
 	path = libs/libs-catch

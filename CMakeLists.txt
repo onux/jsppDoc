@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8.10)
 project (docgen CXX)
 
-include(libs/jspp-common/common-settings.cmake)
+include(libs/common/common-settings.cmake)
 set(PARSER_TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 option(NO_TESTS OFF)
@@ -12,8 +12,8 @@ set(PARSER_LIB_ONLY ON CACHE BOOL "Build only main parser lib, don't build tests
 add_subdirectory(libs/jspp-parser "${CMAKE_CURRENT_BINARY_DIR}/jspp-parser")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/jspp-common/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/jspp-symbol-table/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/common/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/symbol-table/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/jspp-parser/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/pcre)
 
