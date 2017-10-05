@@ -8,7 +8,15 @@
 
 using namespace jspp::parser;
 
-jspp::docgen::DocVisitor::DocVisitor(OutputBuilder* builder) : builder(builder) {}
+jspp::docgen::DocVisitor::DocVisitor(	const std::string& outputDir,
+										OutputBuilder* const builder,
+										OutputEmitter* const emitter)
+									:
+										outputDir(outputDir),
+										builder(builder),
+										emitter(emitter)
+{
+}
 
 void jspp::docgen::DocVisitor::visit(jspp::parser::DocComment* node) {
 	this->currentDocComment = node;
@@ -60,7 +68,14 @@ void jspp::docgen::DocVisitor::buildDocument(Node* node) {
 		this->modifiers
 	);
 
+	std::string xml, identifier;
 	if (node->is<ModuleDeclaration>()) {
 		this->builder->buildModule(comment);
+		xml = this->builder->getOutput();
+		identifier = dynamic_cast<ModuleDeclaration *>(node)->id->name;
+	}
+
+	if (xml != "") {
+		this->emitter->write(xml, this->outputPath);
 	}
 }

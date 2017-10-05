@@ -1,5 +1,7 @@
 set(
     SOURCE_FILES
+    Application.cc
+    Application.h
     CommentData.cc
     CommentData.h
     CommentParser.cc
@@ -7,9 +9,14 @@ set(
     DocCommentTags.h
     DocVisitor.cc
     DocVisitor.h
+    FilesystemEmitter.cc
+    FilesystemEmitter.h
     Modifiers.h
+    NopEmitter.cc
+    NopEmitter.h
     OutputBuilder.cc
     OutputBuilder.h
+    OutputEmitter.h
     Utils.cc
     Utils.h
 )

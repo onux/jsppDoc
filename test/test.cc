@@ -11,7 +11,8 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
 	);
 
 	jspp::docgen::OutputBuilder output;
-	jspp::docgen::DocVisitor docvisitor(&output);
+	jspp::docgen::NopEmitter emitter;
+	jspp::docgen::DocVisitor docvisitor("", &output, &emitter);
 	program->accept(&docvisitor);
 	std::string generated = output.getOutput();
 

@@ -12,6 +12,7 @@
 #include <memory>
 #include <bitset>
 #include "OutputBuilder.h"
+#include "OutputEmitter.h"
 
 namespace jspp
 {
@@ -20,7 +21,11 @@ namespace docgen
 	class DocVisitor : public jspp::parser::VisitorVisitChildrenByDefault
 	{
 	public:
-		DocVisitor(OutputBuilder* builder);
+		DocVisitor(
+			const std::string& outputDir,
+			OutputBuilder* const builder,
+			OutputEmitter* const emitter
+		);
 
 		void visit(jspp::parser::DocComment* node) override;
 		void visit(jspp::parser::ModuleDeclaration* node) override;
@@ -33,9 +38,12 @@ namespace docgen
 		std::vector<std::string> classes;
 		std::bitset<10> modifiers;
 		jspp::parser::DocComment* currentDocComment = nullptr;
+		
+		std::string outputDir;
 		OutputBuilder* builder = nullptr;
+		OutputEmitter* emitter = nullptr;
 
-		std::string getFQN(jspp::parser::Node *node) const;
+		std::string getFQN(jspp::parser::Node* node) const;
 		void buildDocument(jspp::parser::Node* node);
 	};
 }

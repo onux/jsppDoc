@@ -11,6 +11,7 @@
 #include "CommentParser.h"
 #include "DocCommentTags.h"
 #include "DocVisitor.h"
+#include "NopEmitter.h"
 #include "OutputBuilder.h"
 #include "Utils.h"
 
