@@ -24,19 +24,14 @@ void jspp::docgen::DocVisitor::visit(jspp::parser::DocComment* node) {
 
 void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
 	this->modules.push_back(node->id->name);
-
-	const bool isDocumented = 	this->currentDocComment &&
-								this->currentDocComment->isBefore(node);
-	if (isDocumented) {
-		this->buildDocument(node);
-	}
-
+	this->buildDocument(node);
 	visitChildren(node);
 	this->modules.pop_back();
 }
 
 void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
 	this->classes.push_back(node->id->name);
+	this->buildDocument(node);
 	visitChildren(node);
 	this->classes.pop_back();
 }
@@ -61,6 +56,12 @@ std::string jspp::docgen::DocVisitor::getFQN(Node* node) const {
 }
 
 void jspp::docgen::DocVisitor::buildDocument(Node* node) {
+	const bool isDocumented = 	this->currentDocComment &&
+								this->currentDocComment->isBefore(node);
+	if (!isDocumented) {
+		return;
+	}
+
 	CommentData comment(
 		node,
 		this->getFQN(node),
@@ -68,14 +69,23 @@ void jspp::docgen::DocVisitor::buildDocument(Node* node) {
 		this->modifiers
 	);
 
+
 	std::string xml, identifier;
 	if (node->is<ModuleDeclaration>()) {
 		this->builder->buildModule(comment);
 		xml = this->builder->getOutput();
-		identifier = dynamic_cast<ModuleDeclaration *>(node)->id->name;
+		identifier = "index";
+	}
+	if (node->is<ClassDeclaration>()) {
+		this->builder->buildClass(comment);
+		xml = this->builder->getOutput();
+		identifier = dynamic_cast<ClassDeclaration *>(node)->id->name;
 	}
 
 	if (xml != "") {
-		this->emitter->write(xml, this->outputPath);
+		const std::string outputPath = this->outputDir + identifier + ".xml";
+
+		std::cout << "OUTPUT: " << outputPath << std::endl;
+		this->emitter->write(xml, outputPath);
 	}
 }

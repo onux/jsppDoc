@@ -29,6 +29,12 @@ namespace docgen
 		 * @param comment The processed comment data. See `CommentData`.
 		 */
 		void buildModule(const CommentData& comment);
+		/**
+		 * Builds the XML for a JS++ `class`.
+		 *
+		 * @param comment The processed comment data. See `CommentData`.
+		 */
+		void buildClass(const CommentData& comment);
 	private:
 		std::ostringstream output;
 
