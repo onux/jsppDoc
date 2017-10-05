@@ -58,6 +58,14 @@ namespace docgen
 		 * @param The code for the example.
 		 */
 		void addExample(const std::string& title, const std::string& code);
+		/**
+		 * Adds a <see> ("See Also") tag with the specified page to the output
+		 * XML document.
+		 *
+		 * @param title The link text for the suggested page.
+		 * @param page The fully-qualified name (FQN) or URL to suggest.
+		 */
+		void addSeeAlso(const std::string& title, const std::string& page);
 	};
 }
 }

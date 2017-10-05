@@ -30,6 +30,11 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 		this->addExample(example->title, example->code);
 	}
 	this->output << "</examples>";
+	this->output << "<see>";
+	for (auto& see : tags->see_also) {
+		this->addSeeAlso(see->title, see->path);
+	}
+	this->output << "</see>";
 	this->output << "</module>";
 }
 
@@ -65,4 +70,10 @@ void jspp::docgen::OutputBuilder::addExample(const std::string& title, const std
 	this->output << "<example name=\"" << title << "\">";
 	this->output << cdata(code);
 	this->output << "</example>";
+}
+
+void jspp::docgen::OutputBuilder::addSeeAlso(const std::string& title, const std::string& page) {
+	this->output << "<ref to=\"" << page << "\">";
+	this->output << cdata(title);
+	this->output << "</ref>";
 }

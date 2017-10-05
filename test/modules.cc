@@ -151,3 +151,29 @@ TEST_CASE("Module Examples") {
 		REQUIRE(code == "import System;\n\nConsole.log(\"Example2\");");
 	}
 }
+
+TEST_CASE("Module See Also") {
+	auto xml = generate(
+		R"(
+			/**
+			 * This is the long description.
+			 *
+			 * @see Naming Conventions Developers/JavaScript-PP/Language-Guide/naming-conventions
+			 * @see Scopes/Scoping https://docs.onux.com/en-US/Developers/JavaScript-PP/Language-Guide/scopes-scoping
+			 */
+			module Foo
+			{
+			}
+		)"
+	);
+
+	SECTION("See Also") {
+		auto it = xml->child("module").child("see").children("ref").begin();
+		std::string ref_tag1 = it->attribute("to").value();
+		REQUIRE(ref_tag1 == "Developers/JavaScript-PP/Language-Guide/naming-conventions");
+
+		++it;
+		std::string ref_tag2 = it->attribute("to").value();
+		REQUIRE(ref_tag2 == "https://docs.onux.com/en-US/Developers/JavaScript-PP/Language-Guide/scopes-scoping");
+	}
+}

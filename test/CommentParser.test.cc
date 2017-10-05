@@ -78,8 +78,8 @@ TEST_CASE("jspp::docgen::CommentParser") {
 			"\n"
 			"@return The coordinate object.\n"
 			"\n"
-			"@see CoordinateXYZ\n"
-			"@see MyApp.CoordinateZ\n"
+			"@see CoordinateXYZ path/to/page1\n"
+			"@see MyApp.CoordinateZ https://www.onux.com/\n"
 			"\n"
 			"@example Basic Usage\n"
 			"\n"
@@ -103,8 +103,10 @@ TEST_CASE("jspp::docgen::CommentParser") {
 		REQUIRE(tags->return_info == "The coordinate object.");
 
 		REQUIRE(tags->see_also.size() == 2);
-		REQUIRE(tags->see_also.at(0) == "CoordinateXYZ");
-		REQUIRE(tags->see_also.at(1) == "MyApp.CoordinateZ");
+		REQUIRE(tags->see_also.at(0)->title == "CoordinateXYZ");
+		REQUIRE(tags->see_also.at(0)->path == "path/to/page1");
+		REQUIRE(tags->see_also.at(1)->title == "MyApp.CoordinateZ");
+		REQUIRE(tags->see_also.at(1)->path == "https://www.onux.com/");
 
 		REQUIRE(tags->examples.size() == 2);
 		REQUIRE(tags->examples.at(0)->title == "Basic Usage");

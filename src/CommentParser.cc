@@ -124,7 +124,15 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
 			tags->return_info = markdown(tagText);
 		}
 		if (tagName == "see") {
-			tags->see_also.push_back(tagText);
+			std::vector<std::string> tokens = utils::split(tagText, " ");
+			
+			if (tokens.size() < 2) continue;
+			std::string path = tokens.back();
+			tokens.pop_back();
+			std::string title = utils::join(tokens, " ");
+
+			auto see_also = std::unique_ptr<SeeAlso>(new SeeAlso(title, path));
+			tags->see_also.push_back(std::move(see_also));
 		}
 		if (tagName == "param") {
 			pcrecpp::RE re_param(

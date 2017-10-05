@@ -15,6 +15,7 @@ namespace docgen
 {
 	struct Parameter;
 	struct Example;
+	struct SeeAlso;
 
 	struct DocCommentTags
 	{
@@ -25,7 +26,7 @@ namespace docgen
 		std::string deprecated_reason;
 		std::vector<std::shared_ptr<Parameter>> params;
 		std::vector<std::shared_ptr<Example>> examples;
-		std::vector<std::string> see_also;
+		std::vector<std::shared_ptr<SeeAlso>> see_also;
 	};
 
 	/**
@@ -56,6 +57,22 @@ namespace docgen
 			:
 			title(title),
 			code(code)
+		{
+		}
+	};
+
+	/**
+	 * Used for representing the JS++ \@see documentation tag.
+	 */
+	struct SeeAlso
+	{
+		std::string title;
+		std::string path;
+
+		SeeAlso(const std::string& title, const std::string& path)
+			:
+			title(title),
+			path(path)
 		{
 		}
 	};
