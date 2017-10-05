@@ -22,7 +22,7 @@ namespace docgen
 	class CommentData
 	{
 	public:
-		CommentData(jspp::parser::Node const* node,
+		CommentData(const jspp::parser::Node* const node,
 					const std::string& fqn,
 					const std::string& docComment,
 					const std::bitset<10>& modifiers);

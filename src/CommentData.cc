@@ -2,7 +2,7 @@
 #include "CommentParser.h"
 #include "Utils.h"
 
-jspp::docgen::CommentData::CommentData(	jspp::parser::Node const* node,
+jspp::docgen::CommentData::CommentData(	const jspp::parser::Node* const node,
 										const std::string& fqn,
 										const std::string& docComment,
 										const std::bitset<10>& modifiers)
