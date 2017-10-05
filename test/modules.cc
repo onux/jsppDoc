@@ -69,7 +69,7 @@ TEST_CASE("Module Summary") {
 		)"
 	);
 
-	SECTION("FQN") {
+	SECTION("Summary") {
 		std::string summary = xml->child("module").child_value("summary");
 		REQUIRE(summary == "This is the summary.");
 	}
@@ -96,7 +96,7 @@ TEST_CASE("Module Description") {
 		)"
 	);
 
-	SECTION("FQN") {
+	SECTION("Description") {
 		std::string description = xml->child("module").child_value("description");
 		REQUIRE(description == "This is the long description.\n\nSome more text goes here.");
 	}

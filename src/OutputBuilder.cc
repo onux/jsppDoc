@@ -29,7 +29,7 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 		this->addDeprecated(tags->deprecated_reason);
 	}
 	this->output << "<examples>";
-	for(auto example : tags->examples) {
+	for(auto& example : tags->examples) {
 		this->addExample(example->title, example->code);
 	}
 	this->output << "</examples>";
