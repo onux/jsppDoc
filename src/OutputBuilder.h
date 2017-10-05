@@ -59,6 +59,13 @@ namespace docgen
 		 */
 		void addExample(const std::string& title, const std::string& code);
 		/**
+		 * Adds a <deprecated> tag with the specified reason to the output XML
+		 * document.
+		 *
+		 * @param reason The reason the documented node is deprecated.
+		 */
+		void addDeprecated(const std::string& reason);
+		/**
 		 * Adds a <see> ("See Also") tag with the specified page to the output
 		 * XML document.
 		 *

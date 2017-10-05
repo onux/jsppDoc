@@ -25,6 +25,9 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 	this->addTitle(node);
 	this->addSummary(tags->summary != "" ? tags->summary : description);
 	this->addDescription(description);
+	if (tags->deprecated_reason != "") {
+		this->addDeprecated(tags->deprecated_reason);
+	}
 	this->output << "<examples>";
 	for(auto example : tags->examples) {
 		this->addExample(example->title, example->code);
@@ -70,6 +73,12 @@ void jspp::docgen::OutputBuilder::addExample(const std::string& title, const std
 	this->output << "<example name=\"" << title << "\">";
 	this->output << cdata(code);
 	this->output << "</example>";
+}
+
+void jspp::docgen::OutputBuilder::addDeprecated(const std::string& reason) {
+	this->output << "<deprecated>";
+	this->output << cdata(reason);
+	this->output << "</deprecated>";
 }
 
 void jspp::docgen::OutputBuilder::addSeeAlso(const std::string& title, const std::string& page) {

@@ -102,6 +102,28 @@ TEST_CASE("Module Description") {
 	}
 }
 
+TEST_CASE("Deprecated Modules") {
+	auto xml = generate(
+		R"(
+			/**
+			 * This is the long description.
+			 *
+			 * Some more text goes here.
+			 *
+			 * @deprecated This module is replaced by a new one.
+			 */
+			module Foo
+			{
+			}
+		)"
+	);
+
+	SECTION("Deprecated Reason") {
+		std::string reason = xml->child("module").child_value("deprecated");
+		REQUIRE(reason == "This module is replaced by a new one.");
+	}
+}
+
 TEST_CASE("Module Examples") {
 	auto xml = generate(
 		R"(
