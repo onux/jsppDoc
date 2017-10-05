@@ -14,7 +14,7 @@ namespace docgen
 	/**
 	 * A class for writing output to the file system.
 	 */
-	struct FilesystemEmitter : OutputEmitter
+	struct FileEmitter : OutputEmitter
 	{
 		/**
 		 * Writes the data to the specified path.

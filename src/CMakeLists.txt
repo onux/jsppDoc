@@ -9,8 +9,8 @@ set(
     DocCommentTags.h
     DocVisitor.cc
     DocVisitor.h
-    FilesystemEmitter.cc
-    FilesystemEmitter.h
+    FileEmitter.cc
+    FileEmitter.h
     Modifiers.h
     NopEmitter.cc
     NopEmitter.h

@@ -13,7 +13,7 @@
 
 #include "DocVisitor.h"
 #include "OutputBuilder.h"
-#include "FilesystemEmitter.h"
+#include "FileEmitter.h"
 
 using namespace jspp::docgen;
 using namespace jspp::parser;
@@ -40,7 +40,7 @@ void Application::generateDocumentation(const std::string& inputPath,
 		);
 
 		jspp::docgen::OutputBuilder builder;
-		jspp::docgen::FilesystemEmitter emitter;
+		jspp::docgen::FileEmitter emitter;
 		jspp::docgen::DocVisitor docvisitor(outputDir, &builder, &emitter);
 		program->accept(&docvisitor);
 	}
