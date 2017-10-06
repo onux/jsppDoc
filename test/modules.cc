@@ -15,7 +15,7 @@ TEST_CASE("Module Name - One module") {
 		size_t count = xml->select_nodes("module").size();
 		REQUIRE(count == 1);
 	}
-	SECTION("FQN") {
+	SECTION("Module Name") {
 		REQUIRE(std::string(xml->child("module").child_value("title")) == "Foo");
 	}
 }
@@ -35,7 +35,7 @@ TEST_CASE("Module Name - Multiple modules separated by dot (.)") {
 		size_t count = xml->select_nodes("module").size();
 		REQUIRE(count == 1);
 	}
-	SECTION("FQN") {
+	SECTION("Module Name") {
 		REQUIRE(std::string(xml->child("module").child_value("title")) == "Baz");
 	}
 }
