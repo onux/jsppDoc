@@ -5,6 +5,7 @@ include_directories(../libs/pugixml/src)
 
 set(
     SOURCE_FILES
+    class.cc
     main.cc
     modules.cc
     test.cc
