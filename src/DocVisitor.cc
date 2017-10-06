@@ -52,6 +52,10 @@ std::string jspp::docgen::DocVisitor::getFQN(Node* node) const {
 	if (node->is<ModuleDeclaration>()) {
 		return utils::join(this->modules, ".");
 	}
+	if (node->is<ClassDeclaration>()) {
+		return utils::join(this->modules, ".") + utils::join(this->classes, ".");
+	}
+	
 	return "";
 }
 
