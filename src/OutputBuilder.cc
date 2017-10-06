@@ -5,6 +5,8 @@
 using namespace jspp::docgen;
 using namespace jspp::parser;
 
+static std::string truncate(const std::string& s, size_t count);
+
 std::string jspp::docgen::OutputBuilder::getOutput() const {
 	return this->output.str();
 }
@@ -23,7 +25,9 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 
 	this->output << "<module>";
 	this->addTitle(node);
-	this->addSummary(tags->summary != "" ? tags->summary : description);
+	this->addSummary(
+		tags->summary != "" ? tags->summary : truncate(description, 250)
+	);
 	this->addDescription(description);
 	if (tags->deprecated_reason != "") {
 		this->addDeprecated(tags->deprecated_reason);
@@ -50,7 +54,9 @@ void jspp::docgen::OutputBuilder::buildClass(const CommentData& comment) {
 
 	this->output << "<class>";
 	this->addTitle(node);
-	this->addSummary(tags->summary != "" ? tags->summary : description);
+	this->addSummary(
+		tags->summary != "" ? tags->summary : truncate(description, 250)
+	);
 	this->addDescription(description);
 	if (tags->deprecated_reason != "") {
 		this->addDeprecated(tags->deprecated_reason);
@@ -112,4 +118,21 @@ void jspp::docgen::OutputBuilder::addSeeAlso(const std::string& title, const std
 	this->output << "<ref to=\"" << page << "\">";
 	this->output << cdata(title);
 	this->output << "</ref>";
+}
+
+static std::string truncate(const std::string& s, size_t count) {
+	std::vector<std::string> lines = utils::splitLines(s);
+	if (lines.size() == 0) {
+		return "";
+	}
+
+	std::string firstLine = lines[0];
+	if (firstLine.size() <= count) {
+		return firstLine;
+	}
+	else {
+		firstLine.resize(count);
+		firstLine += "...";
+		return firstLine;
+	}
 }

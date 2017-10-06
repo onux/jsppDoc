@@ -76,8 +76,23 @@ TEST_CASE("Module Summary") {
 }
 
 TEST_CASE("Module Summary - If @summary tag is unavailable, use snippet of description") {
-	// TODO
-	SKIP_TEST();
+	auto xml = generate(
+		R"(
+			/**
+			 * This is the long description.
+			 *
+			 * Some more text goes here.
+			 */
+			module Foo
+			{
+			}
+		)"
+	);
+
+	SECTION("Summary") {
+		std::string summary = xml->child("module").child_value("summary");
+		REQUIRE(summary == "This is the long description.");
+	}
 }
 
 TEST_CASE("Module Description") {
