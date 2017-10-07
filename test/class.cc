@@ -262,3 +262,44 @@ TEST_CASE("Class See Also") {
         REQUIRE(ref_tag2 == "https://docs.onux.com/en-US/Developers/JavaScript-PP/Language-Guide/scopes-scoping");
     }
 }
+
+TEST_CASE("Class Modifiers") {
+    auto xml = generate(
+        R"(
+            /**
+             */
+            public module Foo
+            {
+                private class Bar {}
+            }
+        )"
+    );
+    SECTION("Modifier count") {
+        size_t count = xml->child("class").child("modifiers").select_nodes("modifier").size();
+        REQUIRE(count == 1);
+    }
+
+    SECTION("Modifier name") {
+        auto it = xml->child("class").child("modifiers").children("modifier").begin();
+        std::string modifier = it->attribute("name").value();
+        REQUIRE(modifier == "private");
+    }
+
+    xml = generate(
+        R"(
+            /**
+             */
+            protected class Bar {}
+        )"
+    );
+    SECTION("Modifier count") {
+        size_t count = xml->child("class").child("modifiers").select_nodes("modifier").size();
+        REQUIRE(count == 1);
+    }
+
+    SECTION("Modifier name") {
+        auto it = xml->child("class").child("modifiers").children("modifier").begin();
+        std::string modifier = it->attribute("name").value();
+        REQUIRE(modifier == "protected");
+    }
+}

@@ -25,6 +25,9 @@ void jspp::docgen::OutputBuilder::buildModule(const std::shared_ptr<CommentData>
 
     this->output << "<module>";
     this->addTitle(node);
+    this->output << "<modifiers>";
+    this->addModifiers(comment->getModifiers());
+    this->output << "</modifiers>";
     this->addSummary(
         tags->summary != "" ? tags->summary : truncate(description, 250)
     );
@@ -54,6 +57,9 @@ void jspp::docgen::OutputBuilder::buildClass(const std::shared_ptr<CommentData> 
 
     this->output << "<class>";
     this->addTitle(node);
+    this->output << "<modifiers>";
+    this->addModifiers(comment->getModifiers());
+    this->output << "</modifiers>";
     this->addSummary(
         tags->summary != "" ? tags->summary : truncate(description, 250)
     );
@@ -118,6 +124,39 @@ void jspp::docgen::OutputBuilder::addSeeAlso(const std::string& title, const std
     this->output << "<ref to=\"" << page << "\">";
     this->output << cdata(title);
     this->output << "</ref>";
+}
+
+void jspp::docgen::OutputBuilder::addModifiers(const std::shared_ptr<jspp::docgen::Modifiers> modifiers) {
+    if (modifiers->isPublic) {
+        this->output << "<modifier name=\"public\" />";
+    }
+    if (modifiers->isProtected) {
+        this->output << "<modifier name=\"protected\" />";
+    }
+    if (modifiers->isPrivate) {
+        this->output << "<modifier name=\"private\" />";
+    }
+    if (modifiers->isStatic) {
+        this->output << "<modifier name=\"static\" />";
+    }
+    if (modifiers->isFinal) {
+        this->output << "<modifier name=\"final\" />";
+    }
+    if (modifiers->isInline) {
+        this->output << "<modifier name=\"inline\" />";
+    }
+    if (modifiers->isProperty) {
+        this->output << "<modifier name=\"property\" />";
+    }
+    if (modifiers->isAbstract) {
+        this->output << "<modifier name=\"abstract\" />";
+    }
+    if (modifiers->isVirtual) {
+        this->output << "<modifier name=\"virtual\" />";
+    }
+    if (modifiers->isOverride) {
+        this->output << "<modifier name=\"override\" />";
+    }
 }
 
 static std::string truncate(const std::string& s, size_t count) {

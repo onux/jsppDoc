@@ -80,6 +80,12 @@ namespace docgen
          * @param page The fully-qualified name (FQN) or URL to suggest.
          */
         void addSeeAlso(const std::string& title, const std::string& page);
+        /**
+         * Adds the modifiers to the output XML document.
+         *
+         * @param modifiers The modifiers applied to the documented AST node.
+         */
+        void addModifiers(const std::shared_ptr<jspp::docgen::Modifiers> modifiers);
     };
 }
 }

@@ -14,15 +14,24 @@ void jspp::docgen::DocVisitor::visit(jspp::parser::DocComment* node) {
 
 void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
     this->modules.push_back(node->id->name);
+
     this->buildDocument(node);
+    this->clearModifiers();
+
     visitChildren(node);
+    
     this->modules.pop_back();
 }
 
 void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
     this->classes.push_back(node->id->name);
+
     this->buildDocument(node);
+    this->clearModifiers();
+    this->clearDocComment();
+
     visitChildren(node);
+
     this->classes.pop_back();
 }
 
@@ -33,9 +42,18 @@ void jspp::docgen::DocVisitor::visit(VariableStatement* node) {
 }
 
 void jspp::docgen::DocVisitor::visit(StatementModifier* node) {
-    this->modifiers.set(static_cast<int>(node->modifier));
+    StatementModifier* modifier = node;
+
+    do {
+        this->modifiers.set(static_cast<int>(modifier->modifier));
+
+        Statement* modified = modifier->modified.get();
+        if (nullptr == modified) break;
+        modifier = dynamic_cast<StatementModifier*>(modified);
+    }
+    while (nullptr != modifier);
+
     visitChildren(node);
-    this->modifiers.reset();
 }
 
 std::string jspp::docgen::DocVisitor::getFQN(Node* node) const {
@@ -77,4 +95,12 @@ auto jspp::docgen::DocVisitor::getDocuments() const ->
     std::queue<std::shared_ptr<jspp::docgen::CommentData>>
 {
     return this->documented;
+}
+
+void jspp::docgen::DocVisitor::clearDocComment() {
+    this->currentDocComment = nullptr;
+}
+
+void jspp::docgen::DocVisitor::clearModifiers() {
+    this->modifiers.reset();
 }

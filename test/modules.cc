@@ -209,8 +209,27 @@ TEST_CASE("Module See Also") {
         std::string ref_tag1 = it->attribute("to").value();
         REQUIRE(ref_tag1 == "Developers/JavaScript-PP/Language-Guide/naming-conventions");
 
+        // TODO: this should be an <a> tag instead of <ref>
         ++it;
         std::string ref_tag2 = it->attribute("to").value();
         REQUIRE(ref_tag2 == "https://docs.onux.com/en-US/Developers/JavaScript-PP/Language-Guide/scopes-scoping");
+    }
+}
+
+TEST_CASE("Module Modifiers") {
+    auto xml = generate(
+        R"(
+            /**
+             */
+            public module Foo
+            {
+            }
+        )"
+    );
+
+    SECTION("See Also") {
+        auto it = xml->child("module").child("modifiers").children("modifier").begin();
+        std::string modifier = it->attribute("name").value();
+        REQUIRE(modifier == "public");
     }
 }

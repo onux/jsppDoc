@@ -13,6 +13,7 @@
 #include "DocVisitor.h"
 #include "OutputBuilder.h"
 #include "FileEmitter.h"
+#include "Utils.h"
 
 using namespace jspp::docgen;
 using namespace jspp::parser;
@@ -83,7 +84,6 @@ int Application::process(const std::string& input_argv,
     return EXIT_SUCCESS;
 }
 
-
 void Application::processInput(const std::string& inputPath,
                                const std::string& outputDir) {
     std::ifstream file(inputPath, std::ifstream::in | std::ifstream::binary);
@@ -110,7 +110,7 @@ void Application::processInput(const std::string& inputPath,
         std::cerr << e.description << std::endl;
     }
 
-    auto documents = docvisitor.getDocuments();
+    std::queue<std::shared_ptr<CommentData>> documents = docvisitor.getDocuments();
     while (documents.size() != 0) {
         this->generateXML(documents.front(), outputDir);
         documents.pop();
@@ -121,28 +121,43 @@ void Application::generateXML(std::shared_ptr<CommentData> document,
                               const std::string& outputDir) {
     jspp::docgen::OutputBuilder builder;
     jspp::docgen::FileEmitter emitter;
+    std::shared_ptr<jspp::parser::Node> node = document->getNode();
 
     std::string relativeDir = document->getFQN();
     std::replace(relativeDir.begin(), relativeDir.end(), '.', '/');
-    std::string absoluteDir = outputDir + relativeDir + "/";
+    std::string absoluteDir = outputDir + relativeDir;
 
-    Filesystem::mkdirp(absoluteDir);
+    const bool isClassMember = node->is<VariableDeclarator>() ||
+                               node->is<FunctionDeclaration>();
+    if (isClassMember) {
+        std::vector<std::string> tokens = utils::split(absoluteDir, "/");
+        tokens.pop_back();
+        absoluteDir = utils::join(tokens, "/");
+    }
 
-    std::string xml, identifier;
-    auto node = document->getNode();
+    absoluteDir += "/";
+
+    std::string xml, filename;
     if (node->is<ModuleDeclaration>()) {
         builder.buildModule(document);
         xml = builder.getOutput();
-        identifier = "index";
+        filename = "index";
     }
     if (node->is<ClassDeclaration>()) {
         builder.buildClass(document);
         xml = builder.getOutput();
-        identifier = "index";
+        filename = "index";
+    }
+    if (node->is<VariableDeclarator>()) {
+        builder.buildField(document);
+        xml = builder.getOutput();
+        filename = node->as<VariableDeclarator>()->id->name;
     }
 
     if (xml != "") {
-        const std::string outputPath = absoluteDir + identifier + ".xml";
+        Filesystem::mkdirp(absoluteDir);
+
+        const std::string outputPath = absoluteDir + filename + ".xml";
 
         std::cout << "OUTPUT: " << outputPath << std::endl;
         emitter.write(xml, outputPath);

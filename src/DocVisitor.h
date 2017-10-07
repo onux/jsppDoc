@@ -44,6 +44,9 @@ namespace docgen
 
         std::string getFQN(jspp::parser::Node* node) const;
         void buildDocument(jspp::parser::Node* node);
+        
+        void clearDocComment();
+        void clearModifiers();
     };
 }
 }
