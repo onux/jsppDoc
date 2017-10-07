@@ -36,6 +36,12 @@ namespace docgen
          * @param comment The processed comment data. See `CommentData`.
          */
         void buildClass(const std::shared_ptr<CommentData> comment);
+        /**
+         * Builds the XML for a JS++ class field.
+         *
+         * @param comment The processed comment data. See `CommentData`.
+         */
+        void buildField(const std::shared_ptr<CommentData> comment);
     private:
         std::ostringstream output;
 
@@ -50,6 +56,7 @@ namespace docgen
          */
         void addTitle(jspp::parser::ModuleDeclaration* const node);
         void addTitle(jspp::parser::ClassDeclaration* const node);
+        void addTitle(jspp::parser::VariableDeclarator* const node);
         /**
          * Adds a <summary> tag to the output XML document.
          */

@@ -19,7 +19,7 @@ void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
     this->clearModifiers();
 
     visitChildren(node);
-    
+
     this->modules.pop_back();
 }
 
@@ -38,7 +38,17 @@ void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
 void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
 }
 
-void jspp::docgen::DocVisitor::visit(VariableStatement* node) {
+void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
+    if (node->declarations.size() != 1) {
+        // TODO: output error for multiple var declarations on the same line
+        return;
+    }
+
+    std::unique_ptr<VariableDeclarator>& decl = node->declarations[0];
+
+    this->buildDocument(decl.get());
+    this->clearModifiers();
+    this->clearDocComment();
 }
 
 void jspp::docgen::DocVisitor::visit(StatementModifier* node) {
@@ -67,6 +77,18 @@ std::string jspp::docgen::DocVisitor::getFQN(Node* node) const {
             result += ".";
             result += utils::join(this->classes, ".");
         }
+
+        return result;
+    }
+    if (node->is<VariableDeclarator>()) {
+        const bool isClassMember = this->classes.size() != 0;
+        assert(isClassMember);
+
+        std::string result = utils::join(this->modules, ".");
+        result += ".";
+        result += utils::join(this->classes, ".");
+        result += ".";
+        result += dynamic_cast<VariableDeclarator *>(node)->id->name;
 
         return result;
     }

@@ -29,7 +29,7 @@ namespace docgen
         void visit(jspp::parser::ModuleDeclaration* node) override;
         void visit(jspp::parser::ClassDeclaration* node) override;
         void visit(jspp::parser::FunctionDeclaration* node) override;
-        void visit(jspp::parser::VariableStatement* node) override;
+        void visit(jspp::parser::VariableDeclaration* node) override;
         void visit(jspp::parser::StatementModifier* node) override;
     private:
         typedef std::shared_ptr<jspp::parser::FunctionDeclaration> method_t;

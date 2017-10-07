@@ -26,6 +26,9 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
         if (node->is<ClassDeclaration>()) {
             builder.buildClass(document);
         }
+        if (node->is<VariableDeclarator>()) {
+            builder.buildField(document);
+        }
 
         documents.pop();
     }

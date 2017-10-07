@@ -80,6 +80,38 @@ void jspp::docgen::OutputBuilder::buildClass(const std::shared_ptr<CommentData> 
     this->output << "</class>";
 }
 
+void jspp::docgen::OutputBuilder::buildField(const std::shared_ptr<CommentData> comment) {
+    std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment->getTags();
+
+    auto node = dynamic_cast<VariableDeclarator *>(comment->getNode().get());
+
+    std::string description = comment->getBodyText();
+
+    this->output << "<field>";
+    this->addTitle(node);
+    this->output << "<modifiers>";
+    this->addModifiers(comment->getModifiers());
+    this->output << "</modifiers>";
+    this->addSummary(
+        tags->summary != "" ? tags->summary : truncate(description, 250)
+    );
+    this->addDescription(description);
+    if (tags->deprecated_reason != "") {
+        this->addDeprecated(tags->deprecated_reason);
+    }
+    this->output << "<examples>";
+    for(auto& example : tags->examples) {
+        this->addExample(example->title, example->code);
+    }
+    this->output << "</examples>";
+    this->output << "<see>";
+    for (auto& see : tags->see_also) {
+        this->addSeeAlso(see->title, see->path);
+    }
+    this->output << "</see>";
+    this->output << "</field>";
+}
+
 std::string jspp::docgen::OutputBuilder::cdata(const std::string& s) const {
     return "<![CDATA[" + s + "]]>";
 }
@@ -91,6 +123,12 @@ void jspp::docgen::OutputBuilder::addTitle(ModuleDeclaration* const node) {
 }
 
 void jspp::docgen::OutputBuilder::addTitle(ClassDeclaration* const node) {
+    this->output << "<title>";
+    this->output << cdata(node->id->name);
+    this->output << "</title>";
+}
+
+void jspp::docgen::OutputBuilder::addTitle(VariableDeclarator* const node) {
     this->output << "<title>";
     this->output << cdata(node->id->name);
     this->output << "</title>";
