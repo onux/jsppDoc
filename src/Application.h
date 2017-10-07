@@ -6,6 +6,8 @@
 #define JSPP_DOCGEN_APPLICATION_H
 
 #include <string>
+#include <memory>
+#include "CommentData.h"
 
 namespace jspp
 {
@@ -18,15 +20,6 @@ namespace docgen
 	class Application
 	{
 	public:
-		/**
-		 * Generates the XML documentation page for the specified JS++ input
-		 * file.
-		 *
-		 * @param inputPath The JS++ input file to generate documentation for.
-		 * @param outputDir The directory to write the write output files to.
-		 */
-		void generateDocumentation(	const std::string& inputPath,
-									const std::string& outputDir);
 		/**
 		 * Parses the command-line arguments provided to js++Doc.
 		 *
@@ -42,7 +35,7 @@ namespace docgen
 										std::string& input,
 										std::string& output);
 		/**
-		 * Reads the input file(s) and calls `generateDocumentation` for each
+		 * Reads the input file(s) and calls `processInput` for each
 		 * file.
 		 *
 		 * @param input_argv The input file (from argv).
@@ -50,8 +43,24 @@ namespace docgen
 		 * @return EXIT_SUCCESS if documentation successfully generated and
 		 *         EXIT_FAILURE otherwise.
 		 */
-		int processFiles(	const std::string& input_argv,
-							const std::string& output_argv);
+		int process(const std::string& input_argv,
+					const std::string& output_argv);
+		/**
+		 * Parses the specified JS++ input file and calls `generateXML`.
+		 *
+		 * @param inputPath The JS++ input file to generate documentation for.
+		 * @param outputDir The directory to write the write output files to.
+		 */
+		void processInput(	const std::string& inputPath,
+							const std::string& outputDir);
+		/**
+		 * Generates the final XML documentation page.
+		 *
+		 * @param document The data for the documentation comment.
+		 * @param outputDir The directory to write the write output files to.
+		 */
+		void generateXML(	std::shared_ptr<jspp::docgen::CommentData> document,
+							const std::string& outputDir);
 
 	private:
 		/**

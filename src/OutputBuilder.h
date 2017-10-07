@@ -7,6 +7,7 @@
 
 #include "CommentData.h"
 #include <sstream>
+#include <memory>
 
 namespace jspp
 {
@@ -28,13 +29,13 @@ namespace docgen
 		 *
 		 * @param comment The processed comment data. See `CommentData`.
 		 */
-		void buildModule(const CommentData& comment);
+		void buildModule(const std::shared_ptr<CommentData> comment);
 		/**
 		 * Builds the XML for a JS++ `class`.
 		 *
 		 * @param comment The processed comment data. See `CommentData`.
 		 */
-		void buildClass(const CommentData& comment);
+		void buildClass(const std::shared_ptr<CommentData> comment);
 	private:
 		std::ostringstream output;
 

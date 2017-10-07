@@ -22,5 +22,5 @@ int main(int argc, char* argv[]) {
 	std::string input, output;
 
 	jsppDoc.parseCommandlineOptions(argc, argv, input, output);
-	return jsppDoc.processFiles(input, output);
+	return jsppDoc.process(input, output);
 }

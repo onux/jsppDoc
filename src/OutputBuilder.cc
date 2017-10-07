@@ -11,17 +11,17 @@ std::string jspp::docgen::OutputBuilder::getOutput() const {
 	return this->output.str();
 }
 
-void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
-	std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment.getTags();
+void jspp::docgen::OutputBuilder::buildModule(const std::shared_ptr<CommentData> comment) {
+	std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment->getTags();
 
-	auto node = dynamic_cast<ModuleDeclaration *>(comment.getNode().get());
+	auto node = dynamic_cast<ModuleDeclaration *>(comment->getNode().get());
 
 	const bool isPrefixModule = node->isSplit;
 	if (isPrefixModule) {
 		return;
 	}
 
-	std::string description = comment.getBodyText();
+	std::string description = comment->getBodyText();
 
 	this->output << "<module>";
 	this->addTitle(node);
@@ -45,12 +45,12 @@ void jspp::docgen::OutputBuilder::buildModule(const CommentData& comment) {
 	this->output << "</module>";
 }
 
-void jspp::docgen::OutputBuilder::buildClass(const CommentData& comment) {
-	std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment.getTags();
+void jspp::docgen::OutputBuilder::buildClass(const std::shared_ptr<CommentData> comment) {
+	std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment->getTags();
 
-	auto node = dynamic_cast<ClassDeclaration *>(comment.getNode().get());
+	auto node = dynamic_cast<ClassDeclaration *>(comment->getNode().get());
 
-	std::string description = comment.getBodyText();
+	std::string description = comment->getBodyText();
 
 	this->output << "<class>";
 	this->addTitle(node);
