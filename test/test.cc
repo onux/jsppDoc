@@ -12,14 +12,13 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
 	);
 
 	jspp::docgen::OutputBuilder builder;
-	jspp::docgen::NopEmitter emitter;
 	jspp::docgen::DocVisitor docvisitor;
 	program->accept(&docvisitor);
 
 	auto documents = docvisitor.getDocuments();
 	while (documents.size() != 0) {
 		auto document = documents.front();
-		
+
 		auto node = document->getNode();
 		if (node->is<ModuleDeclaration>()) {
 			builder.buildModule(document);

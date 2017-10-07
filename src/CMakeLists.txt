@@ -12,8 +12,6 @@ set(
     FileEmitter.cc
     FileEmitter.h
     Modifiers.h
-    NopEmitter.cc
-    NopEmitter.h
     OutputBuilder.cc
     OutputBuilder.h
     OutputEmitter.h
