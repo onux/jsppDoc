@@ -9,22 +9,22 @@ namespace jspp
 {
 namespace docgen
 {
-	/**
-	 * Used for representing the modifiers applied to a documented AST node.
-	 */
-	struct Modifiers
-	{
-		bool isPublic = false;
-		bool isProtected = false;
-		bool isPrivate = false;
-		bool isStatic = false;
-		bool isFinal = false;
-		bool isInline = false;
-		bool isProperty = false;
-		bool isAbstract = false;
-		bool isVirtual = false;
-		bool isOverride = false;
-	};
+    /**
+     * Used for representing the modifiers applied to a documented AST node.
+     */
+    struct Modifiers
+    {
+        bool isPublic = false;
+        bool isProtected = false;
+        bool isPrivate = false;
+        bool isStatic = false;
+        bool isFinal = false;
+        bool isInline = false;
+        bool isProperty = false;
+        bool isAbstract = false;
+        bool isVirtual = false;
+        bool isOverride = false;
+    };
 }
 }
 

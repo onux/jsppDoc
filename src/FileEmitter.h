@@ -11,19 +11,19 @@ namespace jspp
 {
 namespace docgen
 {
-	/**
-	 * A class for writing output to the file system.
-	 */
-	struct FileEmitter : OutputEmitter
-	{
-		/**
-		 * Writes the data to the specified path.
-		 *
-		 * @param text The text to write to the output path.
-		 * @param path The file path to write the text to.
-		 */
-		void write(const std::string& text, const std::string& path) override;
-	};
+    /**
+     * A class for writing output to the file system.
+     */
+    struct FileEmitter : OutputEmitter
+    {
+        /**
+         * Writes the data to the specified path.
+         *
+         * @param text The text to write to the output path.
+         * @param path The file path to write the text to.
+         */
+        void write(const std::string& text, const std::string& path) override;
+    };
 }
 }
 
