@@ -1,30 +1,24 @@
 #include "OutputBuilder.h"
 #include "DocCommentTags.h"
 #include "Utils.h"
+#include <cstddef>
 
 using namespace jspp::docgen;
-using namespace jspp::parser;
 
 static std::string truncate(const std::string& s, size_t count);
 
-std::string jspp::docgen::OutputBuilder::getOutput() const {
+std::string OutputBuilder::getOutput() const {
     return this->output.str();
 }
 
-void jspp::docgen::OutputBuilder::buildModule(const std::shared_ptr<CommentData> comment) {
-    std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment->getTags();
-
-    auto node = dynamic_cast<ModuleDeclaration *>(comment->getNode().get());
-
-    const bool isPrefixModule = node->isSplit;
-    if (isPrefixModule) {
-        return;
-    }
+void OutputBuilder::buildModule(const std::unique_ptr<ModuleCommentData> comment) {
+    std::shared_ptr<DocCommentTags> tags = comment->getTags();
 
     std::string description = comment->getBodyText();
 
     this->output << "<module>";
-    this->addTitle(node);
+    this->addTitle(comment->getName());
+    this->output << "<menu file=\"Developers\" />";
     this->output << "<modifiers>";
     this->addModifiers(comment->getModifiers());
     this->output << "</modifiers>";
@@ -48,15 +42,13 @@ void jspp::docgen::OutputBuilder::buildModule(const std::shared_ptr<CommentData>
     this->output << "</module>";
 }
 
-void jspp::docgen::OutputBuilder::buildClass(const std::shared_ptr<CommentData> comment) {
-    std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment->getTags();
-
-    auto node = dynamic_cast<ClassDeclaration *>(comment->getNode().get());
-
+void OutputBuilder::buildClass(const std::unique_ptr<ClassCommentData> comment) {
+    std::shared_ptr<DocCommentTags> tags = comment->getTags();
     std::string description = comment->getBodyText();
 
     this->output << "<class>";
-    this->addTitle(node);
+    this->addTitle(comment->getName());
+    this->output << "<menu file=\"Developers\" />";
     this->output << "<modifiers>";
     this->addModifiers(comment->getModifiers());
     this->output << "</modifiers>";
@@ -83,12 +75,14 @@ void jspp::docgen::OutputBuilder::buildClass(const std::shared_ptr<CommentData> 
 void jspp::docgen::OutputBuilder::buildField(const std::shared_ptr<CommentData> comment) {
     std::shared_ptr<jspp::docgen::DocCommentTags> tags = comment->getTags();
 
-    auto node = dynamic_cast<VariableDeclarator *>(comment->getNode().get());
+void OutputBuilder::buildField(const std::unique_ptr<FieldCommentData> comment) {
+    std::shared_ptr<DocCommentTags> tags = comment->getTags();
 
     std::string description = comment->getBodyText();
 
     this->output << "<field>";
-    this->addTitle(node);
+    this->addTitle(comment->getName());
+    this->output << "<menu file=\"Developers\" />";
     this->output << "<modifiers>";
     this->addModifiers(comment->getModifiers());
     this->output << "</modifiers>";
@@ -116,21 +110,9 @@ std::string jspp::docgen::OutputBuilder::cdata(const std::string& s) const {
     return "<![CDATA[" + s + "]]>";
 }
 
-void jspp::docgen::OutputBuilder::addTitle(ModuleDeclaration* const node) {
+void jspp::docgen::OutputBuilder::addTitle(const std::string& title) {
     this->output << "<title>";
-    this->output << cdata(node->id->name);
-    this->output << "</title>";
-}
-
-void jspp::docgen::OutputBuilder::addTitle(ClassDeclaration* const node) {
-    this->output << "<title>";
-    this->output << cdata(node->id->name);
-    this->output << "</title>";
-}
-
-void jspp::docgen::OutputBuilder::addTitle(VariableDeclarator* const node) {
-    this->output << "<title>";
-    this->output << cdata(node->id->name);
+    this->output << cdata(title);
     this->output << "</title>";
 }
 
@@ -147,7 +129,7 @@ void jspp::docgen::OutputBuilder::addDescription(const std::string& text) {
 }
 
 void jspp::docgen::OutputBuilder::addExample(const std::string& title, const std::string& code) {
-    this->output << "<example name=\"" << title << "\">";
+    this->output << "<example name=\"" << utils::escapeXML(title) << "\">";
     this->output << cdata(code);
     this->output << "</example>";
 }

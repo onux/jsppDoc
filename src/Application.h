@@ -7,7 +7,7 @@
 
 #include <string>
 #include <memory>
-#include "CommentData.h"
+#include "CommentData/CommentData.h"
 
 namespace jspp
 {
@@ -57,12 +57,25 @@ namespace docgen
          * Generates the final XML documentation page.
          *
          * @param document The data for the documentation comment.
-         * @param outputDir The directory to write the write output files to.
+         * @param outputRootDir The root directory to write the write output
+         *                      files and folders to.
          */
-        void generateXML(std::shared_ptr<jspp::docgen::CommentData> document,
-                         const std::string& outputDir);
+        void generateXML(std::unique_ptr<CommentData> document,
+                         const std::string& outputRootDir);
 
     private:
+        /**
+         * Generates the output directory path based on the FQN (fully-qualified
+         * name) of the documented node.
+         *
+         * @param fqn The fully-qualified name (FQN) of the documented node.
+         * @param outputRootDir The root directory to write the write output
+         *                      files and folders to.
+         * @param isClassMember Is the documented node a member of a class?
+         */
+        std::string outputDirectory(const std::string& fqn,
+                                    const std::string& outputRootDir,
+                                    const bool isClassMember) const;
         /**
          * Removes the specified prefix from the specified path.
          *
@@ -71,7 +84,7 @@ namespace docgen
          * @return The original path with the specified prefix removed.
          */
         std::string removeDirectoryPrefix(const std::string& path,
-                                          const std::string& prefix);
+                                          const std::string& prefix) const;
     };
 }
 }

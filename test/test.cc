@@ -1,6 +1,7 @@
 #include "test.h"
 #include <cassert>
 
+using namespace jspp::docgen;
 using namespace jspp::parser;
 
 std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
@@ -17,20 +18,28 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
 
     auto documents = docvisitor.getDocuments();
     while (documents.size() != 0) {
-        auto document = documents.front();
+        std::unique_ptr<CommentData> document = std::move(documents.back());
 
-        auto node = document->getNode();
-        if (node->is<ModuleDeclaration>()) {
-            builder.buildModule(document);
+        if (document->is<ModuleCommentData>()) {
+            auto module_doc = CommentData::dynamic_unique_ptr_cast<ModuleCommentData>(
+                std::move(document)
+            );
+            builder.buildModule(std::move(module_doc));
         }
-        if (node->is<ClassDeclaration>()) {
-            builder.buildClass(document);
+        if (document->is<ClassCommentData>()) {
+            auto class_doc = CommentData::dynamic_unique_ptr_cast<ClassCommentData>(
+                std::move(document)
+            );
+            builder.buildClass(std::move(class_doc));
         }
-        if (node->is<VariableDeclarator>()) {
-            builder.buildField(document);
+        if (document->is<FieldCommentData>()) {
+            auto field_doc = CommentData::dynamic_unique_ptr_cast<FieldCommentData>(
+                std::move(document)
+            );
+            builder.buildField(std::move(field_doc));
         }
 
-        documents.pop();
+        documents.pop_back();
     }
     std::string generated = builder.getOutput();
 

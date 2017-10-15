@@ -42,7 +42,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
         std::unique_ptr<jspp::docgen::DocCommentTags> tags = parser.parseDocCommentTags(
             "@overload foobar"
         );
-        REQUIRE(tags->overload == "foobar");
+        REQUIRE(tags->overload_name == "foobar");
     }
 
     SECTION("parseDocCommentTags - @deprecated") {

@@ -114,7 +114,11 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
             tags->examples.push_back(std::move(example));
         }
         if (tagName == "overload") {
-            tags->overload = tagText;
+            std::vector<std::string> lines = utils::splitLines(tagText);
+            if (lines.size() == 0) continue;
+
+            std::string firstWord = lines[0].substr(0, lines[0].find(" "));
+            tags->overload_name = firstWord;
         }
         if (tagName == "deprecated") {
             tags->isDeprecated = true;

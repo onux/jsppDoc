@@ -20,7 +20,7 @@ namespace docgen
     struct DocCommentTags
     {
         std::string summary;
-        std::string overload;
+        std::string overload_name;
         std::string return_info;
         bool isDeprecated = false;
         std::string deprecated_reason;

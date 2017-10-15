@@ -34,6 +34,10 @@ namespace utils
      * Removes empty lines from the beginning and end of a string vector.
      */
     void trimWhitespace(std::vector<std::string>& v);
+    /**
+     * Escapes XML entities.
+     */
+    std::string escapeXML(const std::string &s);
 }
 }
 }

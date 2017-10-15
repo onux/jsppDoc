@@ -5,7 +5,9 @@
 #ifndef JSPP_DOCGEN_OUTPUTBUILDER_H
 #define JSPP_DOCGEN_OUTPUTBUILDER_H
 
-#include "CommentData.h"
+#include "CommentData/includes.h"
+#include "Modifiers.h"
+#include "DocCommentTags.h"
 #include <sstream>
 #include <memory>
 
@@ -27,21 +29,21 @@ namespace docgen
         /**
          * Builds the XML for a JS++ `module`.
          *
-         * @param comment The processed comment data. See `CommentData`.
+         * @param comment The processed comment data. See `ModuleCommentData`.
          */
-        void buildModule(const std::shared_ptr<CommentData> comment);
+        void buildModule(const std::unique_ptr<ModuleCommentData> comment);
         /**
          * Builds the XML for a JS++ `class`.
          *
-         * @param comment The processed comment data. See `CommentData`.
+         * @param comment The processed comment data. See `ClassCommentData`.
          */
-        void buildClass(const std::shared_ptr<CommentData> comment);
+        void buildClass(const std::unique_ptr<ClassCommentData> comment);
         /**
          * Builds the XML for a JS++ class field.
          *
-         * @param comment The processed comment data. See `CommentData`.
+         * @param comment The processed comment data. See `FieldCommentData`.
          */
-        void buildField(const std::shared_ptr<CommentData> comment);
+        void buildField(const std::unique_ptr<FieldCommentData> comment);
     private:
         std::ostringstream output;
 
@@ -52,11 +54,9 @@ namespace docgen
         /**
          * Adds a <title> tag to the output XML document.
          *
-         * @param node The AST node to extract the identifier from for the <title> tag.
+         * @param title The text for the <title> tag.
          */
-        void addTitle(jspp::parser::ModuleDeclaration* const node);
-        void addTitle(jspp::parser::ClassDeclaration* const node);
-        void addTitle(jspp::parser::VariableDeclarator* const node);
+        void addTitle(const std::string& title);
         /**
          * Adds a <summary> tag to the output XML document.
          */

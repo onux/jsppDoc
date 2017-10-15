@@ -6,12 +6,13 @@
 #include <regex>
 
 std::string jspp::docgen::utils::join(const std::vector<std::string>& v, const std::string& delimiter/* = ""*/) {
+    if (v.size() == 0) {
+        return "";
+    }
     std::ostringstream ss;
 
     std::copy(v.begin(), v.end() - 1, std::ostream_iterator<std::string>(ss, delimiter.c_str()));
-    if (v.size() != 0) {
-        ss << v.back();
-    }
+    ss << v.back();
 
     return ss.str();
 }
@@ -86,4 +87,23 @@ void jspp::docgen::utils::trimWhitespace(std::vector<std::string>& v) {
 
     std::vector<std::string> trimmed(firstNonEmptyLine, lastNonEmptyLine.base());
     v.swap(trimmed);
+}
+
+std::string jspp::docgen::utils::escapeXML(const std::string &s) {
+    if (s.size() == 0) return "";
+
+    std::string buffer;
+    buffer.reserve(s.size());
+    for(size_t pos = 0; pos != s.size(); ++pos) {
+        switch(s[pos]) {
+            case '&':  buffer.append("&amp;");     break;
+            case '\"': buffer.append("&quot;");    break;
+            case '\'': buffer.append("&apos;");    break;
+            case '<':  buffer.append("&lt;");      break;
+            case '>':  buffer.append("&gt;");      break;
+            default:   buffer.append(&s[pos], 1);  break;
+        }
+    }
+
+    return buffer;
 }

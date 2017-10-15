@@ -14,6 +14,7 @@
 #include "OutputBuilder.h"
 #include "FileEmitter.h"
 #include "Utils.h"
+#include "CommentData/includes.h"
 
 using namespace jspp::docgen;
 using namespace jspp::parser;
@@ -67,25 +68,25 @@ int Application::process(const std::string& input_argv,
             relInputPath = this->removeDirectoryPrefix(inputFile, inputDir);
         }
 
-        const std::string outputDir =
+        const std::string outputRootDir =
             Filesystem::dirName(output_argv + relInputPath) + "/";
 
-        const bool outputDirExists = generatedDirs.find(outputDir) !=
-                                     generatedDirs.end();
-        if (!outputDirExists) {
-            Filesystem::mkdirp(outputDir);
-            generatedDirs.insert(outputDir);
+        const bool outputRootDirExists = generatedDirs.find(outputRootDir) !=
+                                         generatedDirs.end();
+        if (!outputRootDirExists) {
+            Filesystem::mkdirp(outputRootDir);
+            generatedDirs.insert(outputRootDir);
         }
 
         std::cout << "INPUT:  " << inputFile << std::endl;
-        this->processInput(inputFile, outputDir);
+        this->processInput(inputFile, outputRootDir);
     }
 
     return EXIT_SUCCESS;
 }
 
 void Application::processInput(const std::string& inputPath,
-                               const std::string& outputDir) {
+                               const std::string& outputRootDir) {
     std::ifstream file(inputPath, std::ifstream::in | std::ifstream::binary);
     if (file.bad()) {
         std::cerr << "ERROR: Unable to open " << inputPath << std::endl;
@@ -110,25 +111,74 @@ void Application::processInput(const std::string& inputPath,
         std::cerr << e.description << std::endl;
     }
 
-    std::queue<std::shared_ptr<CommentData>> documents = docvisitor.getDocuments();
+    std::vector<std::unique_ptr<CommentData>> documents = docvisitor.getDocuments();
     while (documents.size() != 0) {
-        this->generateXML(documents.front(), outputDir);
-        documents.pop();
+        std::unique_ptr<CommentData> document = std::move(documents.back());
+        this->generateXML(std::move(document), outputRootDir);
+        documents.pop_back();
     }
 }
 
-void Application::generateXML(std::shared_ptr<CommentData> document,
-                              const std::string& outputDir) {
+void Application::generateXML(std::unique_ptr<CommentData> document,
+                              const std::string& outputRootDir) {
     jspp::docgen::OutputBuilder builder;
     jspp::docgen::FileEmitter emitter;
-    std::shared_ptr<jspp::parser::Node> node = document->getNode();
 
-    std::string relativeDir = document->getFQN();
+    std::string xml, filename, outputDir;
+    if (document->is<ModuleCommentData>()) {
+        auto module_doc = CommentData::dynamic_unique_ptr_cast<ModuleCommentData>(
+            std::move(document)
+        );
+
+        builder.buildModule(std::move(module_doc));
+        xml = builder.getOutput();
+        filename = "index";
+        outputDir = outputDirectory(module_doc->getFQN(),
+                                    outputRootDir,
+                                    false);
+    }
+    if (document->is<ClassCommentData>()) {
+        auto class_doc = CommentData::dynamic_unique_ptr_cast<ClassCommentData>(
+            std::move(document)
+        );
+
+        builder.buildClass(std::move(class_doc));
+        xml = builder.getOutput();
+        filename = "index";
+        outputDir = outputDirectory(class_doc->getFQN(),
+                                    outputRootDir,
+                                    false);
+    }
+    if (document->is<FieldCommentData>()) {
+        auto field_doc = CommentData::dynamic_unique_ptr_cast<FieldCommentData>(
+            std::move(document)
+        );
+
+        builder.buildField(std::move(field_doc));
+        xml = builder.getOutput();
+        filename = field_doc->getName();
+        outputDir = outputDirectory(field_doc->getFQN(),
+                                    outputRootDir,
+                                    true);
+    }
+
+    if (xml != "") {
+        Filesystem::mkdirp(outputDir);
+
+        const std::string outputPath = outputDir + filename + ".xml";
+
+        std::cout << "OUTPUT: " << outputPath << std::endl;
+        emitter.write(xml, outputPath);
+    }
+}
+
+std::string Application::outputDirectory(const std::string& fqn,
+                                         const std::string& outputRootDir,
+                                         const bool isClassMember) const {
+    std::string relativeDir(fqn);
     std::replace(relativeDir.begin(), relativeDir.end(), '.', '/');
-    std::string absoluteDir = outputDir + relativeDir;
+    std::string absoluteDir = outputRootDir + relativeDir;
 
-    const bool isClassMember = node->is<VariableDeclarator>() ||
-                               node->is<FunctionDeclaration>();
     if (isClassMember) {
         std::vector<std::string> tokens = utils::split(absoluteDir, "/");
         tokens.pop_back();
@@ -137,35 +187,11 @@ void Application::generateXML(std::shared_ptr<CommentData> document,
 
     absoluteDir += "/";
 
-    std::string xml, filename;
-    if (node->is<ModuleDeclaration>()) {
-        builder.buildModule(document);
-        xml = builder.getOutput();
-        filename = "index";
-    }
-    if (node->is<ClassDeclaration>()) {
-        builder.buildClass(document);
-        xml = builder.getOutput();
-        filename = "index";
-    }
-    if (node->is<VariableDeclarator>()) {
-        builder.buildField(document);
-        xml = builder.getOutput();
-        filename = node->as<VariableDeclarator>()->id->name;
-    }
-
-    if (xml != "") {
-        Filesystem::mkdirp(absoluteDir);
-
-        const std::string outputPath = absoluteDir + filename + ".xml";
-
-        std::cout << "OUTPUT: " << outputPath << std::endl;
-        emitter.write(xml, outputPath);
-    }
+    return absoluteDir;
 }
 
 std::string Application::removeDirectoryPrefix(const std::string& path,
-                                               const std::string& prefix) {
+                                               const std::string& prefix) const {
     std::string result = path;
 
     const bool hasDirectoryPrefix = path.find_first_of(prefix) !=
