@@ -6,7 +6,6 @@ set(
 
         ClassCommentData.cc
         ClassCommentData.h
-        CommentData.cc
         CommentData.h
         ConstructorCommentData.cc
         ConstructorCommentData.h
