@@ -130,36 +130,37 @@ void Application::generateXML(std::unique_ptr<CommentData> document,
             std::move(document)
         );
 
+        const std::string fqn = module_doc->getFQN();
+
         builder.buildModule(std::move(module_doc));
         xml = builder.getOutput();
         filename = "index";
-        outputDir = outputDirectory(module_doc->getFQN(),
-                                    outputRootDir,
-                                    false);
+        outputDir = outputDirectory(fqn, outputRootDir, false);
     }
     if (document->is<ClassCommentData>()) {
         auto class_doc = CommentData::dynamic_unique_ptr_cast<ClassCommentData>(
             std::move(document)
         );
 
+        const std::string fqn = class_doc->getFQN();
+
         builder.buildClass(std::move(class_doc));
         xml = builder.getOutput();
         filename = "index";
-        outputDir = outputDirectory(class_doc->getFQN(),
-                                    outputRootDir,
-                                    false);
+        outputDir = outputDirectory(fqn, outputRootDir, false);
     }
     if (document->is<FieldCommentData>()) {
         auto field_doc = CommentData::dynamic_unique_ptr_cast<FieldCommentData>(
             std::move(document)
         );
 
+        const std::string identifier = field_doc->getName();
+        const std::string fqn = field_doc->getFQN();
+
         builder.buildField(std::move(field_doc));
         xml = builder.getOutput();
-        filename = field_doc->getName();
-        outputDir = outputDirectory(field_doc->getFQN(),
-                                    outputRootDir,
-                                    true);
+        filename = identifier;
+        outputDir = outputDirectory(fqn, outputRootDir, true);
     }
 
     if (xml != "") {
