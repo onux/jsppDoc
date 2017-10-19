@@ -31,19 +31,44 @@ namespace docgen
          *
          * @param comment The processed comment data. See `ModuleCommentData`.
          */
-        void buildModule(const std::unique_ptr<ModuleCommentData> comment);
+        void buildModule(const ModuleCommentData& comment);
         /**
          * Builds the XML for a JS++ `class`.
          *
          * @param comment The processed comment data. See `ClassCommentData`.
          */
-        void buildClass(const std::unique_ptr<ClassCommentData> comment);
+        void buildClass(const ClassCommentData& comment);
+        /**
+         * Builds the XML for JS++ class methods.
+         *
+         * @param comment The processed comment data. See `MethodCommentData`.
+         */
+        void buildFunctions(const MethodCommentData& comment);
+        /**
+         * Builds the XML for JS++ overloaded class methods.
+         *
+         * @param comment The processed comment data. See `OverloadedMethodCommentData`.
+         */
+        void buildFunctions(const OverloadedMethodCommentData& comment);
+        /**
+         * Builds the XML for JS++ class constructors.
+         *
+         * @param comment The processed comment data. See `ConstructorCommentData`.
+         */
+        void buildFunctions(const ConstructorCommentData& comment);
+        /**
+         * Builds the XML for JS++ overloaded class constructors.
+         *
+         * @param comment The processed comment data. See `OverloadedConstructorCommentData`.
+         */
+        void buildFunctions(const OverloadedConstructorCommentData& comment);
         /**
          * Builds the XML for a JS++ class field.
          *
          * @param comment The processed comment data. See `FieldCommentData`.
          */
-        void buildField(const std::unique_ptr<FieldCommentData> comment);
+        void buildField(const FieldCommentData& comment);
+
     private:
         std::ostringstream output;
 
@@ -92,7 +117,15 @@ namespace docgen
          *
          * @param modifiers The modifiers applied to the documented AST node.
          */
-        void addModifiers(const std::shared_ptr<jspp::docgen::Modifiers> modifiers);
+        void addModifiers(const jspp::docgen::Modifiers& modifiers);
+        /**
+         * Adds <param> tags to the output XML document.
+         *
+         * @param commentData The data for the associated documentation comment.
+         * @param tags The parsed documentation tags and data.
+         */
+        void addParameters(const jspp::docgen::MethodCommentData& commentData,
+                           const jspp::docgen::DocCommentTags& tags);
     };
 }
 }

@@ -3,6 +3,7 @@
 //
 
 #include "DocVisitor.h"
+#include "DocCommentTags.h"
 #include "Utils.h"
 #include "CommentData/includes.h"
 
@@ -13,94 +14,100 @@ void jspp::docgen::DocVisitor::saveOverload(jspp::parser::DocComment* node) {
     auto comment = std::unique_ptr<OverloadTagCommentData>(
         new OverloadTagCommentData(this->currentDocComment->text)
     );
+    const DocCommentTags& tags = comment->tags();
 
-    this->overloadComments.insert(
-        std::make_pair(comment->getTags()->overload_name, std::move(comment))
+    this->overloadTags.insert(
+        std::make_pair(tags.overload, std::move(comment))
     );
 }
 
-void jspp::docgen::DocVisitor::buildDocument(ModuleDeclaration* node) {
-    const bool isDocumented = this->currentDocComment &&
-                              this->currentDocComment->isBefore(node);
-    if (!isDocumented) {
+void jspp::docgen::DocVisitor::saveDocument(ModuleDeclaration* node) {
+    if (!isDocumented(node)) {
         return;
     }
+
+    const std::string name = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
 
     auto comment = std::unique_ptr<ModuleCommentData>(
         new ModuleCommentData(
-            this->getIdentifier(node),
-            this->getFQN(node),
+            name,
+            fqn,
             this->currentDocComment->text,
             this->modifiers
         )
     );
-    this->documented.insert(
-        std::make_pair(this->getFQN(node), std::move(comment))
-    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::buildDocument(ClassDeclaration* node) {
-    const bool isDocumented = this->currentDocComment &&
-                              this->currentDocComment->isBefore(node);
-    if (!isDocumented) {
+void jspp::docgen::DocVisitor::saveDocument(ClassDeclaration* node) {
+    if (!isDocumented(node)) {
         return;
     }
+
+    const std::string name = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
 
     auto comment = std::unique_ptr<ClassCommentData>(
         new ClassCommentData(
-            this->getIdentifier(node),
-            this->getFQN(node),
+            name,
+            fqn,
             this->currentDocComment->text,
             this->modifiers
         )
     );
-    this->documented.insert(
-        std::make_pair(this->getFQN(node), std::move(comment))
-    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::buildDocument(VariableDeclarator* node) {
-    const bool isDocumented = this->currentDocComment &&
-                              this->currentDocComment->isBefore(node);
-    if (!isDocumented) {
+void jspp::docgen::DocVisitor::saveDocument(VariableDeclarator* node) {
+    if (!isDocumented(node)) {
         return;
     }
 
+    const std::string name = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
+
     auto comment = std::unique_ptr<FieldCommentData>(
         new FieldCommentData(
-            this->getIdentifier(node),
-            this->getFQN(node),
+            name,
+            fqn,
             this->lastDatatype,
             this->currentDocComment->text,
             this->modifiers
         )
     );
-    this->documented.insert(
-        std::make_pair(this->getFQN(node), std::move(comment))
-    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-
-void jspp::docgen::DocVisitor::buildDocument(ConstructorDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(ConstructorDeclaration* node) {
     ;;;
 }
 
-void jspp::docgen::DocVisitor::buildDocument(FunctionDeclaration* node) {
-    // const std::string funcName = this->getIdentifier(node);
-    // const std::string returnType = this->lastDatatype;
+void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
+    if (!isDocumented(node)) {
+        return;
+    }
 
-    // auto comment = std::unique_ptr<MethodCommentData>(
-    //     this->getIdentifier(node),
-    //     this->getFQN(node),
-    //     this->params,
-    //     returnType,
-    //     this->currentDocComment->text,
-    //     this->modifiers
-    // );
-    // this->documented.insert({ this->getFQN(node), comment });
+    const std::string name = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
+    const std::string returnType = this->lastDatatype;
+
+    auto comment = std::unique_ptr<MethodCommentData>(
+        new MethodCommentData(
+            name,
+            fqn,
+            this->params,
+            returnType,
+            this->currentDocComment->text,
+            this->modifiers
+        )
+    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-std::vector<std::unique_ptr<CommentData>> jspp::docgen::DocVisitor::getDocuments() {
+auto jspp::docgen::DocVisitor::getDocuments() ->
+    std::vector<std::unique_ptr<CommentData>>
+{
     std::vector<doc_comment_t> result;
     std::unordered_set<std::string> processedKeys;
 
@@ -109,23 +116,81 @@ std::vector<std::unique_ptr<CommentData>> jspp::docgen::DocVisitor::getDocuments
         if (processedKeys.find(key) != processedKeys.end()) {
             continue;
         }
+        processedKeys.insert(key);
 
-        const size_t count = this->documented.count(key);
-        const bool isOverloaded = count > 1;
+        const bool isOverloaded = this->documented.count(key) > 1;
         if (!isOverloaded) {
             result.push_back(std::move(pair.second));
-        }
-        else {
-            // TODO: combine this->documented into std::queue, including merging
-            // SingleMethodCommentData into OverloadedMethodCommentData and
-            // SingleConstructorCommentData into OverloadedConstructorCommentData
-            ;;;
+            continue;
         }
 
-        processedKeys.insert(key);
+        std::unique_ptr<CommentData>& document = pair.second;
+        if (document->is<MethodCommentData>()) {
+            auto method_doc = dynamic_cast<MethodCommentData*>(document.get());
+            const std::string methodName = method_doc->getName();
+            const std::string methodFQN  = method_doc->getFQN();
+
+            this->combineMethodDocs(result, methodName, methodFQN);
+            continue;
+        }
+        if (document->is<ConstructorCommentData>()) {
+            // TODO
+            ;;;
+        }
     }
 
     return result;
+}
+
+void jspp::docgen::DocVisitor::combineMethodDocs(std::vector<doc_comment_t>& results,
+                                                 const std::string& name,
+                                                 const std::string& fqn)
+{
+    std::vector<std::unique_ptr<MethodCommentData>> overloads;
+    std::unique_ptr<OverloadedMethodCommentData> combinedDoc;
+
+    auto iterators = this->documented.equal_range(fqn);
+    for (auto it = iterators.first, end = iterators.second; it != end; ++it) {
+        auto method_doc = CommentData::dynamic_unique_ptr_cast<MethodCommentData>(
+            std::move(it->second)
+        );
+        overloads.push_back(std::move(method_doc));
+    }
+
+    const bool overloadTagExists = overloadTags.find(name) !=
+                                   overloadTags.end();
+    if (overloadTagExists) {
+        combinedDoc = std::unique_ptr<OverloadedMethodCommentData>(
+            new OverloadedMethodCommentData(
+                name,
+                fqn,
+                std::move(overloads),
+                overloadTags.at(name).get()
+            )
+        );
+    }
+    else {
+        combinedDoc = std::unique_ptr<OverloadedMethodCommentData>(
+            new OverloadedMethodCommentData(
+                name,
+                fqn,
+                std::move(overloads)
+            )
+        );
+    }
+
+    results.push_back(std::move(combinedDoc));
+}
+
+bool jspp::docgen::DocVisitor::isDocumented(jspp::parser::Node* node) {
+    const bool commentIsBeforeNode = this->currentDocComment &&
+                                     this->currentDocComment->isBefore(node);
+    if (!commentIsBeforeNode) {
+        this->clearDocComment();
+        return false;
+    }
+
+    return true;
 }
 
 void jspp::docgen::DocVisitor::clearDocComment() {

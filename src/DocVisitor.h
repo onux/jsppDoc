@@ -12,6 +12,7 @@
 #include <memory>
 #include <bitset>
 #include <map>
+#include <unordered_map>
 #include "OutputBuilder.h"
 #include "OutputEmitter.h"
 #include "CommentData/includes.h"
@@ -39,8 +40,10 @@ namespace docgen
         void visit(jspp::parser::GenericInstantiationType* node) override;
     private:
         typedef std::unique_ptr<CommentData> doc_comment_t;
+        typedef std::unique_ptr<OverloadTagCommentData> overload_doc_comment_t;
 
         std::multimap<std::string, doc_comment_t> documented;
+        std::unordered_map<std::string, overload_doc_comment_t> overloadTags;
 
         jspp::parser::DocComment* currentDocComment = nullptr;
 
@@ -54,15 +57,21 @@ namespace docgen
         std::string getFQN(jspp::parser::Node* node) const;
 
         void saveOverload(jspp::parser::DocComment* node);
-        void buildDocument(jspp::parser::ModuleDeclaration* node);
-        void buildDocument(jspp::parser::ClassDeclaration* node);
-        void buildDocument(jspp::parser::VariableDeclarator* node);
-        void buildDocument(jspp::parser::ConstructorDeclaration* node);
-        void buildDocument(jspp::parser::FunctionDeclaration* node);
+        void saveDocument(jspp::parser::ModuleDeclaration* node);
+        void saveDocument(jspp::parser::ClassDeclaration* node);
+        void saveDocument(jspp::parser::VariableDeclarator* node);
+        void saveDocument(jspp::parser::ConstructorDeclaration* node);
+        void saveDocument(jspp::parser::FunctionDeclaration* node);
+
+        void combineMethodDocs(std::vector<doc_comment_t>& results,
+                               const std::string& name,
+                               const std::string& fqn);
 
         void clearDocComment();
         void clearModifiers();
         void clearParameters();
+
+        bool isDocumented(jspp::parser::Node* node);
     };
 }
 }

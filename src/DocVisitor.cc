@@ -23,9 +23,8 @@ void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
     this->modules.push_back(node->id->name);
 
     const bool isPrefixModule = node->isSplit;
-
     if (!isPrefixModule) {
-        this->buildDocument(node);
+        this->saveDocument(node);
         this->clearModifiers();
     }
 
@@ -37,7 +36,7 @@ void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
 void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
     this->classes.push_back(node->id->name);
 
-    this->buildDocument(node);
+    this->saveDocument(node);
     this->clearModifiers();
     this->clearDocComment();
 
@@ -47,6 +46,24 @@ void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
 }
 
 void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
+    const bool isFreeFunction = this->modules.size() == 0 &&
+                                this->classes.size() == 0;
+    if (isFreeFunction) {
+        // TODO: output warning for free functions
+        return;
+    }
+
+    this->lastDatatype = parser::Utils::annotationTypeToString(node->kind.get());
+    for (auto& param : node->params) {
+        this->params.push_back(parser::Utils::parameterTypeToString(param));
+    }
+
+    this->saveDocument(node);
+    this->clearParameters();
+    this->clearModifiers();
+    this->clearDocComment();
+
+    visitChildren(node);
 }
 
 void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
@@ -55,9 +72,9 @@ void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
         return;
     }
 
-    std::unique_ptr<VariableDeclarator>& decl = node->declarations[0];
+    VariableDeclarator decl = *node->declarations[0];
 
-    this->buildDocument(decl.get());
+    this->saveDocument(&decl);
     this->clearModifiers();
     this->clearDocComment();
 

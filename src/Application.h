@@ -60,7 +60,7 @@ namespace docgen
          * @param outputRootDir The root directory to write the write output
          *                      files and folders to.
          */
-        void generateXML(std::unique_ptr<CommentData> document,
+        void generateXML(std::unique_ptr<CommentData>& document,
                          const std::string& outputRootDir);
 
     private:

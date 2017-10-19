@@ -33,7 +33,7 @@ namespace docgen
         MethodCommentData(const std::string& name,
                           const std::string& fqn,
                           std::vector<std::string> param_types,
-                          std::string return_type,
+                          const std::string return_type,
                           const std::string& docComment,
                           const std::bitset<10>& modifiers);
 
@@ -43,10 +43,11 @@ namespace docgen
         std::string getReturnType() const;
 
         /**
-         * Get the declared parameter types for the parameters of the documented
-         * method.
+         * Get the declared parameter type at the specified index.
+         *
+         * @param index The zero-based index for the parameter.
          */
-        std::vector<std::string> getParameterTypes() const;
+        std::string getParameterType(size_t index) const;
 
     private:
         std::vector<std::string> param_types;

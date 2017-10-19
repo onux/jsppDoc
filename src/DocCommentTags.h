@@ -6,7 +6,7 @@
 #define JSPP_DOCGEN_DOCCOMMENTTAGS_H
 
 #include <string>
-#include <vector>
+#include <deque>
 #include <memory>
 
 namespace jspp
@@ -20,13 +20,13 @@ namespace docgen
     struct DocCommentTags
     {
         std::string summary;
-        std::string overload_name;
+        std::string overload;
         std::string return_info;
         bool isDeprecated = false;
         std::string deprecated_reason;
-        std::vector<std::shared_ptr<Parameter>> params;
-        std::vector<std::shared_ptr<Example>> examples;
-        std::vector<std::shared_ptr<SeeAlso>> see_also;
+        std::deque<std::shared_ptr<Parameter>> params;
+        std::deque<std::shared_ptr<Example>> examples;
+        std::deque<std::shared_ptr<SeeAlso>> see_also;
     };
 
     /**

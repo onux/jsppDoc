@@ -8,7 +8,9 @@ set(
     class.cc
     fields.cc
     main.cc
+    methods.cc
     modules.cc
+    overload.cc
     test.cc
     CommentParser.test.cc
     Utils.test.cc

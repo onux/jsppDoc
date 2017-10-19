@@ -23,7 +23,8 @@ using namespace jspp::common;
 void Application::parseCommandlineOptions(int argc,
                                           char* argv[],
                                           std::string& input,
-                                          std::string& output) {
+                                          std::string& output)
+{
     bool parsingOutput = false;
     for(int i = 1; i < argc; ++i) {
         const std::string arg = argv[i];
@@ -44,7 +45,8 @@ void Application::parseCommandlineOptions(int argc,
 }
 
 int Application::process(const std::string& input_argv,
-                         const std::string& output_argv) {
+                         const std::string& output_argv)
+{
     if (!Filesystem::isDirectory(output_argv)) {
         std::cerr << "ERROR: Output must be a directory." << std::endl;
         return EXIT_FAILURE;
@@ -86,7 +88,8 @@ int Application::process(const std::string& input_argv,
 }
 
 void Application::processInput(const std::string& inputPath,
-                               const std::string& outputRootDir) {
+                               const std::string& outputRootDir)
+{
     std::ifstream file(inputPath, std::ifstream::in | std::ifstream::binary);
     if (file.bad()) {
         std::cerr << "ERROR: Unable to open " << inputPath << std::endl;
@@ -113,14 +116,14 @@ void Application::processInput(const std::string& inputPath,
 
     std::vector<std::unique_ptr<CommentData>> documents = docvisitor.getDocuments();
     while (documents.size() != 0) {
-        std::unique_ptr<CommentData> document = std::move(documents.back());
-        this->generateXML(std::move(document), outputRootDir);
+        this->generateXML(documents.back(), outputRootDir);
         documents.pop_back();
     }
 }
 
-void Application::generateXML(std::unique_ptr<CommentData> document,
-                              const std::string& outputRootDir) {
+void Application::generateXML(std::unique_ptr<CommentData>& document,
+                              const std::string& outputRootDir)
+{
     jspp::docgen::OutputBuilder builder;
     jspp::docgen::FileEmitter emitter;
 
@@ -132,7 +135,7 @@ void Application::generateXML(std::unique_ptr<CommentData> document,
 
         const std::string fqn = module_doc->getFQN();
 
-        builder.buildModule(std::move(module_doc));
+        builder.buildModule(*module_doc);
         xml = builder.getOutput();
         filename = "index";
         outputDir = outputDirectory(fqn, outputRootDir, false);
@@ -144,7 +147,7 @@ void Application::generateXML(std::unique_ptr<CommentData> document,
 
         const std::string fqn = class_doc->getFQN();
 
-        builder.buildClass(std::move(class_doc));
+        builder.buildClass(*class_doc);
         xml = builder.getOutput();
         filename = "index";
         outputDir = outputDirectory(fqn, outputRootDir, false);
@@ -157,7 +160,33 @@ void Application::generateXML(std::unique_ptr<CommentData> document,
         const std::string identifier = field_doc->getName();
         const std::string fqn = field_doc->getFQN();
 
-        builder.buildField(std::move(field_doc));
+        builder.buildField(*field_doc);
+        xml = builder.getOutput();
+        filename = identifier;
+        outputDir = outputDirectory(fqn, outputRootDir, true);
+    }
+    if (document->is<MethodCommentData>()) {
+        auto method_doc = CommentData::dynamic_unique_ptr_cast<MethodCommentData>(
+            std::move(document)
+        );
+
+        const std::string identifier = method_doc->getName();
+        const std::string fqn = method_doc->getFQN();
+
+        builder.buildFunctions(*method_doc);
+        xml = builder.getOutput();
+        filename = identifier;
+        outputDir = outputDirectory(fqn, outputRootDir, true);
+    }
+    if (document->is<OverloadedMethodCommentData>()) {
+        auto method_doc = CommentData::dynamic_unique_ptr_cast<OverloadedMethodCommentData>(
+            std::move(document)
+        );
+
+        const std::string identifier = method_doc->getName();
+        const std::string fqn = method_doc->getFQN();
+
+        builder.buildFunctions(*method_doc);
         xml = builder.getOutput();
         filename = identifier;
         outputDir = outputDirectory(fqn, outputRootDir, true);
@@ -175,7 +204,8 @@ void Application::generateXML(std::unique_ptr<CommentData> document,
 
 std::string Application::outputDirectory(const std::string& fqn,
                                          const std::string& outputRootDir,
-                                         const bool isClassMember) const {
+                                         const bool isClassMember) const
+{
     std::string relativeDir(fqn);
     std::replace(relativeDir.begin(), relativeDir.end(), '.', '/');
     std::string absoluteDir = outputRootDir + relativeDir;
@@ -192,7 +222,8 @@ std::string Application::outputDirectory(const std::string& fqn,
 }
 
 std::string Application::removeDirectoryPrefix(const std::string& path,
-                                               const std::string& prefix) const {
+                                               const std::string& prefix) const
+{
     std::string result = path;
 
     const bool hasDirectoryPrefix = path.find_first_of(prefix) !=

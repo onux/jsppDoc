@@ -59,6 +59,7 @@ std::string CommentParser::parseDocCommentText(const std::string& docComment) co
     std::string extractedLine;
     std::vector<std::string> lines;
     while (re_extractLines.Consume(&extractor, &extractedLine)) {
+        // TODO: don't trim @example tags
         extractedLine = utils::trimWhitespace(extractedLine);
         lines.push_back(extractedLine);
     }
@@ -118,7 +119,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
             if (lines.size() == 0) continue;
 
             std::string firstWord = lines[0].substr(0, lines[0].find(" "));
-            tags->overload_name = firstWord;
+            tags->overload = firstWord;
         }
         if (tagName == "deprecated") {
             tags->isDeprecated = true;
@@ -165,6 +166,7 @@ std::string CommentParser::parseDocCommentBodyText(const std::string& text) cons
     std::string body;
     pcrecpp::RE re_body(
         "(?# Require the body text match to start from the very beginning)^"
+        "(?# Consume @overload tags)(?:\\s*@overload\\s*\\w+)?"
         "(?# Start group A)("
         "(?# Start group B)(?:"
         "(?# Capture any character until the first @tag)(?!@[a-z]+)[\\s\\S]"

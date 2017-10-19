@@ -18,25 +18,37 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
 
     auto documents = docvisitor.getDocuments();
     while (documents.size() != 0) {
-        std::unique_ptr<CommentData> document = std::move(documents.back());
+        std::unique_ptr<CommentData>& document = documents.back();
 
         if (document->is<ModuleCommentData>()) {
             auto module_doc = CommentData::dynamic_unique_ptr_cast<ModuleCommentData>(
                 std::move(document)
             );
-            builder.buildModule(std::move(module_doc));
+            builder.buildModule(*module_doc);
         }
         if (document->is<ClassCommentData>()) {
             auto class_doc = CommentData::dynamic_unique_ptr_cast<ClassCommentData>(
                 std::move(document)
             );
-            builder.buildClass(std::move(class_doc));
+            builder.buildClass(*class_doc);
+        }
+        if (document->is<MethodCommentData>()) {
+            auto method_doc = CommentData::dynamic_unique_ptr_cast<MethodCommentData>(
+                std::move(document)
+            );
+            builder.buildFunctions(*method_doc);
+        }
+        if (document->is<OverloadedMethodCommentData>()) {
+            auto method_doc = CommentData::dynamic_unique_ptr_cast<OverloadedMethodCommentData>(
+                std::move(document)
+            );
+            builder.buildFunctions(*method_doc);
         }
         if (document->is<FieldCommentData>()) {
             auto field_doc = CommentData::dynamic_unique_ptr_cast<FieldCommentData>(
                 std::move(document)
             );
-            builder.buildField(std::move(field_doc));
+            builder.buildField(*field_doc);
         }
 
         documents.pop_back();

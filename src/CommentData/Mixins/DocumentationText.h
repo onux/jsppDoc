@@ -29,9 +29,20 @@ namespace docgen
          */
         std::string getBodyText() const;
         /**
+         * Set the documentation body text.
+         *
+         * @param text The new documentation body text to replace with.
+         */
+        void setBodyText(const std::string& text);
+        /**
          * Get the documentation tags and their parsed associated data.
          */
-        std::shared_ptr<jspp::docgen::DocCommentTags> getTags() const;
+        const jspp::docgen::DocCommentTags& tags() const;
+        /**
+         * Returns writable (non-const) documentation tags and their parsed
+         * associated data.
+         */
+        jspp::docgen::DocCommentTags& writableTags() const;
 
     protected:
         /**
@@ -44,7 +55,7 @@ namespace docgen
     private:
         std::string text;
         std::string body_text;
-        std::shared_ptr<jspp::docgen::DocCommentTags> tags;
+        std::unique_ptr<jspp::docgen::DocCommentTags> documentation_tags;
     };
 }
 }
