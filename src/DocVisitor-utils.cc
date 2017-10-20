@@ -84,11 +84,13 @@ void jspp::docgen::DocVisitor::saveDocument(ConstructorDeclaration* node) {
 }
 
 void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
-    if (!isDocumented(node)) {
+    const std::string name = this->getIdentifier(node);
+    const bool overloadTagExists = this->overloadTags.find(name) !=
+                                   this->overloadTags.end();
+    if (!overloadTagExists && !isDocumented(node)) {
         return;
     }
 
-    const std::string name = this->getIdentifier(node);
     const std::string fqn = this->getFQN(node);
     const std::string returnType = this->lastDatatype;
 
@@ -98,7 +100,7 @@ void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
             fqn,
             this->params,
             returnType,
-            this->currentDocComment->text,
+            this->currentDocComment ? this->currentDocComment->text : "",
             this->modifiers
         )
     );

@@ -16,6 +16,7 @@ void jspp::docgen::DocVisitor::visit(jspp::parser::DocComment* node) {
                                    std::string::npos;
     if (isOverloadComment) {
         this->saveOverload(node);
+        this->clearDocComment();
     }
 }
 

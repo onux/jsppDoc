@@ -85,28 +85,22 @@ void OverloadedMethodCommentData::mergeOverloadedDocs(const OverloadTagCommentDa
             methodData.deprecated_reason = sharedData.deprecated_reason;
         }
 
-        if (sharedData.params.size() != methodData.params.size()) {
-            for (size_t i = sharedData.params.size(); i-- != 0;) {
-                std::shared_ptr<Parameter> param = sharedData.params[i];
+        for (size_t i = sharedData.params.size(); i-- != 0;) {
+            std::shared_ptr<Parameter> param = sharedData.params[i];
 
-                methodData.params.push_front(param);
-            }
+            methodData.params.push_front(param);
         }
 
-        if (sharedData.examples.size() != methodData.examples.size()) {
-            for (size_t i = sharedData.examples.size(); i-- != 0;) {
-                std::shared_ptr<Example> example = sharedData.examples[i];
-                
-                methodData.examples.push_front(example);
-            }
+        for (size_t i = sharedData.examples.size(); i-- != 0;) {
+            std::shared_ptr<Example> example = sharedData.examples[i];
+            
+            methodData.examples.push_front(example);
         }
 
-        if (sharedData.see_also.size() != methodData.see_also.size()) {
-            for (size_t i = sharedData.see_also.size(); i-- != 0;) {
-                std::shared_ptr<SeeAlso> see = sharedData.see_also[i];
-                
-                methodData.see_also.push_front(see);
-            }
+        for (size_t i = sharedData.see_also.size(); i-- != 0;) {
+            std::shared_ptr<SeeAlso> see = sharedData.see_also[i];
+            
+            methodData.see_also.push_front(see);
         }
     }
 }

@@ -239,8 +239,49 @@ TEST_CASE("@overload Parameter Documentation") {
     }
 }
 
+TEST_CASE("Regression: @overload documentation gets cleared and doesn't get applied directly to the next method") {
+    auto xml = generate(
+        R"(
+            class Foo
+            {
+                /**
+                 * @overload bar
+                 *
+                 * @param baz First param
+                 * @param qux Second param
+                 */
+                void bar(bool a, bool b) {}
+                /**
+                 * @param quux Third param
+                 */
+                void bar(int baz, string qux, bool quux) {}
+            }
+        )"
+    );
+
+    SECTION("Return type documentation text for first overload") {
+        auto it = xml->child("method").children("overload").begin();
+
+        auto first_param = it->child("params").first_child();
+        auto second_param = it->child("params").last_child();
+        REQUIRE(std::string(first_param.child_value()) == "First param");
+        REQUIRE(std::string(second_param.child_value()) == "Second param");
+    }
+
+    SECTION("Return type documentation text for second overload") {
+        auto it = xml->child("method").children("overload").begin();
+        ++it;
+
+        auto first_param = it->child("params").first_child();
+        auto second_param = first_param.next_sibling("param");
+        auto third_param = it->child("params").last_child();
+        REQUIRE(std::string(first_param.child_value()) == "First param");
+        REQUIRE(std::string(second_param.child_value()) == "Second param");
+        REQUIRE(std::string(third_param.child_value()) == "Third param");
+    }
+}
+
 TEST_CASE("@overload tag with no specific overloads documented") {
-    SKIP_TEST();
     auto xml = generate(
         R"(
             class Foo
@@ -253,6 +294,18 @@ TEST_CASE("@overload tag with no specific overloads documented") {
             }
         )"
     );
+
+    SECTION("Ensure all overloads stored in one method node") {
+        size_t count = xml->select_nodes("method").size();
+        REQUIRE(count == 1);
+    }
+    SECTION("Method Name") {
+        REQUIRE(std::string(xml->child("method").child_value("title")) == "bar");
+    }
+    SECTION("Ensure exactly two overloads documented") {
+        size_t count = xml->child("method").select_nodes("overload").size();
+        REQUIRE(count == 2);
+    }
 }
 
 TEST_CASE("@overload @summary tag") {
