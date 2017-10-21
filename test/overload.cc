@@ -143,7 +143,7 @@ TEST_CASE("Overload Parameter Types") {
                  * @param baz ...
                  * @param qux ...
                  */
-                void bar(int baz, string qux) {}
+                void bar(int baz, ...string qux) {}
             }
         )"
     );
@@ -164,7 +164,7 @@ TEST_CASE("Overload Parameter Types") {
         auto first_param = it->child("params").first_child();
         auto second_param = it->child("params").last_child();
         REQUIRE(std::string(first_param.attribute("type").value()) == "int");
-        REQUIRE(std::string(second_param.attribute("type").value()) == "string");
+        REQUIRE(std::string(second_param.attribute("type").value()) == "...string");
     }
 }
 

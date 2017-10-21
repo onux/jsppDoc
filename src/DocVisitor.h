@@ -62,10 +62,12 @@ namespace docgen
                                const std::string& name,
                                const std::string& fqn);
 
+        std::vector<std::string> params;
         std::bitset<10> modifiers;
         void clearModifiers();
         void clearParameters();
 
+        std::string getParameterType(const std::unique_ptr<jspp::parser::Parameter>& node) const;
     };
 }
 }

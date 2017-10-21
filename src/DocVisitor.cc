@@ -56,7 +56,7 @@ void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
 
     this->lastDatatype = parser::Utils::annotationTypeToString(node->kind.get());
     for (auto& param : node->params) {
-        this->params.push_back(parser::Utils::parameterTypeToString(param));
+        this->params.push_back(this->getParameterType(param));
     }
 
     this->saveDocument(node);

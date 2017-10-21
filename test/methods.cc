@@ -131,7 +131,7 @@ TEST_CASE("Method Parameter Types") {
                  * @param qux ...
                  * @param quux ...
                  */
-                void baz(int qux, string quux) {}
+                void baz(int qux, ...string quux) {}
             }
         )"
     );
@@ -146,7 +146,7 @@ TEST_CASE("Method Parameter Types") {
         auto first_param = it->child("params").first_child();
         auto second_param = it->child("params").last_child();
         REQUIRE(std::string(first_param.attribute("type").value()) == "int");
-        REQUIRE(std::string(second_param.attribute("type").value()) == "string");
+        REQUIRE(std::string(second_param.attribute("type").value()) == "...string");
     }
 }
 
