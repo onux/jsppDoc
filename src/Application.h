@@ -7,6 +7,7 @@
 
 #include <string>
 #include <memory>
+#include <jspp-parser/jspp-parser.h>
 #include "CommentData/CommentData.h"
 
 namespace jspp
@@ -59,9 +60,11 @@ namespace docgen
          * @param document The data for the documentation comment.
          * @param outputRootDir The root directory to write the write output
          *                      files and folders to.
+         * @param ast The abstract syntax tree (AST) of the input program.
          */
         void generateXML(std::unique_ptr<CommentData>& document,
-                         const std::string& outputRootDir);
+                         const std::string& outputRootDir,
+                         jspp::parser::Program& ast);
 
     private:
         /**

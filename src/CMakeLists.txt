@@ -8,13 +8,21 @@ set(
         Application.h
         CommentParser.cc
         CommentParser.h
+        DocCommentMixin.cc
+        DocCommentMixin.h
         DocCommentTags.h
         DocVisitor.cc
         DocVisitor-utils.cc
         DocVisitor.h
         FileEmitter.cc
         FileEmitter.h
+        MenuBuilder.cc
+        MenuBuilder.h
+        MenuVisitor.cc
+        MenuVisitor.h
         Modifiers.h
+        NameBuilderMixin.cc
+        NameBuilderMixin.h
         OutputBuilder.cc
         OutputBuilder.h
         OutputEmitter.h

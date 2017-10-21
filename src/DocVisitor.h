@@ -13,6 +13,8 @@
 #include <bitset>
 #include <map>
 #include <unordered_map>
+#include "DocCommentMixin.h"
+#include "NameBuilderMixin.h"
 #include "OutputBuilder.h"
 #include "OutputEmitter.h"
 #include "CommentData/includes.h"
@@ -21,7 +23,9 @@ namespace jspp
 {
 namespace docgen
 {
-    class DocVisitor : public jspp::parser::VisitorVisitChildrenByDefault
+    class DocVisitor : public jspp::parser::VisitorVisitChildrenByDefault,
+                       protected DocCommentMixin,
+                       protected NameBuilderMixin
     {
     public:
         std::vector<std::unique_ptr<CommentData>> getDocuments();
@@ -45,16 +49,7 @@ namespace docgen
         std::multimap<std::string, doc_comment_t> documented;
         std::unordered_map<std::string, overload_doc_comment_t> overloadTags;
 
-        jspp::parser::DocComment* currentDocComment = nullptr;
-
-        std::vector<std::string> modules;
-        std::vector<std::string> classes;
-        std::vector<std::string> params;
-        std::bitset<10> modifiers;
         std::string lastDatatype;
-
-        std::string getIdentifier(jspp::parser::Node* node) const;
-        std::string getFQN(jspp::parser::Node* node) const;
 
         void saveOverload(jspp::parser::DocComment* node);
         void saveDocument(jspp::parser::ModuleDeclaration* node);
@@ -67,11 +62,10 @@ namespace docgen
                                const std::string& name,
                                const std::string& fqn);
 
-        void clearDocComment();
+        std::bitset<10> modifiers;
         void clearModifiers();
         void clearParameters();
 
-        bool isDocumented(jspp::parser::Node* node);
     };
 }
 }

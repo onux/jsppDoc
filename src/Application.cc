@@ -7,11 +7,11 @@
 #include <cstdlib>
 #include <fstream>
 #include <unordered_set>
-#include <jspp-parser/jspp-parser.h>
 #include <jspp-common/Filesystem.h>
 
 #include "DocVisitor.h"
 #include "OutputBuilder.h"
+#include "MenuVisitor.h"
 #include "FileEmitter.h"
 #include "Utils.h"
 #include "CommentData/includes.h"
@@ -116,18 +116,20 @@ void Application::processInput(const std::string& inputPath,
 
     std::vector<std::unique_ptr<CommentData>> documents = docvisitor.getDocuments();
     while (documents.size() != 0) {
-        this->generateXML(documents.back(), outputRootDir);
+        this->generateXML(documents.back(), outputRootDir, *program);
         documents.pop_back();
     }
 }
 
 void Application::generateXML(std::unique_ptr<CommentData>& document,
-                              const std::string& outputRootDir)
+                              const std::string& outputRootDir,
+                              Program& ast)
 {
     jspp::docgen::OutputBuilder builder;
     jspp::docgen::FileEmitter emitter;
 
     std::string xml, filename, outputDir;
+    std::string menuXml, menuFilename;
     if (document->is<ModuleCommentData>()) {
         auto module_doc = CommentData::dynamic_unique_ptr_cast<ModuleCommentData>(
             std::move(document)
@@ -139,6 +141,11 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         xml = builder.getOutput();
         filename = "index";
         outputDir = outputDirectory(fqn, outputRootDir, false);
+
+        jspp::docgen::MenuVisitor menuvisitor;
+        ast.accept(&menuvisitor);
+        menuXml = menuvisitor.getOutput();
+        menuFilename = module_doc->getName();
     }
     if (document->is<ClassCommentData>()) {
         auto class_doc = CommentData::dynamic_unique_ptr_cast<ClassCommentData>(
@@ -151,6 +158,11 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         xml = builder.getOutput();
         filename = "index";
         outputDir = outputDirectory(fqn, outputRootDir, false);
+
+        jspp::docgen::MenuVisitor menuvisitor;
+        ast.accept(&menuvisitor);
+        menuXml = menuvisitor.getOutput();
+        menuFilename = class_doc->getName();
     }
     if (document->is<FieldCommentData>()) {
         auto field_doc = CommentData::dynamic_unique_ptr_cast<FieldCommentData>(
@@ -199,6 +211,15 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
 
         std::cout << "OUTPUT: " << outputPath << std::endl;
         emitter.write(xml, outputPath);
+    }
+
+    if (menuXml != "") {
+        Filesystem::mkdirp(Filesystem::resolvePath(outputDir + "../menus/"));
+
+        const std::string menuOutputPath = Filesystem::resolvePath(outputDir + "../menus/" + menuFilename + ".xml");
+
+        std::cout << "MENU:   " << menuOutputPath << std::endl;
+        emitter.write(menuXml, menuOutputPath);
     }
 }
 

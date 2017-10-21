@@ -184,21 +184,6 @@ void jspp::docgen::DocVisitor::combineMethodDocs(std::vector<doc_comment_t>& res
     results.push_back(std::move(combinedDoc));
 }
 
-bool jspp::docgen::DocVisitor::isDocumented(jspp::parser::Node* node) {
-    const bool commentIsBeforeNode = this->currentDocComment &&
-                                     this->currentDocComment->isBefore(node);
-    if (!commentIsBeforeNode) {
-        this->clearDocComment();
-        return false;
-    }
-
-    return true;
-}
-
-void jspp::docgen::DocVisitor::clearDocComment() {
-    this->currentDocComment = nullptr;
-}
-
 void jspp::docgen::DocVisitor::clearModifiers() {
     this->modifiers.reset();
 }

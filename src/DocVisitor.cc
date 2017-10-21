@@ -68,7 +68,8 @@ void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
 }
 
 void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
-    if (node->declarations.size() != 1) {
+    const bool multipleVarsDeclared = node->declarations.size() != 1;
+    if (multipleVarsDeclared) {
         // TODO: output warning for multiple var declarations on the same line
         return;
     }
