@@ -174,6 +174,36 @@ TEST_CASE("Method Parameter Documentation") {
     }
 }
 
+TEST_CASE("Method Modifiers") {
+    auto xml = generate(
+        R"(
+            class Foo
+            {
+                /**
+                 */
+                public static void bar(bool a, bool b) {}
+            }
+        )"
+    );
+
+    SECTION("Method has exactly two modifiers") {
+        auto it = xml->child("method").children("overload").begin();
+        size_t count = it->child("modifiers").select_nodes("modifier").size();
+        REQUIRE(count == 2);
+    }
+
+    SECTION("Modifier names") {
+        auto it = xml->child("method").children("overload").begin();
+        auto modifiers_it = it->child("modifiers").children("modifier").begin();
+
+        const std::string modifier1 = modifiers_it->attribute("name").value();
+        REQUIRE(modifier1 == "public");
+        ++modifiers_it;
+        const std::string modifier2 = modifiers_it->attribute("name").value();
+        REQUIRE(modifier2 == "static");
+    }
+}
+
 TEST_CASE("Method @example tag") {
     auto xml = generate(
         R"(

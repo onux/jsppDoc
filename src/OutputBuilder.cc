@@ -90,6 +90,10 @@ void OutputBuilder::buildFunctions(const MethodCommentData& comment) {
             this->addDeprecated(tags.deprecated_reason);
         }
 
+        this->output << "<modifiers>";
+        this->addModifiers(*comment.getModifiers());
+        this->output << "</modifiers>";
+
         this->output << "<return type=\"";
         this->output << utils::escapeXML(comment.getReturnType());
         this->output << "\">";
@@ -135,6 +139,10 @@ void OutputBuilder::buildFunctions(const OverloadedMethodCommentData& comment) {
         if (overloadTags.deprecated_reason != "") {
             this->addDeprecated(overloadTags.deprecated_reason);
         }
+        
+        this->output << "<modifiers>";
+        this->addModifiers(*overload.getModifiers());
+        this->output << "</modifiers>";
 
         this->output << "<return type=\"";
         this->output << utils::escapeXML(overload.getReturnType());

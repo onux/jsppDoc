@@ -334,6 +334,55 @@ TEST_CASE("@overload @summary tag") {
     }
 }
 
+TEST_CASE("Overloaded Method Modifiers") {
+    auto xml = generate(
+        R"(
+            class Foo
+            {
+                /**
+                 */
+                public static void bar(bool a, bool b) {}
+                /**
+                 */
+                private void bar(int baz, string qux, bool quux) {}
+            }
+        )"
+    );
+
+    SECTION("First overload has exactly two modifiers") {
+        auto it = xml->child("method").children("overload").begin();
+        size_t count = it->child("modifiers").select_nodes("modifier").size();
+        REQUIRE(count == 2);
+    }
+
+    SECTION("Second overload has exactly one modifier") {
+        auto it = xml->child("method").children("overload").begin();
+        ++it;
+        size_t count = it->child("modifiers").select_nodes("modifier").size();
+        REQUIRE(count == 1);
+    }
+
+    SECTION("Modifiers of first overload") {
+        auto it = xml->child("method").children("overload").begin();
+        auto modifiers_it = it->child("modifiers").children("modifier").begin();
+
+        const std::string modifier1 = modifiers_it->attribute("name").value();
+        REQUIRE(modifier1 == "public");
+        ++modifiers_it;
+        const std::string modifier2 = modifiers_it->attribute("name").value();
+        REQUIRE(modifier2 == "static");
+    }
+
+    SECTION("Modifiers of second overload") {
+        auto it = xml->child("method").children("overload").begin();
+        ++it;
+        auto modifiers_it = it->child("modifiers").children("modifier").begin();
+
+        const std::string modifier1 = modifiers_it->attribute("name").value();
+        REQUIRE(modifier1 == "private");
+    }
+}
+
 TEST_CASE("@overload @example tag") {
     auto xml = generate(
         R"(
