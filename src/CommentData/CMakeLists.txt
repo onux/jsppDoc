@@ -15,6 +15,8 @@ set(
         MethodCommentData.h
         ModuleCommentData.cc
         ModuleCommentData.h
+        OverloadableCommentData.cc
+        OverloadableCommentData.h
         OverloadedConstructorCommentData.cc
         OverloadedConstructorCommentData.h
         OverloadedMethodCommentData.cc

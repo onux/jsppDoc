@@ -8,5 +8,6 @@
 #include "DocumentationText.h"
 #include "Modifiers.h"
 #include "Name.h"
+#include "Overload.h"
 
 #endif

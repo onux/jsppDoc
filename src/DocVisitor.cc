@@ -46,6 +46,21 @@ void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
     this->classes.pop_back();
 }
 
+void jspp::docgen::DocVisitor::visit(ConstructorDeclaration* node) {
+    assert(this->classes.size() != 0);
+
+    for (auto& param : node->params) {
+        this->params.push_back(this->getParameterType(param));
+    }
+
+    this->saveDocument(node);
+    this->clearParameters();
+    this->clearModifiers();
+    this->clearDocComment();
+
+    visitChildren(node);
+}
+
 void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
     const bool isFreeFunction = this->modules.size() == 0 &&
                                 this->classes.size() == 0;

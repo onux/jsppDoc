@@ -124,8 +124,15 @@ namespace docgen
          * @param commentData The data for the associated documentation comment.
          * @param tags The parsed documentation tags and data.
          */
-        void addParameters(const jspp::docgen::MethodCommentData& commentData,
+        void addParameters(const jspp::docgen::OverloadableCommentData& commentData,
                            const jspp::docgen::DocCommentTags& tags);
+        /**
+         * Adds a <class> tag to the output XML document for constructor class
+         * names.
+         *
+         * @param text The text for the <class> tag.
+         */
+        void addClass(const std::string& text);
     };
 }
 }

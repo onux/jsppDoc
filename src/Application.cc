@@ -177,6 +177,30 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         filename = identifier;
         outputDir = outputDirectory(fqn, outputRootDir, true);
     }
+    if (document->is<ConstructorCommentData>()) {
+        auto ctor_doc = CommentData::dynamic_unique_ptr_cast<ConstructorCommentData>(
+            std::move(document)
+        );
+
+        const std::string fqn = ctor_doc->getFQN();
+
+        builder.buildFunctions(*ctor_doc);
+        xml = builder.getOutput();
+        filename = "constructor";
+        outputDir = outputDirectory(fqn, outputRootDir, true);
+    }
+    if (document->is<OverloadedConstructorCommentData>()) {
+        auto ctor_doc = CommentData::dynamic_unique_ptr_cast<OverloadedConstructorCommentData>(
+            std::move(document)
+        );
+
+        const std::string fqn = ctor_doc->getFQN();
+
+        builder.buildFunctions(*ctor_doc);
+        xml = builder.getOutput();
+        filename = "constructor";
+        outputDir = outputDirectory(fqn, outputRootDir, true);
+    }
     if (document->is<MethodCommentData>()) {
         auto method_doc = CommentData::dynamic_unique_ptr_cast<MethodCommentData>(
             std::move(document)

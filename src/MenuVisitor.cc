@@ -55,23 +55,34 @@ void MenuVisitor::visit(ClassDeclaration* node) {
     const std::string tag = this->inModule ? "item" : "menu";
 
     this->output << "<" << tag << " name=\"" << id << "\" slug=\"" << id << "\">";
+
     this->clearDocComment();
     visitChildren(node);
+
+    if (this->hasConstructor) {
+        this->output << "<item name=\"(Constructor)\" slug=\"constructor\" />";
+    }
+
     for (auto& pair : this->members) {
         const std::string itemXml = pair.second;
         this->output << itemXml;
     }
     this->output << "</" << tag << ">";
 
+    this->hasConstructor = false;
     this->classes.pop_back();
 }
 
 void MenuVisitor::visit(ConstructorDeclaration* node) {
-    // TODO
-    ;;;
+    const std::string id = this->getIdentifier(node);
+
+    if (!isDocumented(node, id, this->overloadTags)) {
+        return;
+    }
+
+    this->hasConstructor = true;
 
     this->clearDocComment();
-    visitChildren(node);
 }
 
 void MenuVisitor::visit(FunctionDeclaration* node) {

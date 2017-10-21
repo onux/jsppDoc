@@ -80,7 +80,25 @@ void jspp::docgen::DocVisitor::saveDocument(VariableDeclarator* node) {
 }
 
 void jspp::docgen::DocVisitor::saveDocument(ConstructorDeclaration* node) {
-    ;;;
+    const std::string name = this->getIdentifier(node);
+    const bool overloadTagExists = this->overloadTags.find(name) !=
+                                   this->overloadTags.end();
+    if (!overloadTagExists && !isDocumented(node)) {
+        return;
+    }
+
+    const std::string fqn = this->getFQN(node);
+
+    auto comment = std::unique_ptr<ConstructorCommentData>(
+        new ConstructorCommentData(
+            name,
+            fqn,
+            this->params,
+            this->currentDocComment ? this->currentDocComment->text : "",
+            this->modifiers
+        )
+    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
 void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
@@ -115,6 +133,8 @@ auto jspp::docgen::DocVisitor::getDocuments() ->
 
     for (auto& pair : this->documented) {
         const std::string& key = pair.first;
+        std::unique_ptr<CommentData>& document = pair.second;
+
         if (processedKeys.find(key) != processedKeys.end()) {
             continue;
         }
@@ -126,44 +146,56 @@ auto jspp::docgen::DocVisitor::getDocuments() ->
             continue;
         }
 
-        std::unique_ptr<CommentData>& document = pair.second;
         if (document->is<MethodCommentData>()) {
             auto method_doc = dynamic_cast<MethodCommentData*>(document.get());
             const std::string methodName = method_doc->getName();
             const std::string methodFQN  = method_doc->getFQN();
 
-            this->combineMethodDocs(result, methodName, methodFQN);
+            this->combineMethodDocs<OverloadedMethodCommentData>(
+                result,
+                methodName,
+                methodFQN
+            );
             continue;
         }
         if (document->is<ConstructorCommentData>()) {
-            // TODO
-            ;;;
+            auto ctor_doc = dynamic_cast<ConstructorCommentData*>(document.get());
+            const std::string constructorName = ctor_doc->getClassName();
+            const std::string constructorFQN  = ctor_doc->getFQN();
+
+            this->combineMethodDocs<OverloadedConstructorCommentData>(
+                result,
+                constructorName,
+                constructorFQN
+            );
+            continue;
         }
     }
+    this->documented.clear();
 
     return result;
 }
 
+template<typename T>
 void jspp::docgen::DocVisitor::combineMethodDocs(std::vector<doc_comment_t>& results,
                                                  const std::string& name,
                                                  const std::string& fqn)
 {
-    std::vector<std::unique_ptr<MethodCommentData>> overloads;
-    std::unique_ptr<OverloadedMethodCommentData> combinedDoc;
-
+    std::vector<std::unique_ptr<OverloadableCommentData>> overloads;
     auto iterators = this->documented.equal_range(fqn);
     for (auto it = iterators.first, end = iterators.second; it != end; ++it) {
-        auto method_doc = CommentData::dynamic_unique_ptr_cast<MethodCommentData>(
+        auto method_doc = CommentData::dynamic_unique_ptr_cast<OverloadableCommentData>(
             std::move(it->second)
         );
         overloads.push_back(std::move(method_doc));
     }
 
+    std::unique_ptr<T> combinedDoc;
     const bool overloadTagExists = overloadTags.find(name) !=
                                    overloadTags.end();
     if (overloadTagExists) {
-        combinedDoc = std::unique_ptr<OverloadedMethodCommentData>(
-            new OverloadedMethodCommentData(
+        combinedDoc = std::unique_ptr<T>(
+            new T(
                 name,
                 fqn,
                 std::move(overloads),
@@ -172,8 +204,8 @@ void jspp::docgen::DocVisitor::combineMethodDocs(std::vector<doc_comment_t>& res
         );
     }
     else {
-        combinedDoc = std::unique_ptr<OverloadedMethodCommentData>(
-            new OverloadedMethodCommentData(
+        combinedDoc = std::unique_ptr<T>(
+            new T(
                 name,
                 fqn,
                 std::move(overloads)

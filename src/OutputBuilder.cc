@@ -130,7 +130,10 @@ void OutputBuilder::buildFunctions(const OverloadedMethodCommentData& comment) {
     auto& overloads = comment.getOverloads();
     auto it = overloads.begin(), end = overloads.end();
     for (; it != end; ++it) {
-        const MethodCommentData& overload  = **it;
+        auto downcast = dynamic_cast<MethodCommentData*>(it->get());
+        if (nullptr == downcast) continue;
+
+        const MethodCommentData& overload  = *downcast;
         const DocCommentTags& overloadTags = overload.tags();
 
         this->output << "<overload>";
@@ -169,6 +172,99 @@ void OutputBuilder::buildFunctions(const OverloadedMethodCommentData& comment) {
     this->output << "</method>";
 }
 
+void OutputBuilder::buildFunctions(const ConstructorCommentData& comment) {
+    const DocCommentTags& tags = comment.tags();
+
+    this->output << "<constructor>";
+
+    const std::string className = comment.getClassName();
+    this->addClass(className);
+    this->addTitle(className + " (Constructor)");
+    this->output << "<menu file=\"Developers\" />";
+    const std::string description = comment.getBodyText();
+    const std::string summary = tags.summary;
+    this->addSummary(summary != "" ? summary : truncate(description, 250));
+
+    this->output << "<overload>";
+    /* #region: Individual <overload> Generation */
+    {{
+        this->addDescription(description);
+        if (tags.deprecated_reason != "") {
+            this->addDeprecated(tags.deprecated_reason);
+        }
+
+        this->output << "<modifiers>";
+        this->addModifiers(*comment.getModifiers());
+        this->output << "</modifiers>";
+
+        this->output << "<params>";
+        this->addParameters(comment, tags);
+        this->output << "</params>";
+
+        this->output << "<examples>";
+        for(auto& example : tags.examples) {
+            this->addExample(example->title, example->code);
+        }
+        this->output << "</examples>";
+
+        this->output << "<see>";
+        for (auto& see : tags.see_also) {
+            this->addSeeAlso(see->title, see->path);
+        }
+        this->output << "</see>";
+    }}
+    this->output << "</overload>";
+
+    this->output << "</constructor>";
+}
+
+void OutputBuilder::buildFunctions(const OverloadedConstructorCommentData& comment) {
+    this->output << "<constructor>";
+
+    const std::string className = comment.getClassName();
+    this->addClass(className);
+    this->addTitle(className + " (Constructor)");
+    this->output << "<menu file=\"Developers\" />";
+    this->addSummary(comment.getSummary());
+
+    auto& overloads = comment.getOverloads();
+    auto it = overloads.begin(), end = overloads.end();
+    for (; it != end; ++it) {
+        auto downcast = dynamic_cast<ConstructorCommentData*>(it->get());
+        if (nullptr == downcast) continue;
+
+        const ConstructorCommentData& overload  = *downcast;
+        const DocCommentTags& overloadTags = overload.tags();
+
+        this->output << "<overload>";
+
+        this->addDescription(overload.getBodyText());
+        if (overloadTags.deprecated_reason != "") {
+            this->addDeprecated(overloadTags.deprecated_reason);
+        }
+        
+        this->output << "<modifiers>";
+        this->addModifiers(*overload.getModifiers());
+        this->output << "</modifiers>";
+
+        this->output << "<params>";
+        this->addParameters(overload, overloadTags);
+        this->output << "</params>";
+
+        this->output << "<examples>";
+        for(auto& example : overloadTags.examples) {
+            this->addExample(example->title, example->code);
+        }
+        this->output << "</examples>";
+        this->output << "<see>";
+        for (auto& see : overloadTags.see_also) {
+            this->addSeeAlso(see->title, see->path);
+        }
+        this->output << "</see>";
+        this->output << "</overload>";
+    }
+    this->output << "</constructor>";
+}
 
 void OutputBuilder::buildField(const FieldCommentData& comment) {
     const DocCommentTags& tags = comment.tags();
@@ -273,7 +369,7 @@ void jspp::docgen::OutputBuilder::addModifiers(const jspp::docgen::Modifiers& mo
     }
 }
 
-void jspp::docgen::OutputBuilder::addParameters(const MethodCommentData& commentData,
+void jspp::docgen::OutputBuilder::addParameters(const OverloadableCommentData& commentData,
                                                 const DocCommentTags& tags) {
     auto it  = tags.params.cbegin();
     auto end = tags.params.cend();
@@ -290,6 +386,12 @@ void jspp::docgen::OutputBuilder::addParameters(const MethodCommentData& comment
         this->output << cdata(param->description);
         this->output << "</param>";
     }
+}
+
+void jspp::docgen::OutputBuilder::addClass(const std::string& text) {
+    this->output << "<class>";
+    this->output << cdata(text);
+    this->output << "</class>";
 }
 
 static std::string truncate(const std::string& s, size_t count) {

@@ -9,7 +9,7 @@
 #include <vector>
 #include <memory>
 #include "../OverloadTagCommentData.h"
-#include "../MethodCommentData.h"
+#include "../OverloadableCommentData.h"
 
 namespace jspp
 {
@@ -23,8 +23,8 @@ namespace docgen
     class OverloadMixin
     {
     public:
-        OverloadMixin(std::vector<std::unique_ptr<MethodCommentData>> methods);
-        OverloadMixin(std::vector<std::unique_ptr<MethodCommentData>> methods,
+        OverloadMixin(std::vector<std::unique_ptr<OverloadableCommentData>> methods);
+        OverloadMixin(std::vector<std::unique_ptr<OverloadableCommentData>> methods,
                       const OverloadTagCommentData* const overload_tag);
 
         /**
@@ -35,10 +35,10 @@ namespace docgen
         /**
          * Gets the individual overloads for the method.
          */
-        const std::vector<std::unique_ptr<MethodCommentData>>& getOverloads() const;
+        const std::vector<std::unique_ptr<OverloadableCommentData>>& getOverloads() const;
 
     protected:
-        typedef std::vector<std::unique_ptr<MethodCommentData>> methods_t;
+        typedef std::vector<std::unique_ptr<OverloadableCommentData>> methods_t;
         typedef const OverloadTagCommentData* const overload_tag_t;
 
         std::string summary;

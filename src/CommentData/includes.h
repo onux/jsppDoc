@@ -11,6 +11,7 @@
 #include "FieldCommentData.h"
 #include "MethodCommentData.h"
 #include "ModuleCommentData.h"
+#include "OverloadableCommentData.h"
 #include "OverloadedConstructorCommentData.h"
 #include "OverloadedMethodCommentData.h"
 #include "OverloadTagCommentData.h"

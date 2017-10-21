@@ -6,11 +6,13 @@ include_directories(../libs/pugixml/src)
 set(
     SOURCE_FILES
     class.cc
+    constructors.cc
     fields.cc
     main.cc
     methods.cc
     modules.cc
-    overload.cc
+    overloaded-constructors.cc
+    overloaded-methods.cc
     test.cc
     CommentParser.test.cc
     Utils.test.cc

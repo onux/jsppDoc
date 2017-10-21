@@ -41,7 +41,7 @@ const std::string OverloadMixin::extractSummary(const methods_t& methods,
         if (result != "") return result;
     }
 
-    for (const std::unique_ptr<MethodCommentData>& method : methods) {
+    for (const std::unique_ptr<OverloadableCommentData>& method : methods) {
         const DocCommentTags& tags = method->tags();
         result = tags.summary;
         if (result != "") return result;

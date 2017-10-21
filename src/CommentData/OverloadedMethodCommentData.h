@@ -29,10 +29,10 @@ namespace docgen
     public:
         OverloadedMethodCommentData(const std::string& name,
                                     const std::string& fqn,
-                                    std::vector<std::unique_ptr<MethodCommentData>> methods);
+                                    std::vector<std::unique_ptr<OverloadableCommentData>>&& methods);
         OverloadedMethodCommentData(const std::string& name,
                                     const std::string& fqn,
-                                    std::vector<std::unique_ptr<MethodCommentData>> methods,
+                                    std::vector<std::unique_ptr<OverloadableCommentData>>&& methods,
                                     const OverloadTagCommentData* const overload_tag);
     };
 }

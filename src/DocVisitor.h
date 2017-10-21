@@ -33,6 +33,7 @@ namespace docgen
         void visit(jspp::parser::DocComment* node) override;
         void visit(jspp::parser::ModuleDeclaration* node) override;
         void visit(jspp::parser::ClassDeclaration* node) override;
+        void visit(jspp::parser::ConstructorDeclaration* node) override;
         void visit(jspp::parser::FunctionDeclaration* node) override;
         void visit(jspp::parser::VariableDeclaration* node) override;
         void visit(jspp::parser::StatementModifier* node) override;
@@ -58,6 +59,7 @@ namespace docgen
         void saveDocument(jspp::parser::ConstructorDeclaration* node);
         void saveDocument(jspp::parser::FunctionDeclaration* node);
 
+        template<typename T>
         void combineMethodDocs(std::vector<doc_comment_t>& results,
                                const std::string& name,
                                const std::string& fqn);

@@ -44,6 +44,18 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
             );
             builder.buildFunctions(*method_doc);
         }
+        if (document->is<ConstructorCommentData>()) {
+            auto ctor_doc = CommentData::dynamic_unique_ptr_cast<ConstructorCommentData>(
+                std::move(document)
+            );
+            builder.buildFunctions(*ctor_doc);
+        }
+        if (document->is<OverloadedConstructorCommentData>()) {
+            auto ctor_doc = CommentData::dynamic_unique_ptr_cast<OverloadedConstructorCommentData>(
+                std::move(document)
+            );
+            builder.buildFunctions(*ctor_doc);
+        }
         if (document->is<FieldCommentData>()) {
             auto field_doc = CommentData::dynamic_unique_ptr_cast<FieldCommentData>(
                 std::move(document)
