@@ -20,4 +20,4 @@ set(
 
 add_executable(tests ${SOURCE_FILES})
 
-target_link_libraries(tests ${DOCGEN_LIBS} ${DOCGEN_LIBS} pcrecpp gcov pugixml ${DEPENDS_LIB_LIST})
+target_link_libraries(tests ${DOCGEN_LIBS} ${DOCGEN_LIBS} pcrecpp sundown gcov pugixml ${DEPENDS_LIB_LIST})

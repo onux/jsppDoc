@@ -71,7 +71,7 @@ TEST_CASE("Module Summary") {
 
     SECTION("Summary") {
         std::string summary = xml->child("module").child_value("summary");
-        REQUIRE(summary == "This is the summary.");
+        REQUIRE(summary == "<p>This is the summary.</p>");
     }
 }
 
@@ -91,7 +91,7 @@ TEST_CASE("Module Summary - If @summary tag is unavailable, use snippet of descr
 
     SECTION("Summary") {
         std::string summary = xml->child("module").child_value("summary");
-        REQUIRE(summary == "This is the long description.");
+        REQUIRE(summary == "<p>This is the long description.</p>");
     }
 }
 
@@ -113,7 +113,13 @@ TEST_CASE("Module Description") {
 
     SECTION("Description") {
         std::string description = xml->child("module").child_value("description");
-        REQUIRE(description == "This is the long description.\n\nSome more text goes here.");
+        REQUIRE(
+            description
+            ==
+            "<p>This is the long description.</p>"
+            "\n\n"
+            "<p>Some more text goes here.</p>"
+        );
     }
 }
 
@@ -135,7 +141,7 @@ TEST_CASE("Deprecated Modules") {
 
     SECTION("Deprecated Reason") {
         std::string reason = xml->child("module").child_value("deprecated");
-        REQUIRE(reason == "This module is replaced by a new one.");
+        REQUIRE(reason == "<p>This module is replaced by a new one.</p>");
     }
 }
 

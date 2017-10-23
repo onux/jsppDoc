@@ -116,8 +116,8 @@ TEST_CASE("Overloaded Constructor Parameter Documentation - without @overload") 
 
         auto first_param = it->child("params").first_child();
         auto second_param = it->child("params").last_child();
-        REQUIRE(std::string(first_param.child_value()) == "First param");
-        REQUIRE(std::string(second_param.child_value()) == "Second param");
+        REQUIRE(std::string(first_param.child_value()) == "<p>First param</p>");
+        REQUIRE(std::string(second_param.child_value()) == "<p>Second param</p>");
     }
 }
 
@@ -148,8 +148,8 @@ TEST_CASE("@overload Constructor Parameter Documentation") {
 
         auto first_param = it->child("params").first_child();
         auto second_param = it->child("params").last_child();
-        REQUIRE(std::string(first_param.child_value()) == "First param");
-        REQUIRE(std::string(second_param.child_value()) == "Second param");
+        REQUIRE(std::string(first_param.child_value()) == "<p>First param</p>");
+        REQUIRE(std::string(second_param.child_value()) == "<p>Second param</p>");
     }
 
     SECTION("Documentation text for second overload") {
@@ -159,9 +159,9 @@ TEST_CASE("@overload Constructor Parameter Documentation") {
         auto first_param = it->child("params").first_child();
         auto second_param = first_param.next_sibling("param");
         auto third_param = it->child("params").last_child();
-        REQUIRE(std::string(first_param.child_value()) == "First param");
-        REQUIRE(std::string(second_param.child_value()) == "Second param");
-        REQUIRE(std::string(third_param.child_value()) == "Third param");
+        REQUIRE(std::string(first_param.child_value()) == "<p>First param</p>");
+        REQUIRE(std::string(second_param.child_value()) == "<p>Second param</p>");
+        REQUIRE(std::string(third_param.child_value()) == "<p>Third param</p>");
     }
 }
 
@@ -190,8 +190,8 @@ TEST_CASE("@overload documentation gets cleared and doesn't get applied directly
 
         auto first_param = it->child("params").first_child();
         auto second_param = it->child("params").last_child();
-        REQUIRE(std::string(first_param.child_value()) == "First param");
-        REQUIRE(std::string(second_param.child_value()) == "Second param");
+        REQUIRE(std::string(first_param.child_value()) == "<p>First param</p>");
+        REQUIRE(std::string(second_param.child_value()) == "<p>Second param</p>");
     }
 
     SECTION("Return type documentation text for second overload") {
@@ -201,9 +201,9 @@ TEST_CASE("@overload documentation gets cleared and doesn't get applied directly
         auto first_param = it->child("params").first_child();
         auto second_param = first_param.next_sibling("param");
         auto third_param = it->child("params").last_child();
-        REQUIRE(std::string(first_param.child_value()) == "First param");
-        REQUIRE(std::string(second_param.child_value()) == "Second param");
-        REQUIRE(std::string(third_param.child_value()) == "Third param");
+        REQUIRE(std::string(first_param.child_value()) == "<p>First param</p>");
+        REQUIRE(std::string(second_param.child_value()) == "<p>Second param</p>");
+        REQUIRE(std::string(third_param.child_value()) == "<p>Third param</p>");
     }
 }
 
@@ -257,7 +257,7 @@ TEST_CASE("@overload Constructor @summary tag") {
 
     SECTION("@overload summary is applied to main <constructor> tag") {
         const std::string summary = xml->child("constructor").child("summary").child_value();
-        REQUIRE(summary == "Global summary for all");
+        REQUIRE(summary == "<p>Global summary for all</p>");
     }
 }
 
@@ -330,14 +330,14 @@ TEST_CASE("Overloaded Constructor Description - without @overload") {
     SECTION("Description for first overload") {
         auto it = xml->child("constructor").children("overload").begin();
         const std::string description = it->child("description").child_value();
-        REQUIRE(description == "First description");
+        REQUIRE(description == "<p>First description</p>");
     }
 
     SECTION("Description for second overload") {
         auto it = xml->child("constructor").children("overload").begin();
         ++it;
         const std::string description = it->child("description").child_value();
-        REQUIRE(description == "Second description");
+        REQUIRE(description == "<p>Second description</p>");
     }
 }
 
@@ -376,13 +376,25 @@ TEST_CASE("@overload Constructor Description") {
     SECTION("Description for first overload") {
         auto it = xml->child("constructor").children("overload").begin();
         const std::string description = it->child("description").child_value();
-        REQUIRE(description == "This is the long description.\n\nSome more text goes here.");
+        REQUIRE(
+            description
+            ==
+            "<p>This is the long description.</p>"
+            "\n\n"
+            "<p>Some more text goes here.</p>"
+        );
     }
 
     SECTION("Description for second overload") {
         auto it = xml->child("constructor").children("overload").begin();
         ++it;
         const std::string description = it->child("description").child_value();
-        REQUIRE(description == "This is the long description.\n\nSome more text goes here.");
+        REQUIRE(
+            description
+            ==
+            "<p>This is the long description.</p>"
+            "\n\n"
+            "<p>Some more text goes here.</p>"
+        );
     }
 }

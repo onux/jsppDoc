@@ -16,12 +16,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/common/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/symbol-table/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/jspp-parser/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/pcre)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/sundown/cpp)
 
 set(DEPENDS_LIB_LIST jspp-parser jspp-symbol-table jspp-common)
 set(DOCGEN_LIBS CommentDataMixins CommentData jspp-docgen-lib)
 
 add_subdirectory(src)
 add_subdirectory(libs/pcre)
+add_subdirectory(libs/sundown)
 
 if (NOT NO_TESTS)
     add_subdirectory(test)

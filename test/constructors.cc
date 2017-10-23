@@ -63,7 +63,7 @@ TEST_CASE("Constructor Summary") {
 
     SECTION("Summary") {
         const std::string summary = xml->child("constructor").child_value("summary");
-        REQUIRE(summary == "This is the summary.");
+        REQUIRE(summary == "<p>This is the summary.</p>");
     }
 }
 
@@ -87,7 +87,13 @@ TEST_CASE("Constructor Description") {
     SECTION("Description") {
         auto it = xml->child("constructor").children("overload").begin();
         const std::string description = it->child_value("description");
-        REQUIRE(description == "This is the long description.\n\nSome more text goes here.");
+        REQUIRE(
+            description
+            ==
+            "<p>This is the long description.</p>"
+            "\n\n"
+            "<p>Some more text goes here.</p>"
+        );
     }
 }
 
@@ -156,8 +162,8 @@ TEST_CASE("Constructor Parameter Documentation") {
 
         auto first_param = it->child("params").first_child();
         auto second_param = it->child("params").last_child();
-        REQUIRE(std::string(first_param.child_value()) == "First param");
-        REQUIRE(std::string(second_param.child_value()) == "Second param");
+        REQUIRE(std::string(first_param.child_value()) == "<p>First param</p>");
+        REQUIRE(std::string(second_param.child_value()) == "<p>Second param</p>");
     }
 }
 

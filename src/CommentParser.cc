@@ -1,6 +1,7 @@
 #include "CommentParser.h"
 #include "Utils.h"
 #include <pcrecpp.h>
+#include <sundown.h>
 
 using namespace jspp::docgen;
 
@@ -150,7 +151,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
 
             std::string paramName, paramDescription;
             re_param.FullMatch(tagText, &paramName, &paramDescription);
-            utils::trimWhitespace(paramDescription);
+            paramDescription = markdown(paramDescription);
 
             auto param = std::unique_ptr<Parameter>(
                 new Parameter(paramName, paramDescription)
@@ -176,10 +177,9 @@ std::string CommentParser::parseDocCommentBodyText(const std::string& text) cons
     );
     re_body.PartialMatch(text, &body);
 
-    return utils::trimWhitespace(body);
+    return markdown(body);
 }
 
 std::string CommentParser::markdown(const std::string& text) const {
-    // TODO: Markdown conversion
-    return text;
+    return utils::trimWhitespace(sundown::parse(utils::trimWhitespace(text)));
 }
