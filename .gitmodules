@@ -16,3 +16,6 @@
 [submodule "libs/pugixml"]
 	path = libs/pugixml
 	url = https://gitlab.com/onux/jspp/libs.pugixml.git
+[submodule "libs/sundown"]
+	path = libs/sundown
+	url = git@gitlab.com:onux/jspp/libs.sundown.git
