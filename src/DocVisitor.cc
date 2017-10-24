@@ -111,6 +111,7 @@ void jspp::docgen::DocVisitor::visit(StatementModifier* node) {
     while (nullptr != modifier);
 
     visitChildren(node);
+    this->clearModifiers();
 }
 
 void jspp::docgen::DocVisitor::visit(IdentifierType* node) {
