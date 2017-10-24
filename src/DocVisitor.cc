@@ -78,8 +78,6 @@ void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
     this->clearParameters();
     this->clearModifiers();
     this->clearDocComment();
-
-    visitChildren(node);
 }
 
 void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
@@ -94,8 +92,6 @@ void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
     this->saveDocument(&decl);
     this->clearModifiers();
     this->clearDocComment();
-
-    visitChildren(node);
 }
 
 void jspp::docgen::DocVisitor::visit(StatementModifier* node) {
