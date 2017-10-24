@@ -117,4 +117,42 @@ TEST_CASE("jspp::docgen::utils") {
 
         REQUIRE(trimWhitespace(" ... Before the first tag. ") == "... Before the first tag.");
     }
+    SECTION("trimLeading") {
+        using namespace jspp::docgen::utils;
+
+        std::vector<std::string> v1 = {
+            "abc\n",
+            "def"
+        };
+        trimLeading(v1);
+        REQUIRE(v1 == std::vector<std::string>({ "abc\n", "def" }));
+
+        std::vector<std::string> v2 = {
+            "\tabc\n",
+            "\t\tdef"
+        };
+        trimLeading(v2);
+        REQUIRE(v2 == std::vector<std::string>({ "abc\n", "\tdef" }));
+
+        std::vector<std::string> v3 = {
+            "  abc\n",
+            "      def"
+        };
+        trimLeading(v3);
+        REQUIRE(v3 == std::vector<std::string>({ "abc\n", "    def" }));
+
+        std::vector<std::string> v4 = {
+            "abc\n",
+            "      def"
+        };
+        trimLeading(v4);
+        REQUIRE(v4 == std::vector<std::string>({ "abc\n", "      def" }));
+
+        std::vector<std::string> v5 = {
+            "abc\n",
+            "\t\tdef"
+        };
+        trimLeading(v5);
+        REQUIRE(v5 == std::vector<std::string>({ "abc\n", "\t\tdef" }));
+    }
 }

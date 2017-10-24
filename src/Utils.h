@@ -35,6 +35,11 @@ namespace utils
      */
     void trimWhitespace(std::vector<std::string>& v);
     /**
+     * Trims leading whitespace from each line based on the whitespace of the
+     * first non-empty line.
+     */
+    void trimLeading(std::vector<std::string>& lines);
+    /**
      * Escapes XML entities.
      */
     std::string escapeXML(const std::string &s);

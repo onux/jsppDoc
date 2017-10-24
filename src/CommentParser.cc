@@ -60,8 +60,6 @@ std::string CommentParser::parseDocCommentText(const std::string& docComment) co
     std::string extractedLine;
     std::vector<std::string> lines;
     while (re_extractLines.Consume(&extractor, &extractedLine)) {
-        // TODO: don't trim @example tags
-        extractedLine = utils::trimWhitespace(extractedLine);
         lines.push_back(extractedLine);
     }
 
@@ -108,6 +106,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
 
             if (lines.size() == 0) continue;
             utils::trimWhitespace(lines);
+            utils::trimLeading(lines);
             std::string exampleCode = utils::join(lines, "\n");
 
             auto example = std::unique_ptr<Example>(
@@ -164,7 +163,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
 }
 
 std::string CommentParser::parseDocCommentBodyText(const std::string& text) const {
-    std::string body;
+    std::string raw;
     pcrecpp::RE re_body(
         "(?# Require the body text match to start from the very beginning)^"
         "(?# Consume @overload tags)(?:\\s*@overload\\s*\\w+)?"
@@ -175,7 +174,20 @@ std::string CommentParser::parseDocCommentBodyText(const std::string& text) cons
         "(?# Capture one or more of everything specified inside capture group B)+"
         "(?# End group A))"
     );
-    re_body.PartialMatch(text, &body);
+    re_body.PartialMatch(text, &raw);
+
+    std::string rawTrimmed = utils::trimWhitespace(raw);
+    if (rawTrimmed == "") {
+        return "";
+    }
+
+    std::vector<std::string> lines = utils::splitLines(rawTrimmed);
+    if (lines.size() == 1) {
+        return markdown(utils::trimWhitespace(lines[0]));
+    }
+
+    utils::trimLeading(lines);
+    std::string body = utils::join(lines, "\n");
 
     return markdown(body);
 }

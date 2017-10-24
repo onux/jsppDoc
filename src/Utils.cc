@@ -4,8 +4,11 @@
 #include <iterator>
 #include <algorithm>
 #include <regex>
+#include <cstddef>
 
-std::string jspp::docgen::utils::join(const std::vector<std::string>& v, const std::string& delimiter/* = ""*/) {
+using namespace jspp::docgen;
+
+std::string utils::join(const std::vector<std::string>& v, const std::string& delimiter/* = ""*/) {
     if (v.size() == 0) {
         return "";
     }
@@ -17,7 +20,7 @@ std::string jspp::docgen::utils::join(const std::vector<std::string>& v, const s
     return ss.str();
 }
 
-std::vector<std::string> jspp::docgen::utils::split(const std::string& s, const std::string& delimiter) {
+std::vector<std::string> utils::split(const std::string& s, const std::string& delimiter) {
     std::vector<std::string> result;
 
     if (delimiter.size() == 0) {
@@ -41,7 +44,7 @@ std::vector<std::string> jspp::docgen::utils::split(const std::string& s, const 
     return result;
 }
 
-std::vector<std::string> jspp::docgen::utils::splitLines(const std::string& s) {
+std::vector<std::string> utils::splitLines(const std::string& s) {
     if (s.size() == 0) return {};
 
     std::vector<std::string> lines;
@@ -59,7 +62,7 @@ std::vector<std::string> jspp::docgen::utils::splitLines(const std::string& s) {
     return lines;
 }
 
-std::string jspp::docgen::utils::trimWhitespace(const std::string &s) {
+std::string utils::trimWhitespace(const std::string &s) {
     if (s.size() == 0) return "";
 
     auto fn_isWhitespace = [](char32_t c) {
@@ -78,7 +81,7 @@ std::string jspp::docgen::utils::trimWhitespace(const std::string &s) {
     return std::string(trimLeft, trimRight.base());
 }
 
-void jspp::docgen::utils::trimWhitespace(std::vector<std::string>& v) {
+void utils::trimWhitespace(std::vector<std::string>& v) {
     auto isEmptyLine = [](const std::string& line) {
         return line == "";
     };
@@ -89,7 +92,47 @@ void jspp::docgen::utils::trimWhitespace(std::vector<std::string>& v) {
     v.swap(trimmed);
 }
 
-std::string jspp::docgen::utils::escapeXML(const std::string &s) {
+void utils::trimLeading(std::vector<std::string>& lines) {
+    auto fn_isLeadingWhitespace = [](char32_t c) {
+        const bool isWhitespace = c == ' ' ||
+                                  c == '\t';
+
+        return isWhitespace;
+    };
+
+    ptrdiff_t firstLineWhitespace = 0;
+    bool setFirstLineWhitespace = false;
+    for(size_t i = 0, len = lines.size(); i != len; ++i) {
+        const std::string& line = lines[i];
+
+        const bool isEmptyLine = utils::trimWhitespace(line) == "";
+        if (isEmptyLine) {
+            continue;
+        }
+
+        auto it_firstChar = std::find_if_not(
+            line.begin(),
+            line.end(),
+            fn_isLeadingWhitespace
+        );
+
+        if (!setFirstLineWhitespace) {
+            firstLineWhitespace = it_firstChar - line.begin();
+            setFirstLineWhitespace = true;
+        }
+
+        auto it_leadingWhitespace = line.begin() + firstLineWhitespace;
+        const bool isTrimRequired = firstLineWhitespace != 0 &&
+                                    it_firstChar >= it_leadingWhitespace &&
+                                    it_leadingWhitespace < line.end();
+        if (isTrimRequired) {
+            std::string trimmedLine(it_leadingWhitespace, line.end());
+            lines[i] = trimmedLine;
+        }
+    }
+}
+
+std::string utils::escapeXML(const std::string &s) {
     if (s.size() == 0) return "";
 
     std::string buffer;

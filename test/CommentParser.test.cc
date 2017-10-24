@@ -25,7 +25,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
                 )"
             )
             ==
-            "This *IS* a doc comment."
+            " This *IS* a doc comment."
         );
         REQUIRE(
             parser.parseDocCommentText(
@@ -165,8 +165,8 @@ TEST_CASE("jspp::docgen::CommentParser") {
                  * My description goes here.
                  *
                  * More description.
-                 * More text.
-                 * Even more text.
+                 *
+                 * More text. Even more text.
                  *
                  * And even more text.
                  */
@@ -179,9 +179,9 @@ TEST_CASE("jspp::docgen::CommentParser") {
             ==
             "<p>My description goes here.</p>\n"
             "\n"
-            "<p>More description.\n"
-            "More text.\n"
-            "Even more text.</p>\n"
+            "<p>More description.</p>\n"
+            "\n"
+            "<p>More text. Even more text.</p>\n"
             "\n"
             "<p>And even more text.</p>"
         );

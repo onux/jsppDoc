@@ -156,7 +156,9 @@ TEST_CASE("Module Examples") {
              * @example First Example
              * import System;
              *
-             * Console.log("Example1");
+             * if (true) {
+             *     Console.log("Example1");
+             * }
              *
              * @example Second Example
              * import System;
@@ -181,7 +183,7 @@ TEST_CASE("Module Examples") {
         REQUIRE(title == "First Example");
 
         std::string code = it->child_value();
-        REQUIRE(code == "import System;\n\nConsole.log(\"Example1\");");
+        REQUIRE(code == "import System;\n\nif (true) {\n    Console.log(\"Example1\");\n}");
     }
 
     SECTION("Example 2") {
