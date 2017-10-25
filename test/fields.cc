@@ -93,7 +93,13 @@ TEST_CASE("Field Summary - If @summary tag is unavailable, use snippet of descri
 
     SECTION("Summary") {
         std::string summary = xml->child("field").child_value("summary");
-        REQUIRE(summary == "<p>This is the long description.</p>");
+        REQUIRE(
+            summary
+            ==
+            "<p>This is the long description.</p>"
+            "\n\n"
+            "<p>Some more text goes here.</p>"
+        );
     }
 }
 

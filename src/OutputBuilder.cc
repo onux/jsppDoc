@@ -396,6 +396,32 @@ void jspp::docgen::OutputBuilder::addClass(const std::string& text) {
 }
 
 static std::string truncate(const std::string& s, size_t count) {
+    std::string result;
+
+    std::vector<std::string> sentences = utils::split(s, ".");
+
+    const bool periodFound = s.find(".") != std::string::npos;
+
+    auto it = sentences.cbegin();
+    auto end = sentences.cend();
+    for (; it != end; ++it) {
+        const std::string sentence = *it;
+
+        if (sentence == "") {
+            continue;
+        }
+
+        result += sentence;
+        if (periodFound) {
+            result += ".";
+        }
+
+        if (result.size() >= count) {
+            break;
+        }
+    }
+
+    return result;
 }
 
 std::string OutputBuilder::markdown(const std::string& text) const {

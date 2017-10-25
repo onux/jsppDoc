@@ -23,7 +23,13 @@ std::string utils::join(const std::vector<std::string>& v, const std::string& de
 std::vector<std::string> utils::split(const std::string& s, const std::string& delimiter) {
     std::vector<std::string> result;
 
-    if (delimiter.size() == 0) {
+    const bool emptyDelimiter  = delimiter.size() == 0;
+    const bool emptyString     = s.size() == 0;
+    const bool delimiterFound  = s.find(delimiter) != std::string::npos;
+    const bool cannotTokenize  = emptyDelimiter ||
+                                 emptyString    ||
+                                 !delimiterFound;
+    if (cannotTokenize) {
         return { s };
     }
 
@@ -37,8 +43,8 @@ std::vector<std::string> utils::split(const std::string& s, const std::string& d
         lastSearchIndex = searchIndex;
     }
 
-    size_t  lastDelimiter = lastSearchIndex + offset,
-            endOfString = s.size() - lastDelimiter;
+    size_t lastDelimiter = lastSearchIndex + offset,
+           endOfString = s.size() - lastDelimiter;
     result.push_back(s.substr(lastDelimiter, endOfString));
 
     return result;

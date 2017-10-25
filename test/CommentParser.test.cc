@@ -56,7 +56,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
             "@deprecated Deprecation reason"
         );
         REQUIRE(tags2->isDeprecated);
-        REQUIRE(tags2->deprecated_reason == "<p>Deprecation reason</p>");
+        REQUIRE(tags2->deprecated_reason == "Deprecation reason");
 
         std::unique_ptr<jspp::docgen::DocCommentTags> tags3 = parser.parseDocCommentTags(
             "@summary This is the summary.\n"
@@ -92,15 +92,15 @@ TEST_CASE("jspp::docgen::CommentParser") {
             "Coordinate coord = new Coordinate(100, 100);\n"
         );
 
-        REQUIRE(tags->summary == "<p>This is the summary.</p>");
+        REQUIRE(tags->summary == "This is the summary.");
 
         REQUIRE(tags->params.size() == 2);
         REQUIRE(tags->params.at(0)->name == "x");
-        REQUIRE(tags->params.at(0)->description == "<p>The X coordinate.</p>");
+        REQUIRE(tags->params.at(0)->description == "The X coordinate.");
         REQUIRE(tags->params.at(1)->name == "y");
-        REQUIRE(tags->params.at(1)->description == "<p>The Y coordinate.</p>");
+        REQUIRE(tags->params.at(1)->description == "The Y coordinate.");
 
-        REQUIRE(tags->return_info == "<p>The coordinate object.</p>");
+        REQUIRE(tags->return_info == "The coordinate object.");
 
         REQUIRE(tags->see_also.size() == 2);
         REQUIRE(tags->see_also.at(0)->title == "CoordinateXYZ");
@@ -134,7 +134,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
                 )"
             )
         );
-        REQUIRE(body1 == "<p>One line</p>");
+        REQUIRE(body1 == "One line");
 
         std::string body2 = parser.parseDocCommentBodyText(
             parser.parseDocCommentText(
@@ -145,7 +145,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
                 )"
             )
         );
-        REQUIRE(body2 == "<p>One line</p>");
+        REQUIRE(body2 == "One line");
 
         std::string body3 = parser.parseDocCommentBodyText(
             parser.parseDocCommentText(
@@ -156,7 +156,7 @@ TEST_CASE("jspp::docgen::CommentParser") {
                 )"
             )
         );
-        REQUIRE(body3 == "<p>One line</p>");
+        REQUIRE(body3 == "One line");
 
         std::string body4 = parser.parseDocCommentBodyText(
             parser.parseDocCommentText(
@@ -177,13 +177,13 @@ TEST_CASE("jspp::docgen::CommentParser") {
         REQUIRE(
             body4
             ==
-            "<p>My description goes here.</p>\n"
+            "My description goes here.\n"
             "\n"
-            "<p>More description.</p>\n"
+            "More description.\n"
             "\n"
-            "<p>More text. Even more text.</p>\n"
+            "More text. Even more text.\n"
             "\n"
-            "<p>And even more text.</p>"
+            "And even more text."
         );
 
         std::string body5 = parser.parseDocCommentBodyText(
@@ -203,13 +203,13 @@ TEST_CASE("jspp::docgen::CommentParser") {
         REQUIRE(
             body5
             ==
-            "<p>My description goes here.</p>\n"
+            "My description goes here.\n"
             "\n"
-            "<p>More description.\n"
+            "More description.\n"
             "More text.\n"
-            "Even more text.</p>\n"
+            "Even more text.\n"
             "\n"
-            "<p>And even more text.</p>"
+            "And even more text."
         );
 
         std::string body6 = parser.parseDocCommentBodyText(
@@ -228,9 +228,9 @@ TEST_CASE("jspp::docgen::CommentParser") {
         REQUIRE(
             body6
             ==
-            "<p>My description.</p>\n"
+            "My description.\n"
             "\n"
-            "<p>... Before the first tag.</p>"
+            "... Before the first tag."
         );
 
         std::string body7 = parser.parseDocCommentBodyText(
@@ -243,6 +243,6 @@ TEST_CASE("jspp::docgen::CommentParser") {
                 )"
             )
         );
-        REQUIRE(body7 == "<p>My description.</p>");
+        REQUIRE(body7 == "My description.");
     }
 }

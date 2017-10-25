@@ -79,9 +79,9 @@ TEST_CASE("Module Summary - If @summary tag is unavailable, use snippet of descr
     auto xml = generate(
         R"(
             /**
-             * This is the long description.
+             * This is the long description with no period
              *
-             * Some more text goes here.
+             * Some more text goes here
              */
             module Foo
             {
@@ -91,7 +91,13 @@ TEST_CASE("Module Summary - If @summary tag is unavailable, use snippet of descr
 
     SECTION("Summary") {
         std::string summary = xml->child("module").child_value("summary");
-        REQUIRE(summary == "<p>This is the long description.</p>");
+        REQUIRE(
+            summary
+            ==
+            "<p>This is the long description with no period</p>"
+            "\n\n"
+            "<p>Some more text goes here</p>"
+        );
     }
 }
 
