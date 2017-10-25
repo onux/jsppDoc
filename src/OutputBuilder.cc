@@ -2,6 +2,7 @@
 #include "DocCommentTags.h"
 #include "Utils.h"
 #include <cstddef>
+#include <sundown.h>
 
 using namespace jspp::docgen;
 
@@ -97,7 +98,7 @@ void OutputBuilder::buildFunctions(const MethodCommentData& comment) {
         this->output << "<return type=\"";
         this->output << utils::escapeXML(comment.getReturnType());
         this->output << "\">";
-        this->output << cdata(tags.return_info);
+        this->output << cdata(markdown(tags.return_info));
         this->output << "</return>";
 
         this->output << "<params>";
@@ -150,7 +151,7 @@ void OutputBuilder::buildFunctions(const OverloadedMethodCommentData& comment) {
         this->output << "<return type=\"";
         this->output << utils::escapeXML(overload.getReturnType());
         this->output << "\">";
-        this->output << cdata(overloadTags.return_info);
+        this->output << cdata(markdown(overloadTags.return_info));
         this->output << "</return>";
 
         this->output << "<params>";
@@ -308,13 +309,13 @@ void jspp::docgen::OutputBuilder::addTitle(const std::string& title) {
 
 void jspp::docgen::OutputBuilder::addSummary(const std::string& text) {
     this->output << "<summary>";
-    this->output << cdata(text);
+    this->output << cdata(markdown(text));
     this->output << "</summary>";
 }
 
 void jspp::docgen::OutputBuilder::addDescription(const std::string& text) {
     this->output << "<description>";
-    this->output << cdata(text);
+    this->output << cdata(markdown(text));
     this->output << "</description>";
 }
 
@@ -326,7 +327,7 @@ void jspp::docgen::OutputBuilder::addExample(const std::string& title, const std
 
 void jspp::docgen::OutputBuilder::addDeprecated(const std::string& reason) {
     this->output << "<deprecated>";
-    this->output << cdata(reason);
+    this->output << cdata(markdown(reason));
     this->output << "</deprecated>";
 }
 
@@ -383,7 +384,7 @@ void jspp::docgen::OutputBuilder::addParameters(const OverloadableCommentData& c
         this->output << "type=\"";
         this->output << utils::escapeXML(commentData.getParameterType(index));
         this->output << "\">";
-        this->output << cdata(param->description);
+        this->output << cdata(markdown(param->description));
         this->output << "</param>";
     }
 }
@@ -395,18 +396,8 @@ void jspp::docgen::OutputBuilder::addClass(const std::string& text) {
 }
 
 static std::string truncate(const std::string& s, size_t count) {
-    std::vector<std::string> lines = utils::splitLines(s);
-    if (lines.size() == 0) {
-        return "";
-    }
+}
 
-    std::string firstLine = lines[0];
-    if (firstLine.size() <= count) {
-        return firstLine;
-    }
-    else {
-        firstLine.resize(count);
-        firstLine += "...";
-        return firstLine;
-    }
+std::string OutputBuilder::markdown(const std::string& text) const {
+    return utils::trimWhitespace(sundown::parse(utils::trimWhitespace(text)));
 }

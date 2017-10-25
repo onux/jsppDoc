@@ -133,6 +133,10 @@ namespace docgen
          * @param text The text for the <class> tag.
          */
         void addClass(const std::string& text);
+        /**
+         * Returns the Markdown-formatted text for a given string.
+         */
+        std::string markdown(const std::string& text) const;
     };
 }
 }

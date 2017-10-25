@@ -44,10 +44,6 @@ namespace docgen
          * @param text The text with comment delimiters stripped. See `parseDocCommentText()`.
          */
         std::string parseDocCommentBodyText(const std::string& text) const;
-        /**
-         * Returns the Markdown-formatted text for a given string.
-         */
-        std::string markdown(const std::string& text) const;
     };
 }
 }

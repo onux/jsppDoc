@@ -1,7 +1,6 @@
 #include "CommentParser.h"
 #include "Utils.h"
 #include <pcrecpp.h>
-#include <sundown.h>
 
 using namespace jspp::docgen;
 
@@ -95,7 +94,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
         tagText = utils::trimWhitespace(tagText);
 
         if (tagName == "summary") {
-            tags->summary = markdown(tagText);
+            tags->summary = tagText;
         }
         if (tagName == "example") {
             std::vector<std::string> lines = utils::splitLines(tagText);
@@ -123,10 +122,10 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
         }
         if (tagName == "deprecated") {
             tags->isDeprecated = true;
-            tags->deprecated_reason = markdown(tagText);
+            tags->deprecated_reason = tagText;
         }
         if (tagName == "return") {
-            tags->return_info = markdown(tagText);
+            tags->return_info = tagText;
         }
         if (tagName == "see") {
             std::vector<std::string> tokens = utils::split(tagText, " ");
@@ -150,7 +149,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
 
             std::string paramName, paramDescription;
             re_param.FullMatch(tagText, &paramName, &paramDescription);
-            paramDescription = markdown(paramDescription);
+            paramDescription = paramDescription;
 
             auto param = std::unique_ptr<Parameter>(
                 new Parameter(paramName, paramDescription)
@@ -183,15 +182,11 @@ std::string CommentParser::parseDocCommentBodyText(const std::string& text) cons
 
     std::vector<std::string> lines = utils::splitLines(rawTrimmed);
     if (lines.size() == 1) {
-        return markdown(utils::trimWhitespace(lines[0]));
+        return utils::trimWhitespace(lines[0]);
     }
 
     utils::trimLeading(lines);
     std::string body = utils::join(lines, "\n");
 
-    return markdown(body);
-}
-
-std::string CommentParser::markdown(const std::string& text) const {
-    return utils::trimWhitespace(sundown::parse(utils::trimWhitespace(text)));
+    return body;
 }
