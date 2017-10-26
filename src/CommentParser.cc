@@ -175,12 +175,7 @@ std::string CommentParser::parseDocCommentBodyText(const std::string& text) cons
     );
     re_body.PartialMatch(text, &raw);
 
-    std::string rawTrimmed = utils::trimWhitespace(raw);
-    if (rawTrimmed == "") {
-        return "";
-    }
-
-    std::vector<std::string> lines = utils::splitLines(rawTrimmed);
+    std::vector<std::string> lines = utils::splitLines(raw);
     if (lines.size() == 1) {
         return utils::trimWhitespace(lines[0]);
     }
@@ -188,5 +183,5 @@ std::string CommentParser::parseDocCommentBodyText(const std::string& text) cons
     utils::trimLeading(lines);
     std::string body = utils::join(lines, "\n");
 
-    return body;
+    return utils::trimWhitespace(body);
 }

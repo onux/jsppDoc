@@ -94,6 +94,10 @@ void utils::trimWhitespace(std::vector<std::string>& v) {
     auto firstNonEmptyLine = std::find_if_not(v.begin(), v.end(), isEmptyLine);
     auto lastNonEmptyLine = std::find_if_not(v.rbegin(), v.rend(), isEmptyLine);
 
+    if (firstNonEmptyLine == v.end()) {
+        return;
+    }
+
     std::vector<std::string> trimmed(firstNonEmptyLine, lastNonEmptyLine.base());
     v.swap(trimmed);
 }
