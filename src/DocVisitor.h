@@ -36,6 +36,8 @@ namespace docgen
         void visit(jspp::parser::ConstructorDeclaration* node) override;
         void visit(jspp::parser::FunctionDeclaration* node) override;
         void visit(jspp::parser::VariableDeclaration* node) override;
+        void visit(jspp::parser::EnumDeclaration* node) override;
+        void visit(jspp::parser::Enumerator* node) override;
         void visit(jspp::parser::StatementModifier* node) override;
 
         void visit(jspp::parser::IdentifierType* node) override;
@@ -51,13 +53,15 @@ namespace docgen
         std::unordered_map<std::string, overload_doc_comment_t> overloadTags;
 
         std::string lastDatatype;
+        std::vector<std::unique_ptr<EnumMemberCommentData>> lastEnumMembers;
 
         void saveOverload(jspp::parser::DocComment* node);
         void saveDocument(jspp::parser::ModuleDeclaration* node);
         void saveDocument(jspp::parser::ClassDeclaration* node);
-        void saveDocument(jspp::parser::VariableDeclarator* node);
         void saveDocument(jspp::parser::ConstructorDeclaration* node);
         void saveDocument(jspp::parser::FunctionDeclaration* node);
+        void saveDocument(jspp::parser::VariableDeclarator* node);
+        void saveDocument(jspp::parser::EnumDeclaration* node);
 
         template<typename T>
         void combineMethodDocs(std::vector<doc_comment_t>& results,
@@ -68,6 +72,8 @@ namespace docgen
         std::bitset<10> modifiers;
         void clearModifiers();
         void clearParameters();
+
+        std::string getDocCommentText() const;
 
         std::string getParameterType(const std::unique_ptr<jspp::parser::Parameter>& node) const;
     };

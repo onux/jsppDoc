@@ -8,6 +8,8 @@
 #include "CommentData.h"
 #include "ClassCommentData.h"
 #include "ConstructorCommentData.h"
+#include "EnumCommentData.h"
+#include "EnumMemberCommentData.h"
 #include "FieldCommentData.h"
 #include "MethodCommentData.h"
 #include "ModuleCommentData.h"

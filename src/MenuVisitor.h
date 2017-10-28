@@ -31,6 +31,7 @@ namespace docgen
         void visit(jspp::parser::ConstructorDeclaration* node) override;
         void visit(jspp::parser::FunctionDeclaration* node) override;
         void visit(jspp::parser::VariableDeclaration* node) override;
+        void visit(jspp::parser::EnumDeclaration* node) override;
 
     private:
         bool inModule = false;

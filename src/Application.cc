@@ -227,6 +227,19 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         filename = identifier;
         outputDir = outputDirectory(fqn, outputRootDir, true);
     }
+    if (document->is<EnumCommentData>()) {
+        auto enum_doc = CommentData::dynamic_unique_ptr_cast<EnumCommentData>(
+            std::move(document)
+        );
+
+        const std::string identifier = enum_doc->getName();
+        const std::string fqn = enum_doc->getFQN();
+
+        builder.buildEnumeration(*enum_doc);
+        xml = builder.getOutput();
+        filename = identifier;
+        outputDir = outputDirectory(fqn, outputRootDir, true);
+    }
 
     if (xml != "") {
         Filesystem::mkdirp(outputDir);

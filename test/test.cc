@@ -62,6 +62,12 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
             );
             builder.buildField(*field_doc);
         }
+        if (document->is<EnumCommentData>()) {
+            auto enum_doc = CommentData::dynamic_unique_ptr_cast<EnumCommentData>(
+                std::move(document)
+            );
+            builder.buildEnumeration(*enum_doc);
+        }
 
         documents.pop_back();
     }

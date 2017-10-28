@@ -7,6 +7,7 @@ set(
     SOURCE_FILES
     class.cc
     constructors.cc
+    enum.cc
     fields.cc
     main.cc
     methods.cc

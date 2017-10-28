@@ -21,6 +21,12 @@ const std::string NameBuilderMixin::getIdentifier(Node* node) const {
     if (node->is<VariableDeclarator>()) {
         return node->as<VariableDeclarator>()->id->name;
     }
+    if (node->is<EnumDeclaration>()) {
+        return node->as<EnumDeclaration>()->id->name;
+    }
+    if (node->is<Enumerator>()) {
+        return node->as<Enumerator>()->id->name;
+    }
 
     return "";
 }
@@ -75,6 +81,20 @@ const std::string NameBuilderMixin::getFQN(Node* node) const {
                     dynamic_cast<VariableDeclarator *>(node)->id->name
                     :
                     dynamic_cast<FunctionDeclaration *>(node)->id->name;
+
+        return result;
+    }
+    if (node->is<EnumDeclaration>()) {
+        std::string result;
+        if (this->modules.size() != 0) {
+            result = utils::join(this->modules, ".");
+            result += ".";
+        }
+        if (this->classes.size() != 0) {
+            result += utils::join(this->classes, ".");
+            result += ".";
+        }
+        result += node->as<EnumDeclaration>()->id->name;
 
         return result;
     }

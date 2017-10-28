@@ -118,6 +118,19 @@ void MenuVisitor::visit(VariableDeclaration* node) {
     this->clearDocComment();
 }
 
+void MenuVisitor::visit(EnumDeclaration* node) {
+    if (!isDocumented(node)) {
+        return;
+    }
+
+    const std::string id = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
+    const std::string xml = "<item name=\"" + id + "\" slug=\"" + id + "\" />";
+    this->members.insert({ fqn, xml });
+
+    this->clearDocComment();
+}
+
 void MenuVisitor::saveOverload(jspp::parser::DocComment* node) {
     OverloadTagCommentData comment{ this->currentDocComment->text };
     const DocCommentTags& tags = comment.tags();

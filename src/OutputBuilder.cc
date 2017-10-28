@@ -297,6 +297,46 @@ void OutputBuilder::buildField(const FieldCommentData& comment) {
     this->output << "</field>";
 }
 
+void OutputBuilder::buildEnumeration(const EnumCommentData& comment) {
+    const DocCommentTags& tags = comment.tags();
+    const std::string description = comment.getBodyText();
+
+    this->output << "<enum type=\"" << comment.getDatatype() << "\">";
+    this->addTitle(comment.getName());
+    this->output << "<menu file=\"Developers\" />";
+    this->output << "<modifiers>";
+    this->addModifiers(*comment.getModifiers());
+    this->output << "</modifiers>";
+    this->addSummary(
+        tags.summary != "" ? tags.summary : truncate(description, 250)
+    );
+    this->addDescription(description);
+    if (tags.deprecated_reason != "") {
+        this->addDeprecated(tags.deprecated_reason);
+    }
+    this->output << "<members>";
+    for (const std::unique_ptr<EnumMemberCommentData>& member : comment.getMembers()) {
+        const std::string identifier = member->getName();
+        const std::string description = member->getBodyText();
+
+        this->output << "<member name=\"" << identifier << "\">";
+        this->output << description;
+        this->output << "</member>";
+    }
+    this->output << "</members>";
+    this->output << "<examples>";
+    for(auto& example : tags.examples) {
+        this->addExample(example->title, example->code);
+    }
+    this->output << "</examples>";
+    this->output << "<see>";
+    for (auto& see : tags.see_also) {
+        this->addSeeAlso(see->title, see->path);
+    }
+    this->output << "</see>";
+    this->output << "</enum>";
+}
+
 std::string jspp::docgen::OutputBuilder::cdata(const std::string& s) const {
     return "<![CDATA[" + s + "]]>";
 }
@@ -309,7 +349,8 @@ void jspp::docgen::OutputBuilder::addTitle(const std::string& title) {
 
 void jspp::docgen::OutputBuilder::addSummary(const std::string& text) {
     this->output << "<summary>";
-    this->output << cdata(markdown(text));
+    if (text == "") this->output << "...";
+    else this->output << cdata(markdown(text));
     this->output << "</summary>";
 }
 

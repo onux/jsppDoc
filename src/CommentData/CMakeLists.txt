@@ -9,6 +9,10 @@ set(
         CommentData.h
         ConstructorCommentData.cc
         ConstructorCommentData.h
+        EnumCommentData.cc
+        EnumCommentData.h
+        EnumMemberCommentData.cc
+        EnumMemberCommentData.h
         FieldCommentData.cc
         FieldCommentData.h
         MethodCommentData.cc

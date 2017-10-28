@@ -94,6 +94,30 @@ void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
     this->clearDocComment();
 }
 
+void jspp::docgen::DocVisitor::visit(jspp::parser::EnumDeclaration* node) {
+    DocComment* const saveDocComment = this->currentDocComment;
+    this->clearDocComment();
+    visitChildren(node);
+    this->currentDocComment = saveDocComment;
+    
+    this->lastDatatype = parser::Utils::annotationTypeToString(node->kind.get());
+
+    this->saveDocument(node);
+    this->clearModifiers();
+    this->clearDocComment();
+}
+
+void jspp::docgen::DocVisitor::visit(jspp::parser::Enumerator* node) {
+    const std::string name = this->getIdentifier(node);
+    const std::string docText = this->getDocCommentText();
+
+    auto comment = std::unique_ptr<EnumMemberCommentData>(
+        new EnumMemberCommentData(name, docText)
+    );
+    this->lastEnumMembers.push_back(std::move(comment));
+    this->clearDocComment();
+}
+
 void jspp::docgen::DocVisitor::visit(StatementModifier* node) {
     StatementModifier* modifier = node;
 

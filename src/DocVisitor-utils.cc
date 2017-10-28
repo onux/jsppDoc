@@ -11,8 +11,9 @@ using namespace jspp::docgen;
 using namespace jspp::parser;
 
 void jspp::docgen::DocVisitor::saveOverload(jspp::parser::DocComment* node) {
+    const std::string docText = this->getDocCommentText();
     auto comment = std::unique_ptr<OverloadTagCommentData>(
-        new OverloadTagCommentData(this->currentDocComment->text)
+        new OverloadTagCommentData(docText)
     );
     const DocCommentTags& tags = comment->tags();
 
@@ -28,12 +29,13 @@ void jspp::docgen::DocVisitor::saveDocument(ModuleDeclaration* node) {
 
     const std::string name = this->getIdentifier(node);
     const std::string fqn = this->getFQN(node);
+    const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<ModuleCommentData>(
         new ModuleCommentData(
             name,
             fqn,
-            this->currentDocComment->text,
+            docText,
             this->modifiers
         )
     );
@@ -47,12 +49,13 @@ void jspp::docgen::DocVisitor::saveDocument(ClassDeclaration* node) {
 
     const std::string name = this->getIdentifier(node);
     const std::string fqn = this->getFQN(node);
+    const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<ClassCommentData>(
         new ClassCommentData(
             name,
             fqn,
-            this->currentDocComment->text,
+            docText,
             this->modifiers
         )
     );
@@ -66,13 +69,14 @@ void jspp::docgen::DocVisitor::saveDocument(VariableDeclarator* node) {
 
     const std::string name = this->getIdentifier(node);
     const std::string fqn = this->getFQN(node);
+    const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<FieldCommentData>(
         new FieldCommentData(
             name,
             fqn,
             this->lastDatatype,
-            this->currentDocComment->text,
+            docText,
             this->modifiers
         )
     );
@@ -88,13 +92,14 @@ void jspp::docgen::DocVisitor::saveDocument(ConstructorDeclaration* node) {
     }
 
     const std::string fqn = this->getFQN(node);
+    const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<ConstructorCommentData>(
         new ConstructorCommentData(
             name,
             fqn,
             this->params,
-            this->currentDocComment ? this->currentDocComment->text : "",
+            docText,
             this->modifiers
         )
     );
@@ -111,6 +116,7 @@ void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
 
     const std::string fqn = this->getFQN(node);
     const std::string returnType = this->lastDatatype;
+    const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<MethodCommentData>(
         new MethodCommentData(
@@ -118,11 +124,34 @@ void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
             fqn,
             this->params,
             returnType,
-            this->currentDocComment ? this->currentDocComment->text : "",
+            docText,
             this->modifiers
         )
     );
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
+}
+
+void jspp::docgen::DocVisitor::saveDocument(EnumDeclaration* node) {
+    if (!isDocumented(node)) {
+        return;
+    }
+
+    const std::string name = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
+    const std::string docText = this->getDocCommentText();
+
+    auto comment = std::unique_ptr<EnumCommentData>(
+        new EnumCommentData(
+            name,
+            fqn,
+            this->lastDatatype,
+            std::move(this->lastEnumMembers),
+            docText,
+            this->modifiers
+        )
+    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
+    this->lastEnumMembers.clear();
 }
 
 auto jspp::docgen::DocVisitor::getDocuments() ->
@@ -174,6 +203,10 @@ auto jspp::docgen::DocVisitor::getDocuments() ->
     this->documented.clear();
 
     return result;
+}
+
+std::string jspp::docgen::DocVisitor::getDocCommentText() const {
+    return this->currentDocComment ? this->currentDocComment->text : "";
 }
 
 template<typename T>

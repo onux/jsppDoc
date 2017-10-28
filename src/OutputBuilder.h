@@ -68,6 +68,12 @@ namespace docgen
          * @param comment The processed comment data. See `FieldCommentData`.
          */
         void buildField(const FieldCommentData& comment);
+        /**
+         * Builds the XML for a JS++ enum declaration.
+         *
+         * @param comment The processed comment data. See `EnumCommentData`.
+         */
+        void buildEnumeration(const EnumCommentData& comment);
 
     private:
         std::ostringstream output;
