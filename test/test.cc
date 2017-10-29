@@ -68,6 +68,13 @@ std::unique_ptr<pugi::xml_document> generate(const std::string& code) {
             );
             builder.buildEnumeration(*enum_doc);
         }
+        if (document->is<InterfaceCommentData>()) {
+            auto interface_doc =
+                CommentData::dynamic_unique_ptr_cast<InterfaceCommentData>(
+                    std::move(document)
+                );
+            builder.buildInterface(*interface_doc);
+        }
 
         documents.pop_back();
     }

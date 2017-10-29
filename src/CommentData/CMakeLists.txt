@@ -15,6 +15,8 @@ set(
         EnumMemberCommentData.h
         FieldCommentData.cc
         FieldCommentData.h
+        InterfaceCommentData.cc
+        InterfaceCommentData.h
         MethodCommentData.cc
         MethodCommentData.h
         ModuleCommentData.cc

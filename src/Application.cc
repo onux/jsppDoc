@@ -240,6 +240,24 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         filename = identifier;
         outputDir = outputDirectory(fqn, outputRootDir, true);
     }
+    if (document->is<InterfaceCommentData>()) {
+        auto interface_doc =
+            CommentData::dynamic_unique_ptr_cast<InterfaceCommentData>(
+                std::move(document)
+            );
+
+        const std::string fqn = interface_doc->getFQN();
+
+        builder.buildInterface(*interface_doc);
+        xml = builder.getOutput();
+        filename = "index";
+        outputDir = outputDirectory(fqn, outputRootDir, false);
+
+        jspp::docgen::MenuVisitor menuvisitor;
+        ast.accept(&menuvisitor);
+        menuXml = menuvisitor.getOutput();
+        menuFilename = interface_doc->getName();
+    }
 
     if (xml != "") {
         Filesystem::mkdirp(outputDir);

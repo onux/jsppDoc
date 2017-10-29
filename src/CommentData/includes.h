@@ -11,6 +11,7 @@
 #include "EnumCommentData.h"
 #include "EnumMemberCommentData.h"
 #include "FieldCommentData.h"
+#include "InterfaceCommentData.h"
 #include "MethodCommentData.h"
 #include "ModuleCommentData.h"
 #include "OverloadableCommentData.h"

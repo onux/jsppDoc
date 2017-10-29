@@ -9,6 +9,7 @@ set(
     constructors.cc
     enum.cc
     fields.cc
+    interface.cc
     main.cc
     methods.cc
     modules.cc

@@ -62,6 +62,26 @@ void jspp::docgen::DocVisitor::saveDocument(ClassDeclaration* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
+void jspp::docgen::DocVisitor::saveDocument(InterfaceDeclaration* node) {
+    if (!isDocumented(node)) {
+        return;
+    }
+
+    const std::string name = this->getIdentifier(node);
+    const std::string fqn = this->getFQN(node);
+    const std::string docText = this->getDocCommentText();
+
+    auto comment = std::unique_ptr<InterfaceCommentData>(
+        new InterfaceCommentData(
+            name,
+            fqn,
+            docText,
+            this->modifiers
+        )
+    );
+    this->documented.insert(std::make_pair(fqn, std::move(comment)));
+}
+
 void jspp::docgen::DocVisitor::saveDocument(VariableDeclarator* node) {
     if (!isDocumented(node)) {
         return;

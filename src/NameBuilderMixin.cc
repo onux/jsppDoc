@@ -27,6 +27,9 @@ const std::string NameBuilderMixin::getIdentifier(Node* node) const {
     if (node->is<Enumerator>()) {
         return node->as<Enumerator>()->id->name;
     }
+    if (node->is<InterfaceDeclaration>()) {
+        return node->as<InterfaceDeclaration>()->id->name;
+    }
 
     return "";
 }
@@ -35,7 +38,7 @@ const std::string NameBuilderMixin::getFQN(Node* node) const {
     if (node->is<ModuleDeclaration>()) {
         return utils::join(this->modules, ".");
     }
-    if (node->is<ClassDeclaration>()) {
+    if (node->is<ClassDeclaration>() || node->is<InterfaceDeclaration>()) {
         std::string result = utils::join(this->modules, ".");
 
         if (this->classes.size() != 0) {

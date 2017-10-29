@@ -39,13 +39,19 @@ namespace docgen
          */
         void buildClass(const ClassCommentData& comment);
         /**
-         * Builds the XML for JS++ class methods.
+         * Builds the XML for a JS++ `interface`.
+         *
+         * @param comment The processed comment data. See `InterfaceCommentData`.
+         */
+        void buildInterface(const InterfaceCommentData& comment);
+        /**
+         * Builds the XML for JS++ class/interface methods.
          *
          * @param comment The processed comment data. See `MethodCommentData`.
          */
         void buildFunctions(const MethodCommentData& comment);
         /**
-         * Builds the XML for JS++ overloaded class methods.
+         * Builds the XML for JS++ overloaded class/interface methods.
          *
          * @param comment The processed comment data. See `OverloadedMethodCommentData`.
          */

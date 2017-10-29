@@ -72,6 +72,36 @@ void OutputBuilder::buildClass(const ClassCommentData& comment) {
     this->output << "</class>";
 }
 
+void OutputBuilder::buildInterface(const InterfaceCommentData& comment) {
+    const DocCommentTags& tags = comment.tags();
+    const std::string description = comment.getBodyText();
+
+    this->output << "<interface>";
+    this->addTitle(comment.getName());
+    this->output << "<menu file=\"Developers\" />";
+    this->output << "<modifiers>";
+    this->addModifiers(*comment.getModifiers());
+    this->output << "</modifiers>";
+    this->addSummary(
+        tags.summary != "" ? tags.summary : truncate(description, 250)
+    );
+    this->addDescription(description);
+    if (tags.deprecated_reason != "") {
+        this->addDeprecated(tags.deprecated_reason);
+    }
+    this->output << "<examples>";
+    for(auto& example : tags.examples) {
+        this->addExample(example->title, example->code);
+    }
+    this->output << "</examples>";
+    this->output << "<see>";
+    for (auto& see : tags.see_also) {
+        this->addSeeAlso(see->title, see->path);
+    }
+    this->output << "</see>";
+    this->output << "</interface>";
+}
+
 void OutputBuilder::buildFunctions(const MethodCommentData& comment) {
     const DocCommentTags& tags = comment.tags();
 

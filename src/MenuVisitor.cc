@@ -73,6 +73,31 @@ void MenuVisitor::visit(ClassDeclaration* node) {
     this->classes.pop_back();
 }
 
+void MenuVisitor::visit(InterfaceDeclaration* node) {
+    if (!isDocumented(node)) {
+        visitChildren(node);
+        return;
+    }
+
+    this->classes.push_back(node->id->name);
+
+    const std::string id  = this->getIdentifier(node);
+    const std::string tag = this->inModule ? "item" : "menu";
+
+    this->output << "<" << tag << " name=\"" << id << "\" slug=\"" << id << "\">";
+
+    this->clearDocComment();
+    visitChildren(node);
+
+    for (auto& pair : this->members) {
+        const std::string itemXml = pair.second;
+        this->output << itemXml;
+    }
+    this->output << "</" << tag << ">";
+
+    this->classes.pop_back();
+}
+
 void MenuVisitor::visit(ConstructorDeclaration* node) {
     const std::string id = this->getIdentifier(node);
 

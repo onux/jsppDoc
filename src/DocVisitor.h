@@ -33,6 +33,7 @@ namespace docgen
         void visit(jspp::parser::DocComment* node) override;
         void visit(jspp::parser::ModuleDeclaration* node) override;
         void visit(jspp::parser::ClassDeclaration* node) override;
+        void visit(jspp::parser::InterfaceDeclaration* node) override;
         void visit(jspp::parser::ConstructorDeclaration* node) override;
         void visit(jspp::parser::FunctionDeclaration* node) override;
         void visit(jspp::parser::VariableDeclaration* node) override;
@@ -58,6 +59,7 @@ namespace docgen
         void saveOverload(jspp::parser::DocComment* node);
         void saveDocument(jspp::parser::ModuleDeclaration* node);
         void saveDocument(jspp::parser::ClassDeclaration* node);
+        void saveDocument(jspp::parser::InterfaceDeclaration* node);
         void saveDocument(jspp::parser::ConstructorDeclaration* node);
         void saveDocument(jspp::parser::FunctionDeclaration* node);
         void saveDocument(jspp::parser::VariableDeclarator* node);

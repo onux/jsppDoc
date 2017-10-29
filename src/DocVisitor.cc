@@ -46,6 +46,18 @@ void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
     this->classes.pop_back();
 }
 
+void jspp::docgen::DocVisitor::visit(InterfaceDeclaration* node) {
+    this->classes.push_back(node->id->name);
+
+    this->saveDocument(node);
+    this->clearModifiers();
+    this->clearDocComment();
+
+    visitChildren(node);
+
+    this->classes.pop_back();
+}
+
 void jspp::docgen::DocVisitor::visit(ConstructorDeclaration* node) {
     assert(this->classes.size() != 0);
 

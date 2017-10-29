@@ -28,6 +28,7 @@ namespace docgen
         void visit(jspp::parser::DocComment* node) override;
         void visit(jspp::parser::ModuleDeclaration* node) override;
         void visit(jspp::parser::ClassDeclaration* node) override;
+        void visit(jspp::parser::InterfaceDeclaration* node) override;
         void visit(jspp::parser::ConstructorDeclaration* node) override;
         void visit(jspp::parser::FunctionDeclaration* node) override;
         void visit(jspp::parser::VariableDeclaration* node) override;
