@@ -16,7 +16,7 @@
 #include "DocCommentMixin.h"
 #include "NameBuilderMixin.h"
 #include "OutputBuilder.h"
-#include "OutputEmitter.h"
+#include "Emitters/OutputEmitter.h"
 #include "CommentData/includes.h"
 
 namespace jspp

@@ -12,7 +12,7 @@
 #include "DocVisitor.h"
 #include "OutputBuilder.h"
 #include "MenuVisitor.h"
-#include "FileEmitter.h"
+#include "Emitters/FileEmitter.h"
 #include "Utils.h"
 #include "CommentData/includes.h"
 

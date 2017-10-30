@@ -1,8 +1,10 @@
 add_subdirectory(CommentData)
+add_subdirectory(Emitters)
 
 set(
     SOURCE_FILES
         CommentData
+        Emitters
 
         Application.cc
         Application.h
@@ -14,8 +16,6 @@ set(
         DocVisitor.cc
         DocVisitor-utils.cc
         DocVisitor.h
-        FileEmitter.cc
-        FileEmitter.h
         MenuBuilder.cc
         MenuBuilder.h
         MenuVisitor.cc
@@ -25,7 +25,6 @@ set(
         NameBuilderMixin.h
         OutputBuilder.cc
         OutputBuilder.h
-        OutputEmitter.h
         Utils.cc
         Utils.h
 )
