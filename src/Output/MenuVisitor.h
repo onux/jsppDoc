@@ -6,8 +6,8 @@
 #define JSPP_DOCGEN_MENUVISITOR_H
 
 #include "MenuBuilder.h"
-#include "DocCommentMixin.h"
-#include "NameBuilderMixin.h"
+#include "Mixins/DocCommentMixin.h"
+#include "Mixins/NameBuilderMixin.h"
 #include <jspp-parser/jspp-parser.h>
 #include <jspp-parser/VisitorVisitChildrenByDefault.h>
 

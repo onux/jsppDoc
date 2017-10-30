@@ -13,11 +13,11 @@
 #include <bitset>
 #include <map>
 #include <unordered_map>
-#include "DocCommentMixin.h"
-#include "NameBuilderMixin.h"
 #include "OutputBuilder.h"
-#include "Emitters/OutputEmitter.h"
-#include "CommentData/includes.h"
+#include "../Emitters/OutputEmitter.h"
+#include "../CommentData/includes.h"
+#include "Mixins/DocCommentMixin.h"
+#include "Mixins/NameBuilderMixin.h"
 
 namespace jspp
 {
