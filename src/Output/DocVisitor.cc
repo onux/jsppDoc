@@ -35,7 +35,7 @@ void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
 }
 
 void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
-    this->classes.push_back(node->id->name);
+    this->userDefinedTypes.push_back(node->id->name);
 
     this->saveDocument(node);
     this->clearModifiers();
@@ -43,11 +43,11 @@ void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
 
     visitChildren(node);
 
-    this->classes.pop_back();
+    this->userDefinedTypes.pop_back();
 }
 
 void jspp::docgen::DocVisitor::visit(InterfaceDeclaration* node) {
-    this->classes.push_back(node->id->name);
+    this->userDefinedTypes.push_back(node->id->name);
 
     this->saveDocument(node);
     this->clearModifiers();
@@ -55,11 +55,11 @@ void jspp::docgen::DocVisitor::visit(InterfaceDeclaration* node) {
 
     visitChildren(node);
 
-    this->classes.pop_back();
+    this->userDefinedTypes.pop_back();
 }
 
 void jspp::docgen::DocVisitor::visit(ConstructorDeclaration* node) {
-    assert(this->classes.size() != 0);
+    assert(this->userDefinedTypes.size() != 0);
 
     for (auto& param : node->params) {
         this->params.push_back(this->getParameterType(param));
@@ -75,7 +75,7 @@ void jspp::docgen::DocVisitor::visit(ConstructorDeclaration* node) {
 
 void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
     const bool isFreeFunction = this->modules.size() == 0 &&
-                                this->classes.size() == 0;
+                                this->userDefinedTypes.size() == 0;
     if (isFreeFunction) {
         // TODO: output warning for free functions
         return;

@@ -12,8 +12,8 @@ const std::string NameBuilderMixin::getIdentifier(Node* node) const {
         return node->as<ClassDeclaration>()->id->name;
     }
     if (node->is<ConstructorDeclaration>()) {
-        assert(this->classes.size() != 0);
-        return this->classes.back();
+        assert(this->userDefinedTypes.size() != 0);
+        return this->userDefinedTypes.back();
     }
     if (node->is<FunctionDeclaration>()) {
         return node->as<FunctionDeclaration>()->id->name;
@@ -41,15 +41,15 @@ const std::string NameBuilderMixin::getFQN(Node* node) const {
     if (node->is<ClassDeclaration>() || node->is<InterfaceDeclaration>()) {
         std::string result = utils::join(this->modules, ".");
 
-        if (this->classes.size() != 0) {
+        if (this->userDefinedTypes.size() != 0) {
             result += ".";
-            result += utils::join(this->classes, ".");
+            result += utils::join(this->userDefinedTypes, ".");
         }
 
         return result;
     }
     if (node->is<ConstructorDeclaration>()) {
-        const bool isClassMember = this->classes.size() != 0;
+        const bool isClassMember = this->userDefinedTypes.size() != 0;
         assert(isClassMember);
 
         std::string result;
@@ -57,16 +57,16 @@ const std::string NameBuilderMixin::getFQN(Node* node) const {
             result = utils::join(this->modules, ".");
             result += ".";
         }
-        if (this->classes.size() != 0) {
-            result += utils::join(this->classes, ".");
+        if (this->userDefinedTypes.size() != 0) {
+            result += utils::join(this->userDefinedTypes, ".");
             result += ".";
         }
-        result += this->classes.back();
+        result += this->userDefinedTypes.back();
 
         return result;
     }
     if (node->is<VariableDeclarator>() || node->is<FunctionDeclaration>()) {
-        const bool isClassMember = this->classes.size() != 0;
+        const bool isClassMember = this->userDefinedTypes.size() != 0;
         if (node->is<VariableDeclarator>()) {
             assert(isClassMember);
         }
@@ -76,8 +76,8 @@ const std::string NameBuilderMixin::getFQN(Node* node) const {
             result = utils::join(this->modules, ".");
             result += ".";
         }
-        if (this->classes.size() != 0) {
-            result += utils::join(this->classes, ".");
+        if (this->userDefinedTypes.size() != 0) {
+            result += utils::join(this->userDefinedTypes, ".");
             result += ".";
         }
         result += node->is<VariableDeclarator>() ?
@@ -93,8 +93,8 @@ const std::string NameBuilderMixin::getFQN(Node* node) const {
             result = utils::join(this->modules, ".");
             result += ".";
         }
-        if (this->classes.size() != 0) {
-            result += utils::join(this->classes, ".");
+        if (this->userDefinedTypes.size() != 0) {
+            result += utils::join(this->userDefinedTypes, ".");
             result += ".";
         }
         result += node->as<EnumDeclaration>()->id->name;

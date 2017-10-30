@@ -49,7 +49,7 @@ void MenuVisitor::visit(ClassDeclaration* node) {
         return;
     }
 
-    this->classes.push_back(node->id->name);
+    this->userDefinedTypes.push_back(node->id->name);
 
     const std::string id  = this->getIdentifier(node);
     const std::string tag = this->inModule ? "item" : "menu";
@@ -70,7 +70,7 @@ void MenuVisitor::visit(ClassDeclaration* node) {
     this->output << "</" << tag << ">";
 
     this->hasConstructor = false;
-    this->classes.pop_back();
+    this->userDefinedTypes.pop_back();
 }
 
 void MenuVisitor::visit(InterfaceDeclaration* node) {
@@ -79,7 +79,7 @@ void MenuVisitor::visit(InterfaceDeclaration* node) {
         return;
     }
 
-    this->classes.push_back(node->id->name);
+    this->userDefinedTypes.push_back(node->id->name);
 
     const std::string id  = this->getIdentifier(node);
     const std::string tag = this->inModule ? "item" : "menu";
@@ -95,7 +95,7 @@ void MenuVisitor::visit(InterfaceDeclaration* node) {
     }
     this->output << "</" << tag << ">";
 
-    this->classes.pop_back();
+    this->userDefinedTypes.pop_back();
 }
 
 void MenuVisitor::visit(ConstructorDeclaration* node) {

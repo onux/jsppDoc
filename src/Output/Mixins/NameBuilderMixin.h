@@ -30,7 +30,7 @@ namespace docgen
         const std::string getFQN(jspp::parser::Node* node) const;
 
         std::vector<std::string> modules;
-        std::vector<std::string> classes;
+        std::vector<std::string> userDefinedTypes;
     };
 }
 }
