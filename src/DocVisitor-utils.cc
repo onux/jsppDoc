@@ -3,8 +3,8 @@
 //
 
 #include "DocVisitor.h"
-#include "DocCommentTags.h"
 #include "CommentData/includes.h"
+#include "Data/DocCommentTags.h"
 #include <jspp-parser/Utils.h>
 
 using namespace jspp::docgen;

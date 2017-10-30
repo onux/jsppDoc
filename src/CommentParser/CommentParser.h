@@ -5,8 +5,8 @@
 #ifndef JSPP_DOCGEN_COMMENTPARSER_H
 #define JSPP_DOCGEN_COMMENTPARSER_H
 
-#include "Modifiers.h"
-#include "DocCommentTags.h"
+#include "../Data/Modifiers.h"
+#include "../Data/DocCommentTags.h"
 
 #include <bitset>
 #include <string>

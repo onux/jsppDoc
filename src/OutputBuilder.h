@@ -6,8 +6,8 @@
 #define JSPP_DOCGEN_OUTPUTBUILDER_H
 
 #include "CommentData/includes.h"
-#include "Modifiers.h"
-#include "DocCommentTags.h"
+#include "Data/Modifiers.h"
+#include "Data/DocCommentTags.h"
 #include <sstream>
 #include <memory>
 

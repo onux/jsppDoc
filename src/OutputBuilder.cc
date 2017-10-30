@@ -1,5 +1,5 @@
 #include "OutputBuilder.h"
-#include "DocCommentTags.h"
+#include "Data/DocCommentTags.h"
 #include "Utils.h"
 #include <cstddef>
 #include <sundown.h>
