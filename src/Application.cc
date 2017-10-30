@@ -9,9 +9,9 @@
 #include <unordered_set>
 #include <jspp-common/Filesystem.h>
 
-#include "DocVisitor.h"
-#include "OutputBuilder.h"
-#include "MenuVisitor.h"
+#include "Output/DocVisitor.h"
+#include "Output/OutputBuilder.h"
+#include "Output/MenuVisitor.h"
 #include "Emitters/FileEmitter.h"
 #include "Utils.h"
 #include "CommentData/includes.h"

@@ -10,8 +10,8 @@
 #include "CommentData/includes.h"
 #include "CommentParser/CommentParser.h"
 #include "Data/DocCommentTags.h"
-#include "DocVisitor.h"
-#include "OutputBuilder.h"
+#include "Output/DocVisitor.h"
+#include "Output/OutputBuilder.h"
 #include "Utils.h"
 
 std::unique_ptr<pugi::xml_document> generate(const std::string& code);
