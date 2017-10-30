@@ -13,8 +13,8 @@
 #include "Output/OutputBuilder.h"
 #include "Output/MenuVisitor.h"
 #include "Emitters/FileEmitter.h"
-#include "Utils.h"
 #include "CommentData/includes.h"
+#include "Utils.h"
 
 using namespace jspp::docgen;
 using namespace jspp::parser;

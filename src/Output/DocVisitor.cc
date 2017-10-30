@@ -4,7 +4,7 @@
 
 #include "DocVisitor.h"
 #include "CommentData/CommentData.h"
-#include "Utils.h"
+#include "Utils/Utils.h"
 #include <jspp-parser/Utils.h>
 
 using namespace jspp::parser;

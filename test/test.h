@@ -12,7 +12,7 @@
 #include "Data/DocCommentTags.h"
 #include "Output/DocVisitor.h"
 #include "Output/OutputBuilder.h"
-#include "Utils.h"
+#include "Utils/Utils.h"
 
 std::unique_ptr<pugi::xml_document> generate(const std::string& code);
 

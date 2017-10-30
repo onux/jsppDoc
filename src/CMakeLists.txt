@@ -2,6 +2,7 @@ add_subdirectory(CommentData)
 add_subdirectory(CommentParser)
 add_subdirectory(Emitters)
 add_subdirectory(Output)
+add_subdirectory(Utils)
 
 set(
     SOURCE_FILES
@@ -9,11 +10,9 @@ set(
         CommentParser
         Emitters
         Output
+        Utils
 
-        Application.cc
-        Application.h
-        Utils.cc
-        Utils.h
+        main.cc
 )
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
