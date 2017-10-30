@@ -1,5 +1,5 @@
 #include "Modifiers.h"
-#include "../../CommentParser.h"
+#include "../../CommentParser/CommentParser.h"
 
 using namespace jspp::docgen;
 

@@ -19,7 +19,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/pcre)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/sundown/cpp)
 
 set(DEPENDS_LIB_LIST jspp-parser jspp-symbol-table jspp-common)
-set(DOCGEN_LIBS CommentDataMixins CommentData Emitters jspp-docgen-lib)
+set(DOCGEN_LIBS CommentDataMixins CommentData CommentParser Emitters jspp-docgen-lib)
 
 add_subdirectory(src)
 add_subdirectory(libs/pcre)

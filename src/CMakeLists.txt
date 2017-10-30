@@ -1,15 +1,15 @@
 add_subdirectory(CommentData)
+add_subdirectory(CommentParser)
 add_subdirectory(Emitters)
 
 set(
     SOURCE_FILES
         CommentData
+        CommentParser
         Emitters
 
         Application.cc
         Application.h
-        CommentParser.cc
-        CommentParser.h
         DocCommentMixin.cc
         DocCommentMixin.h
         DocCommentTags.h

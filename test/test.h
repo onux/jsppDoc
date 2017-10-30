@@ -8,7 +8,7 @@
 #include <catch.hpp>
 #include <pugixml.hpp>
 #include "CommentData/includes.h"
-#include "CommentParser.h"
+#include "CommentParser/CommentParser.h"
 #include "DocCommentTags.h"
 #include "DocVisitor.h"
 #include "OutputBuilder.h"
