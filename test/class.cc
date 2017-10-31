@@ -20,6 +20,35 @@ TEST_CASE("Class Name") {
     }
 }
 
+TEST_CASE("Generic Class Name") {
+    auto xml = generate(
+        R"(
+            /**
+             */
+            class Foo<T>
+            {
+            }
+        )"
+    );
+
+    SECTION("Class Name") {
+        REQUIRE(std::string(xml->child("class").child_value("title")) == "Foo&lt;T&gt;");
+    }
+    auto xml2 = generate(
+        R"(
+            /**
+             */
+            class Foo<K, V>
+            {
+            }
+        )"
+    );
+
+    SECTION("Class Name") {
+        REQUIRE(std::string(xml2->child("class").child_value("title")) == "Foo&lt;K, V&gt;");
+    }
+}
+
 TEST_CASE("Class Name - inside class") {
     auto xml = generate(
         R"(

@@ -20,6 +20,35 @@ TEST_CASE("Interface Name") {
     }
 }
 
+TEST_CASE("Generic Interface Name") {
+    auto xml = generate(
+        R"(
+            /**
+             */
+            interface IFoo<T>
+            {
+            }
+        )"
+    );
+
+    SECTION("Interface Name") {
+        REQUIRE(std::string(xml->child("interface").child_value("title")) == "IFoo&lt;T&gt;");
+    }
+    auto xml2 = generate(
+        R"(
+            /**
+             */
+            interface IFoo<K, V>
+            {
+            }
+        )"
+    );
+
+    SECTION("Interface Name") {
+        REQUIRE(std::string(xml2->child("interface").child_value("title")) == "IFoo&lt;K, V&gt;");
+    }
+}
+
 TEST_CASE("Interface Name - inside module") {
     auto xml = generate(
         R"(

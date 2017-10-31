@@ -45,7 +45,7 @@ void OutputBuilder::buildClass(const ClassCommentData& comment) {
     const std::string description = comment.getBodyText();
 
     this->output << "<class>";
-    this->addTitle(comment.getName());
+    this->addTitle(utils::escapeXML(comment.getTitle()));
     this->output << "<menu file=\"Developers\" />";
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());
@@ -75,7 +75,7 @@ void OutputBuilder::buildInterface(const InterfaceCommentData& comment) {
     const std::string description = comment.getBodyText();
 
     this->output << "<interface>";
-    this->addTitle(comment.getName());
+    this->addTitle(utils::escapeXML(comment.getTitle()));
     this->output << "<menu file=\"Developers\" />";
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());

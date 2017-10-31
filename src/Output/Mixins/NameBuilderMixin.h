@@ -29,6 +29,46 @@ namespace docgen
          */
         const std::string getFQN(jspp::parser::Node* node) const;
 
+        /**
+         * Returns the string representation for the identifier of an AST node
+         * including generic parameters.
+         */
+        template<typename T>
+        const std::string getGenericTitle(jspp::parser::Node* node) const
+        {
+            constexpr const bool isUserDefinedType =
+                std::is_base_of<jspp::parser::ClassDeclaration, T>::value ||
+                std::is_base_of<jspp::parser::InterfaceDeclaration, T>::value;
+
+            static_assert(
+                isUserDefinedType,
+                "'getGenericTitle' expects a 'ClassDeclaration' or 'InterfaceDeclaration' node"
+            );
+
+            auto node_cast = node->as<T>();
+            std::string result = node_cast->id->name;
+
+            const bool isGeneric = node_cast->genericParams != nullptr &&
+                                   node_cast->genericParams->size() != 0;
+            if (isGeneric) {
+                result += "<";
+                bool first = true;
+                auto& genericParams = *node_cast->genericParams;
+                for (auto& param : genericParams) {
+                    if (!first) {
+                        result += ", ";
+                    }
+
+                    result += param->id->name;
+
+                    first = false;
+                }
+                result += ">";
+            }
+
+            return result;
+        }
+
         std::vector<std::string> modules;
         std::vector<std::string> userDefinedTypes;
     };

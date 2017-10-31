@@ -47,13 +47,15 @@ void jspp::docgen::DocVisitor::saveDocument(ClassDeclaration* node) {
         return;
     }
 
-    const std::string name = this->getIdentifier(node);
-    const std::string fqn = this->getFQN(node);
+    const std::string name    = this->getIdentifier(node);
+    const std::string title   = this->getGenericTitle<ClassDeclaration>(node);
+    const std::string fqn     = this->getFQN(node);
     const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<ClassCommentData>(
         new ClassCommentData(
             name,
+            title,
             fqn,
             docText,
             this->modifiers
@@ -67,13 +69,15 @@ void jspp::docgen::DocVisitor::saveDocument(InterfaceDeclaration* node) {
         return;
     }
 
-    const std::string name = this->getIdentifier(node);
-    const std::string fqn = this->getFQN(node);
+    const std::string name    = this->getIdentifier(node);
+    const std::string title   = this->getGenericTitle<InterfaceDeclaration>(node);
+    const std::string fqn     = this->getFQN(node);
     const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<InterfaceCommentData>(
         new InterfaceCommentData(
             name,
+            title,
             fqn,
             docText,
             this->modifiers

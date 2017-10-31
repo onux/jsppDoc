@@ -1,5 +1,6 @@
 #include "NameBuilderMixin.h"
 #include "Utils/Utils.h"
+#include <type_traits>
 
 using namespace jspp::docgen;
 using namespace jspp::parser;

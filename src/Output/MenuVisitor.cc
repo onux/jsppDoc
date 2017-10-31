@@ -1,4 +1,5 @@
 #include "MenuVisitor.h"
+#include "../Utils/Utils.h"
 
 using namespace jspp::docgen;
 using namespace jspp::parser;
@@ -51,10 +52,18 @@ void MenuVisitor::visit(ClassDeclaration* node) {
 
     this->userDefinedTypes.push_back(node->id->name);
 
-    const std::string id  = this->getIdentifier(node);
-    const std::string tag = this->inModule ? "item" : "menu";
+    const std::string id    = this->getIdentifier(node);
+    const std::string title = this->getGenericTitle<ClassDeclaration>(node);
+    const std::string tag   = this->inModule ? "item" : "menu";
 
-    this->output << "<" << tag << " name=\"" << id << "\" slug=\"" << id << "\">";
+    this->output
+        << "<"
+        << tag
+        << " name=\""
+        << utils::escapeXML(title)
+        << "\" slug=\""
+        << id
+        << "\">";
 
     this->clearDocComment();
     visitChildren(node);
@@ -81,10 +90,18 @@ void MenuVisitor::visit(InterfaceDeclaration* node) {
 
     this->userDefinedTypes.push_back(node->id->name);
 
-    const std::string id  = this->getIdentifier(node);
-    const std::string tag = this->inModule ? "item" : "menu";
+    const std::string id    = this->getIdentifier(node);
+    const std::string title = this->getGenericTitle<InterfaceDeclaration>(node);
+    const std::string tag   = this->inModule ? "item" : "menu";
 
-    this->output << "<" << tag << " name=\"" << id << "\" slug=\"" << id << "\">";
+    this->output
+        << "<"
+        << tag
+        << " name=\""
+        << utils::escapeXML(title)
+        << "\" slug=\""
+        << id
+        << "\">";
 
     this->clearDocComment();
     visitChildren(node);
