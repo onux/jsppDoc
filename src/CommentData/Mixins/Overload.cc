@@ -1,4 +1,5 @@
 #include "Overload.h"
+#include "../../Utils/Utils.h"
 
 using namespace jspp::docgen;
 
@@ -35,16 +36,20 @@ const std::string OverloadMixin::extractSummary(const methods_t& methods,
 {
     std::string result;
 
-    if (nullptr != overload_tag) {
-        const DocCommentTags& tags = overload_tag->tags();
-        result = tags.summary;
-        if (result != "") return result;
+    if (nullptr == overload_tag) {
+        return "";
     }
 
-    for (const std::unique_ptr<OverloadableCommentData>& method : methods) {
-        const DocCommentTags& tags = method->tags();
-        result = tags.summary;
-        if (result != "") return result;
+    const DocCommentTags& tags = overload_tag->tags();
+    result = tags.summary;
+    if (result != "") {
+        return result;
+    }
+
+    const std::string shared_description = overload_tag->getBodyText();
+    result = utils::truncate(shared_description, 250);
+    if (result != "") {
+        return result;
     }
 
     return "";

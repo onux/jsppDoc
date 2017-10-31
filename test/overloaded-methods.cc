@@ -334,6 +334,32 @@ TEST_CASE("@overload @summary tag") {
     }
 }
 
+TEST_CASE("@overload extracted summary") {
+    auto xml = generate(
+        R"(
+            class Foo
+            {
+                /**
+                 * @overload bar
+                 *
+                 * Extracted summary from description for all
+                 */
+                /**
+                 */
+                void bar(bool a, bool b) {}
+                /**
+                 */
+                void bar(int baz, string qux, bool quux) {}
+            }
+        )"
+    );
+
+    SECTION("@overload summary is applied to main <method> tag") {
+        const std::string summary = xml->child("method").child("summary").child_value();
+        REQUIRE(summary == "<p>Extracted summary from description for all</p>");
+    }
+}
+
 TEST_CASE("Overloaded Method Modifiers") {
     auto xml = generate(
         R"(

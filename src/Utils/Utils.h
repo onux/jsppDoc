@@ -43,6 +43,14 @@ namespace utils
      * Escapes XML entities.
      */
     std::string escapeXML(const std::string &s);
+    /**
+     * Truncate a string until the sentences of the string are at least `count`
+     * characters.
+     *
+     * @param s The string to truncate.
+     * @param count The minimum characters of the resulting truncated string.
+     */
+    std::string truncate(const std::string& s, size_t count);
 }
 }
 }

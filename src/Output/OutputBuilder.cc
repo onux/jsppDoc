@@ -6,8 +6,6 @@
 
 using namespace jspp::docgen;
 
-static std::string truncate(const std::string& s, size_t count);
-
 std::string OutputBuilder::getOutput() const {
     return this->output.str();
 }
@@ -23,7 +21,7 @@ void OutputBuilder::buildModule(const ModuleCommentData& comment) {
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
     this->addSummary(
-        tags.summary != "" ? tags.summary : truncate(description, 250)
+        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
     );
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
@@ -53,7 +51,7 @@ void OutputBuilder::buildClass(const ClassCommentData& comment) {
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
     this->addSummary(
-        tags.summary != "" ? tags.summary : truncate(description, 250)
+        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
     );
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
@@ -83,7 +81,7 @@ void OutputBuilder::buildInterface(const InterfaceCommentData& comment) {
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
     this->addSummary(
-        tags.summary != "" ? tags.summary : truncate(description, 250)
+        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
     );
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
@@ -111,7 +109,7 @@ void OutputBuilder::buildFunctions(const MethodCommentData& comment) {
     this->output << "<menu file=\"Developers\" />";
     const std::string description = comment.getBodyText();
     const std::string summary = tags.summary;
-    this->addSummary(summary != "" ? summary : truncate(description, 250));
+    this->addSummary(summary != "" ? summary : utils::truncate(description, 250));
 
     this->output << "<overload>";
     /* #region: Individual <overload> Generation */
@@ -214,7 +212,7 @@ void OutputBuilder::buildFunctions(const ConstructorCommentData& comment) {
     this->output << "<menu file=\"Developers\" />";
     const std::string description = comment.getBodyText();
     const std::string summary = tags.summary;
-    this->addSummary(summary != "" ? summary : truncate(description, 250));
+    this->addSummary(summary != "" ? summary : utils::truncate(description, 250));
 
     this->output << "<overload>";
     /* #region: Individual <overload> Generation */
@@ -308,7 +306,7 @@ void OutputBuilder::buildField(const FieldCommentData& comment) {
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
     this->addSummary(
-        tags.summary != "" ? tags.summary : truncate(description, 250)
+        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
     );
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
@@ -338,7 +336,7 @@ void OutputBuilder::buildEnumeration(const EnumCommentData& comment) {
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
     this->addSummary(
-        tags.summary != "" ? tags.summary : truncate(description, 250)
+        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
     );
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
@@ -464,35 +462,6 @@ void jspp::docgen::OutputBuilder::addClass(const std::string& text) {
     this->output << "<class>";
     this->output << cdata(text);
     this->output << "</class>";
-}
-
-static std::string truncate(const std::string& s, size_t count) {
-    std::string result;
-
-    std::vector<std::string> sentences = utils::split(s, ".");
-
-    const bool periodFound = s.find(".") != std::string::npos;
-
-    auto it = sentences.cbegin();
-    auto end = sentences.cend();
-    for (; it != end; ++it) {
-        const std::string sentence = *it;
-
-        if (sentence == "") {
-            continue;
-        }
-
-        result += sentence;
-        if (periodFound) {
-            result += ".";
-        }
-
-        if (result.size() >= count) {
-            break;
-        }
-    }
-
-    return result;
 }
 
 std::string OutputBuilder::markdown(const std::string& text) const {

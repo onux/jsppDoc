@@ -160,3 +160,33 @@ std::string utils::escapeXML(const std::string &s) {
 
     return buffer;
 }
+
+
+std::string utils::truncate(const std::string& s, size_t count) {
+    std::string result;
+
+    std::vector<std::string> sentences = utils::split(s, ".");
+
+    const bool periodFound = s.find(".") != std::string::npos;
+
+    auto it = sentences.cbegin();
+    auto end = sentences.cend();
+    for (; it != end; ++it) {
+        const std::string sentence = *it;
+
+        if (sentence == "") {
+            continue;
+        }
+
+        result += sentence;
+        if (periodFound) {
+            result += ".";
+        }
+
+        if (result.size() >= count) {
+            break;
+        }
+    }
+
+    return result;
+}
