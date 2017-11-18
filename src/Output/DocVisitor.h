@@ -56,14 +56,14 @@ namespace docgen
         std::string lastDatatype;
         std::vector<std::unique_ptr<EnumMemberCommentData>> lastEnumMembers;
 
-        void saveOverload(jspp::parser::DocComment* node);
-        void saveDocument(jspp::parser::ModuleDeclaration* node);
-        void saveDocument(jspp::parser::ClassDeclaration* node);
-        void saveDocument(jspp::parser::InterfaceDeclaration* node);
-        void saveDocument(jspp::parser::ConstructorDeclaration* node);
-        void saveDocument(jspp::parser::FunctionDeclaration* node);
-        void saveDocument(jspp::parser::VariableDeclarator* node);
-        void saveDocument(jspp::parser::EnumDeclaration* node);
+        void saveOverload();
+        void saveDocument(const jspp::parser::ModuleDeclaration& node);
+        void saveDocument(const jspp::parser::ClassDeclaration& node);
+        void saveDocument(const jspp::parser::InterfaceDeclaration& node);
+        void saveDocument(const jspp::parser::ConstructorDeclaration& node);
+        void saveDocument(const jspp::parser::FunctionDeclaration& node);
+        void saveDocument(const jspp::parser::VariableDeclarator& node);
+        void saveDocument(const jspp::parser::EnumDeclaration& node);
 
         template<typename T>
         void combineMethodDocs(std::vector<doc_comment_t>& results,

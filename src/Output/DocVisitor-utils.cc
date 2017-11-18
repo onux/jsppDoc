@@ -10,7 +10,7 @@
 using namespace jspp::docgen;
 using namespace jspp::parser;
 
-void jspp::docgen::DocVisitor::saveOverload(jspp::parser::DocComment* node) {
+void jspp::docgen::DocVisitor::saveOverload() {
     const std::string docText = this->getDocCommentText();
     auto comment = std::unique_ptr<OverloadTagCommentData>(
         new OverloadTagCommentData(docText)
@@ -22,7 +22,7 @@ void jspp::docgen::DocVisitor::saveOverload(jspp::parser::DocComment* node) {
     );
 }
 
-void jspp::docgen::DocVisitor::saveDocument(ModuleDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(const ModuleDeclaration& node) {
     if (!isDocumented(node)) {
         return;
     }
@@ -42,7 +42,7 @@ void jspp::docgen::DocVisitor::saveDocument(ModuleDeclaration* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::saveDocument(ClassDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(const ClassDeclaration& node) {
     if (!isDocumented(node)) {
         return;
     }
@@ -64,7 +64,7 @@ void jspp::docgen::DocVisitor::saveDocument(ClassDeclaration* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::saveDocument(InterfaceDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(const InterfaceDeclaration& node) {
     if (!isDocumented(node)) {
         return;
     }
@@ -86,7 +86,7 @@ void jspp::docgen::DocVisitor::saveDocument(InterfaceDeclaration* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::saveDocument(VariableDeclarator* node) {
+void jspp::docgen::DocVisitor::saveDocument(const VariableDeclarator& node) {
     if (!isDocumented(node)) {
         return;
     }
@@ -107,7 +107,7 @@ void jspp::docgen::DocVisitor::saveDocument(VariableDeclarator* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::saveDocument(ConstructorDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(const ConstructorDeclaration& node) {
     const std::string name = this->getIdentifier(node);
     const bool overloadTagExists = this->overloadTags.find(name) !=
                                    this->overloadTags.end();
@@ -130,7 +130,7 @@ void jspp::docgen::DocVisitor::saveDocument(ConstructorDeclaration* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(const FunctionDeclaration& node) {
     const std::string name = this->getIdentifier(node);
     const bool overloadTagExists = this->overloadTags.find(name) !=
                                    this->overloadTags.end();
@@ -155,7 +155,7 @@ void jspp::docgen::DocVisitor::saveDocument(FunctionDeclaration* node) {
     this->documented.insert(std::make_pair(fqn, std::move(comment)));
 }
 
-void jspp::docgen::DocVisitor::saveDocument(EnumDeclaration* node) {
+void jspp::docgen::DocVisitor::saveDocument(const EnumDeclaration& node) {
     if (!isDocumented(node)) {
         return;
     }

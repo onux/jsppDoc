@@ -15,7 +15,7 @@ void jspp::docgen::DocVisitor::visit(jspp::parser::DocComment* node) {
     const bool isOverloadComment = node->text.find("@overload") !=
                                    std::string::npos;
     if (isOverloadComment) {
-        this->saveOverload(node);
+        this->saveOverload();
         this->clearDocComment();
     }
 }
@@ -25,7 +25,7 @@ void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
 
     const bool isPrefixModule = node->isSplit;
     if (!isPrefixModule) {
-        this->saveDocument(node);
+        this->saveDocument(*node);
         this->clearModifiers();
     }
 
@@ -37,7 +37,7 @@ void jspp::docgen::DocVisitor::visit(ModuleDeclaration* node) {
 void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
     this->userDefinedTypes.push_back(node->id->name);
 
-    this->saveDocument(node);
+    this->saveDocument(*node);
     this->clearModifiers();
     this->clearDocComment();
 
@@ -49,7 +49,7 @@ void jspp::docgen::DocVisitor::visit(ClassDeclaration* node) {
 void jspp::docgen::DocVisitor::visit(InterfaceDeclaration* node) {
     this->userDefinedTypes.push_back(node->id->name);
 
-    this->saveDocument(node);
+    this->saveDocument(*node);
     this->clearModifiers();
     this->clearDocComment();
 
@@ -65,7 +65,7 @@ void jspp::docgen::DocVisitor::visit(ConstructorDeclaration* node) {
         this->params.push_back(this->getParameterType(param));
     }
 
-    this->saveDocument(node);
+    this->saveDocument(*node);
     this->clearParameters();
     this->clearModifiers();
     this->clearDocComment();
@@ -86,7 +86,7 @@ void jspp::docgen::DocVisitor::visit(FunctionDeclaration* node) {
         this->params.push_back(this->getParameterType(param));
     }
 
-    this->saveDocument(node);
+    this->saveDocument(*node);
     this->clearParameters();
     this->clearModifiers();
     this->clearDocComment();
@@ -99,9 +99,9 @@ void jspp::docgen::DocVisitor::visit(VariableDeclaration* node) {
         return;
     }
 
-    VariableDeclarator decl = *node->declarations[0];
+    const VariableDeclarator& decl = *node->declarations[0];
 
-    this->saveDocument(&decl);
+    this->saveDocument(decl);
     this->clearModifiers();
     this->clearDocComment();
 }
@@ -114,13 +114,13 @@ void jspp::docgen::DocVisitor::visit(jspp::parser::EnumDeclaration* node) {
     
     this->lastDatatype = parser::Utils::annotationTypeToString(node->kind.get());
 
-    this->saveDocument(node);
+    this->saveDocument(*node);
     this->clearModifiers();
     this->clearDocComment();
 }
 
 void jspp::docgen::DocVisitor::visit(jspp::parser::Enumerator* node) {
-    const std::string name = this->getIdentifier(node);
+    const std::string name = this->getIdentifier(*node);
     const std::string docText = this->getDocCommentText();
 
     auto comment = std::unique_ptr<EnumMemberCommentData>(

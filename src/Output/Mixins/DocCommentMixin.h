@@ -31,7 +31,7 @@ namespace docgen
          *
          * @param node The AST node to check.
          */
-        bool isDocumented(const jspp::parser::Node* const node);
+        bool isDocumented(const jspp::parser::Node& node);
         /**
          * Checks if the current documentation comment precedes the specified
          * abstract syntax tree (AST) node. For undocumented methods that have
@@ -40,7 +40,7 @@ namespace docgen
          *
          * @param node The AST node to check.
          */
-        bool isDocumented(const jspp::parser::Node* const node,
+        bool isDocumented(const jspp::parser::Node& node,
                           const std::string& name,
                           const overload_tags_t& overloadTags);
         void clearDocComment();

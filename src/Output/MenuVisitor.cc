@@ -10,12 +10,12 @@ void MenuVisitor::visit(DocComment* node) {
     const bool isOverloadComment = node->text.find("@overload") !=
                                    std::string::npos;
     if (isOverloadComment) {
-        this->saveOverload(node);
+        this->saveOverload();
     }
 }
 
 void MenuVisitor::visit(ModuleDeclaration* node) {
-    if (!isDocumented(node)) {
+    if (!isDocumented(*node)) {
         visitChildren(node);
         return;
     }
@@ -29,7 +29,7 @@ void MenuVisitor::visit(ModuleDeclaration* node) {
     else {
         this->inModule = true;
 
-        const std::string id = this->getIdentifier(node);
+        const std::string id = this->getIdentifier(*node);
         this->output << "<menu name=\"" << id << "\" slug=\"" << id << "\">";
         visitChildren(node);
         for (auto& pair : this->members) {
@@ -45,15 +45,15 @@ void MenuVisitor::visit(ModuleDeclaration* node) {
 }
 
 void MenuVisitor::visit(ClassDeclaration* node) {
-    if (!isDocumented(node)) {
+    if (!isDocumented(*node)) {
         visitChildren(node);
         return;
     }
 
     this->userDefinedTypes.push_back(node->id->name);
 
-    const std::string id    = this->getIdentifier(node);
-    const std::string title = this->getGenericTitle<ClassDeclaration>(node);
+    const std::string id    = this->getIdentifier(*node);
+    const std::string title = this->getGenericTitle<ClassDeclaration>(*node);
     const std::string tag   = this->inModule ? "item" : "menu";
 
     this->output
@@ -83,15 +83,15 @@ void MenuVisitor::visit(ClassDeclaration* node) {
 }
 
 void MenuVisitor::visit(InterfaceDeclaration* node) {
-    if (!isDocumented(node)) {
+    if (!isDocumented(*node)) {
         visitChildren(node);
         return;
     }
 
     this->userDefinedTypes.push_back(node->id->name);
 
-    const std::string id    = this->getIdentifier(node);
-    const std::string title = this->getGenericTitle<InterfaceDeclaration>(node);
+    const std::string id    = this->getIdentifier(*node);
+    const std::string title = this->getGenericTitle<InterfaceDeclaration>(*node);
     const std::string tag   = this->inModule ? "item" : "menu";
 
     this->output
@@ -116,9 +116,9 @@ void MenuVisitor::visit(InterfaceDeclaration* node) {
 }
 
 void MenuVisitor::visit(ConstructorDeclaration* node) {
-    const std::string id = this->getIdentifier(node);
+    const std::string id = this->getIdentifier(*node);
 
-    if (!isDocumented(node, id, this->overloadTags)) {
+    if (!isDocumented(*node, id, this->overloadTags)) {
         return;
     }
 
@@ -128,13 +128,13 @@ void MenuVisitor::visit(ConstructorDeclaration* node) {
 }
 
 void MenuVisitor::visit(FunctionDeclaration* node) {
-    const std::string id = this->getIdentifier(node);
+    const std::string id = this->getIdentifier(*node);
 
-    if (!isDocumented(node, id, this->overloadTags)) {
+    if (!isDocumented(*node, id, this->overloadTags)) {
         return;
     }
 
-    const std::string fqn = this->getFQN(node);
+    const std::string fqn = this->getFQN(*node);
     const std::string xml = "<item name=\"" + id + "\" slug=\"" + id + "\" />";
     this->members.insert({ fqn, xml });
 
@@ -142,7 +142,7 @@ void MenuVisitor::visit(FunctionDeclaration* node) {
 }
 
 void MenuVisitor::visit(VariableDeclaration* node) {
-    if (!isDocumented(node)) {
+    if (!isDocumented(*node)) {
         return;
     }
 
@@ -152,8 +152,8 @@ void MenuVisitor::visit(VariableDeclaration* node) {
     }
 
     VariableDeclarator decl = *node->declarations[0];
-    const std::string id  = this->getIdentifier(&decl);
-    const std::string fqn = this->getFQN(&decl);
+    const std::string id  = this->getIdentifier(decl);
+    const std::string fqn = this->getFQN(decl);
     const std::string xml = "<item name=\"" + id + "\" slug=\"" + id + "\" />";
     this->members.insert({ fqn, xml });
 
@@ -161,19 +161,19 @@ void MenuVisitor::visit(VariableDeclaration* node) {
 }
 
 void MenuVisitor::visit(EnumDeclaration* node) {
-    if (!isDocumented(node)) {
+    if (!isDocumented(*node)) {
         return;
     }
 
-    const std::string id = this->getIdentifier(node);
-    const std::string fqn = this->getFQN(node);
+    const std::string id = this->getIdentifier(*node);
+    const std::string fqn = this->getFQN(*node);
     const std::string xml = "<item name=\"" + id + "\" slug=\"" + id + "\" />";
     this->members.insert({ fqn, xml });
 
     this->clearDocComment();
 }
 
-void MenuVisitor::saveOverload(jspp::parser::DocComment* node) {
+void MenuVisitor::saveOverload() {
     OverloadTagCommentData comment{ this->currentDocComment->text };
     const DocCommentTags& tags = comment.tags();
 

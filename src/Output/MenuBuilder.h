@@ -7,6 +7,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <unordered_set>
 #include <sstream>
 #include <jspp-parser/jspp-parser.h>

@@ -37,7 +37,7 @@ namespace docgen
     private:
         bool inModule = false;
         bool hasConstructor = false;
-        void saveOverload(jspp::parser::DocComment* node);
+        void saveOverload();
     };
 }
 }

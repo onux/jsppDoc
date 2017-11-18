@@ -2,7 +2,7 @@
 
 using namespace jspp::parser;
 
-bool jspp::docgen::DocCommentMixin::isDocumented(const Node* const node) {
+bool jspp::docgen::DocCommentMixin::isDocumented(const Node& node) {
     const bool commentIsBeforeNode = this->currentDocComment &&
                                      this->currentDocComment->isBefore(node);
     if (!commentIsBeforeNode) {
@@ -13,12 +13,12 @@ bool jspp::docgen::DocCommentMixin::isDocumented(const Node* const node) {
     return true;
 }
 
-bool jspp::docgen::DocCommentMixin::isDocumented(const Node* const node,
+bool jspp::docgen::DocCommentMixin::isDocumented(const Node& node,
                                                  const std::string& name,
                                                  const overload_tags_t& overloadTags)
 {
-    const bool isOverloadable = node->is<FunctionDeclaration>() ||
-                                node->is<ConstructorDeclaration>();
+    const bool isOverloadable = node.is<FunctionDeclaration>() ||
+                                node.is<ConstructorDeclaration>();
     const bool overloadTagExists = overloadTags.find(name) !=
                                    overloadTags.end();
     if (isOverloadable && overloadTagExists) {

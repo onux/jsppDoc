@@ -23,18 +23,18 @@ namespace docgen
         /**
          * Returns the string representation for the identifier of an AST node.
          */
-        const std::string getIdentifier(jspp::parser::Node* node) const;
+        const std::string getIdentifier(const jspp::parser::Node& node) const;
         /**
          * Returns the fully-qualified name (FQN) of the specified AST node.
          */
-        const std::string getFQN(jspp::parser::Node* node) const;
+        const std::string getFQN(const jspp::parser::Node& node) const;
 
         /**
          * Returns the string representation for the identifier of an AST node
          * including generic parameters.
          */
         template<typename T>
-        const std::string getGenericTitle(jspp::parser::Node* node) const
+        const std::string getGenericTitle(const jspp::parser::Node& node) const
         {
             constexpr const bool isUserDefinedType =
                 std::is_base_of<jspp::parser::ClassDeclaration, T>::value ||
@@ -45,15 +45,15 @@ namespace docgen
                 "'getGenericTitle' expects a 'ClassDeclaration' or 'InterfaceDeclaration' node"
             );
 
-            auto node_cast = node->as<T>();
-            std::string result = node_cast->id->name;
+            auto node_cast = *node.as<T>();
+            std::string result = node_cast.id->name;
 
-            const bool isGeneric = node_cast->genericParams != nullptr &&
-                                   node_cast->genericParams->size() != 0;
+            const bool isGeneric = node_cast.genericParams != nullptr &&
+                                   node_cast.genericParams->size() != 0;
             if (isGeneric) {
                 result += "<";
                 bool first = true;
-                auto& genericParams = *node_cast->genericParams;
+                auto& genericParams = *node_cast.genericParams;
                 for (auto& param : genericParams) {
                     if (!first) {
                         result += ", ";
