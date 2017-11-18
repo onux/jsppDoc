@@ -7,7 +7,7 @@
 
 #include <bitset>
 #include <memory>
-#include "../../Data/Modifiers.h"
+#include "../../DocCommentData/Modifiers.h"
 
 namespace jspp
 {

@@ -9,7 +9,7 @@
 #include <pugixml.hpp>
 #include "CommentData/includes.h"
 #include "CommentParser/CommentParser.h"
-#include "Data/DocCommentTags.h"
+#include "DocCommentData/DocCommentTags.h"
 #include "Output/DocVisitor.h"
 #include "Output/OutputBuilder.h"
 #include "Utils/Utils.h"

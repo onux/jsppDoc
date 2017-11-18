@@ -5,7 +5,7 @@
 #ifndef JSPP_DOCGEN_COMMENTDATA_MIXINS_DOCUMENTATIONTEXT_H
 #define JSPP_DOCGEN_COMMENTDATA_MIXINS_DOCUMENTATIONTEXT_H
 
-#include "../../Data/DocCommentTags.h"
+#include "../../DocCommentData/DocCommentTags.h"
 #include <memory>
 #include <string>
 
