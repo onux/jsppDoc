@@ -1,7 +1,7 @@
 add_subdirectory(Mixins)
 
 set(
-    COMMENT_DATA_SOURCE_FILES
+    PARSED_DATA_SOURCE_FILES
         Mixins
 
         ClassCommentData.cc
@@ -31,4 +31,4 @@ set(
         OverloadTagCommentData.h
 )
 
-add_library(CommentData ${COMMENT_DATA_SOURCE_FILES})
+add_library(ParsedData ${PARSED_DATA_SOURCE_FILES})

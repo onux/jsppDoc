@@ -3,7 +3,7 @@
 //
 
 #include "DocVisitor.h"
-#include "CommentData/includes.h"
+#include "ParsedData/includes.h"
 #include "DocCommentData/DocCommentTags.h"
 #include <jspp-parser/Utils.h>
 

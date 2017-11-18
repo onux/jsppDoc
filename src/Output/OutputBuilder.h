@@ -5,7 +5,7 @@
 #ifndef JSPP_DOCGEN_OUTPUTBUILDER_H
 #define JSPP_DOCGEN_OUTPUTBUILDER_H
 
-#include "CommentData/includes.h"
+#include "ParsedData/includes.h"
 #include "DocCommentData/Modifiers.h"
 #include "DocCommentData/DocCommentTags.h"
 #include <sstream>

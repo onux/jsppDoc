@@ -1,15 +1,15 @@
-add_subdirectory(CommentData)
 add_subdirectory(CommentParser)
 add_subdirectory(Emitters)
 add_subdirectory(Output)
+add_subdirectory(ParsedData)
 add_subdirectory(Utils)
 
 set(
     SOURCE_FILES
-        CommentData
         CommentParser
         Emitters
         Output
+        ParsedData
         Utils
 
         main.cc

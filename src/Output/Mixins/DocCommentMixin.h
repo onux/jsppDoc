@@ -9,7 +9,7 @@
 #include <memory>
 #include <unordered_set>
 #include <jspp-parser/jspp-parser.h>
-#include "CommentData/OverloadTagCommentData.h"
+#include "ParsedData/OverloadTagCommentData.h"
 
 namespace jspp
 {

@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include "OutputBuilder.h"
 #include "../Emitters/OutputEmitter.h"
-#include "../CommentData/includes.h"
+#include "../ParsedData/includes.h"
 #include "Mixins/DocCommentMixin.h"
 #include "Mixins/NameBuilderMixin.h"
 

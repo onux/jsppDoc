@@ -10,4 +10,4 @@ set(
     Overload.h
 )
 
-add_library(CommentDataMixins ${COMMENT_DATA_MIXINS})
+add_library(ParsedDataMixins ${COMMENT_DATA_MIXINS})

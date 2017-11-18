@@ -8,7 +8,7 @@
 #include <string>
 #include <memory>
 #include <jspp-parser/jspp-parser.h>
-#include "CommentData/CommentData.h"
+#include "ParsedData/CommentData.h"
 
 namespace jspp
 {
