@@ -46,7 +46,6 @@ void MenuVisitor::visit(ModuleDeclaration* node) {
 
 void MenuVisitor::visit(ClassDeclaration* node) {
     if (!isDocumented(*node)) {
-        visitChildren(node);
         return;
     }
 
@@ -84,7 +83,6 @@ void MenuVisitor::visit(ClassDeclaration* node) {
 
 void MenuVisitor::visit(InterfaceDeclaration* node) {
     if (!isDocumented(*node)) {
-        visitChildren(node);
         return;
     }
 
@@ -117,7 +115,7 @@ void MenuVisitor::visit(InterfaceDeclaration* node) {
 
 void MenuVisitor::visit(ConstructorDeclaration* node) {
     const std::string id = this->getIdentifier(*node);
-
+    
     if (!isDocumented(*node, id, this->overloadTags)) {
         return;
     }
