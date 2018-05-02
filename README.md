@@ -30,7 +30,7 @@ $ make
 $ make docgen_coverage
 ```
 
-The generated code coverage files will be available in `build/coverage`.
+The generated code coverage files will be available in `build/docgen_coverage`.
 
 ### Documentation
 

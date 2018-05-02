@@ -21,6 +21,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/sundown/cpp)
 set(DEPENDS_LIB_LIST jspp-parser jspp-symbol-table jspp-common)
 set(DOCGEN_LIBS Utils OutputMixins Output ParsedDataMixins ParsedData CommentParser Emitters jspp-docgen-lib)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+    include(coverage.cmake)
+    APPEND_COVERAGE_COMPILER_FLAGS()
+endif()
+
 add_subdirectory(src)
 add_subdirectory(libs/pcre)
 add_subdirectory(libs/sundown)
@@ -30,6 +35,17 @@ if (NOT NO_TESTS)
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
-    include(coverage.cmake)
-    setup_target_for_coverage(docgen_coverage tests coverage)
+    set(
+        COVERAGE_EXCLUDES
+        '/usr/*'
+        '${CMAKE_CURRENT_BINARY_DIR}/*'
+        '${CMAKE_CURRENT_SOURCE_DIR}/src/main.cc'
+        '${CMAKE_CURRENT_SOURCE_DIR}/libs/*'
+        '${CMAKE_CURRENT_SOURCE_DIR}/test/*'
+    )
+    SETUP_TARGET_FOR_COVERAGE(
+        NAME docgen_coverage
+        EXECUTABLE tests
+        DEPENDENCIES 
+    )
 endif()
