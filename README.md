@@ -9,6 +9,11 @@ method) - which is necessary for the Standard Library documentation.
 ### Build
 
 ```
+$ apt-get install libpcre3-dev
+$ git submodule update --init --recursive
+```
+
+```
 $ mkdir build && cd $_
 $ cmake ..
 $ make
