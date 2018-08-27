@@ -126,6 +126,15 @@ TEST_CASE("jspp::docgen::CommentParser") {
         );
     }
 
+    SECTION("Multi-line @summary is merged into one line") {
+        std::unique_ptr<jspp::docgen::DocCommentTags> tags = parser.parseDocCommentTags(
+            "@summary Implementing the IComparable<T> interface allows objects\n"
+            "to be compared and sorted.\n"
+        );
+
+        REQUIRE(tags->summary == "Implementing the IComparable<T> interface allows objects to be compared and sorted.");
+    }
+
     SECTION("parseDocCommentBodyText") {
         std::string body1 = parser.parseDocCommentBodyText(
             parser.parseDocCommentText(

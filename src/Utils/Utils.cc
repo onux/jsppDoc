@@ -63,7 +63,7 @@ std::vector<std::string> utils::splitLines(const std::string& s) {
         lines.push_back(it->str());
     }
 
-    trimWhitespace(lines);
+    trimEmptyLines(lines);
 
     return lines;
 }
@@ -86,8 +86,14 @@ std::string utils::trimWhitespace(const std::string &s) {
 
     return std::string(trimLeft, trimRight.base());
 }
-
 void utils::trimWhitespace(std::vector<std::string>& v) {
+    for(size_t i = v.size(); i --> 0; ) {
+        const std::string& line = v[i];
+        v[i] = trimWhitespace(line);
+    }
+}
+
+void utils::trimEmptyLines(std::vector<std::string>& v) {
     auto isEmptyLine = [](const std::string& line) {
         return line == "";
     };

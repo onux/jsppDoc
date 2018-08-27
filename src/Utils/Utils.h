@@ -31,9 +31,13 @@ namespace utils
      */
     std::string trimWhitespace(const std::string &s);
     /**
-     * Removes empty lines from the beginning and end of a string vector.
+     * Removes whitespace from the beginning and end of each line of a string vector.
      */
     void trimWhitespace(std::vector<std::string>& v);
+    /**
+     * Removes empty lines from the beginning and end of a string vector.
+     */
+    void trimEmptyLines(std::vector<std::string>& v);
     /**
      * Trims leading whitespace from each line based on the whitespace of the
      * first non-empty line.

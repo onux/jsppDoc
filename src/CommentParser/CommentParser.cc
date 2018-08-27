@@ -94,7 +94,11 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
         tagText = utils::trimWhitespace(tagText);
 
         if (tagName == "summary") {
-            tags->summary = tagText;
+            std::vector<std::string> lines = utils::splitLines(tagText);
+            utils::trimWhitespace(lines);
+            std::string summaryWithoutNewlines = utils::join(lines, " ");
+
+            tags->summary = summaryWithoutNewlines;
         }
         if (tagName == "example") {
             std::vector<std::string> lines = utils::splitLines(tagText);
@@ -104,7 +108,7 @@ std::unique_ptr<DocCommentTags> CommentParser::parseDocCommentTags(const std::st
             lines.erase(lines.begin());
 
             if (lines.size() == 0) continue;
-            utils::trimWhitespace(lines);
+            utils::trimEmptyLines(lines);
             utils::trimLeading(lines);
             std::string exampleCode = utils::join(lines, "\n");
 
