@@ -76,9 +76,23 @@ namespace docgen
          *                      files and folders to.
          * @param isClassMember Is the documented node a member of a class?
          */
-        std::string outputDirectory(const std::string& fqn,
-                                    const std::string& outputRootDir,
-                                    const bool isClassMember) const;
+        std::string makeDocPageOutputDirectory(const std::string& fqn,
+                                               const std::string& outputRootDir,
+                                               const bool isClassMember) const;
+
+        /**
+         * Generates the output directory path for menu files based on the
+         * output directory paths of the given AST type (such as class,
+         * interface, etc) of the menu item.
+         *
+         * @param outputDir The full path for the documentation page of the item
+         *                  we are generating a menu for.
+         * @param outputRootDir The root directory to write the write output
+         *                      files and folders to.
+         */
+        std::string makeMenuFileOutputDirectory(const std::string& outputDir,
+                                                const std::string& outputRootDir) const;
+
         /**
          * Removes the specified prefix from the specified path.
          *

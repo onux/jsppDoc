@@ -65,13 +65,7 @@ int Application::process(const std::string& input_argv,
     std::vector<std::string> files =
         Filesystem::getFilesRecursively(inputDir, ".jspp");
     for (const std::string& inputFile : files) {
-        std::string relInputPath;
-        if (inputIsDirectory) {
-            relInputPath = this->removeDirectoryPrefix(inputFile, inputDir);
-        }
-
-        const std::string outputRootDir =
-            Filesystem::dirName(output_argv + relInputPath) + "/";
+        const std::string outputRootDir = output_argv + "/";
 
         const bool outputRootDirExists = generatedDirs.find(outputRootDir) !=
                                          generatedDirs.end();
@@ -140,7 +134,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildModule(*module_doc);
         xml = builder.getOutput();
         filename = "index";
-        outputDir = outputDirectory(fqn, outputRootDir, false);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, false);
 
         jspp::docgen::MenuVisitor menuvisitor;
         ast.accept(&menuvisitor);
@@ -157,7 +151,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildClass(*class_doc);
         xml = builder.getOutput();
         filename = "index";
-        outputDir = outputDirectory(fqn, outputRootDir, false);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, false);
 
         jspp::docgen::MenuVisitor menuvisitor;
         ast.accept(&menuvisitor);
@@ -175,7 +169,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildField(*field_doc);
         xml = builder.getOutput();
         filename = identifier;
-        outputDir = outputDirectory(fqn, outputRootDir, true);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, true);
     }
     if (document->is<ConstructorCommentData>()) {
         auto ctor_doc = CommentData::dynamic_unique_ptr_cast<ConstructorCommentData>(
@@ -187,7 +181,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildFunctions(*ctor_doc);
         xml = builder.getOutput();
         filename = "constructor";
-        outputDir = outputDirectory(fqn, outputRootDir, true);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, true);
     }
     if (document->is<OverloadedConstructorCommentData>()) {
         auto ctor_doc = CommentData::dynamic_unique_ptr_cast<OverloadedConstructorCommentData>(
@@ -199,7 +193,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildFunctions(*ctor_doc);
         xml = builder.getOutput();
         filename = "constructor";
-        outputDir = outputDirectory(fqn, outputRootDir, true);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, true);
     }
     if (document->is<MethodCommentData>()) {
         auto method_doc = CommentData::dynamic_unique_ptr_cast<MethodCommentData>(
@@ -212,7 +206,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildFunctions(*method_doc);
         xml = builder.getOutput();
         filename = identifier;
-        outputDir = outputDirectory(fqn, outputRootDir, true);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, true);
     }
     if (document->is<OverloadedMethodCommentData>()) {
         auto method_doc = CommentData::dynamic_unique_ptr_cast<OverloadedMethodCommentData>(
@@ -225,7 +219,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildFunctions(*method_doc);
         xml = builder.getOutput();
         filename = identifier;
-        outputDir = outputDirectory(fqn, outputRootDir, true);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, true);
     }
     if (document->is<EnumCommentData>()) {
         auto enum_doc = CommentData::dynamic_unique_ptr_cast<EnumCommentData>(
@@ -238,7 +232,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildEnumeration(*enum_doc);
         xml = builder.getOutput();
         filename = identifier;
-        outputDir = outputDirectory(fqn, outputRootDir, true);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, true);
     }
     if (document->is<InterfaceCommentData>()) {
         auto interface_doc =
@@ -251,7 +245,7 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
         builder.buildInterface(*interface_doc);
         xml = builder.getOutput();
         filename = "index";
-        outputDir = outputDirectory(fqn, outputRootDir, false);
+        outputDir = makeDocPageOutputDirectory(fqn, outputRootDir, false);
 
         jspp::docgen::MenuVisitor menuvisitor;
         ast.accept(&menuvisitor);
@@ -269,18 +263,18 @@ void Application::generateXML(std::unique_ptr<CommentData>& document,
     }
 
     if (menuXml != "") {
-        Filesystem::mkdirp(Filesystem::resolvePath(outputDir + "../menus/"));
-
-        const std::string menuOutputPath = Filesystem::resolvePath(outputDir + "../menus/" + menuFilename + ".xml");
+        const std::string menuOutputDir = makeMenuFileOutputDirectory(outputDir, outputRootDir);
+        Filesystem::mkdirp(menuOutputDir);
+        const std::string menuOutputPath = Filesystem::resolvePath(menuOutputDir + menuFilename + ".xml");
 
         std::cout << "MENU:   " << menuOutputPath << std::endl;
         emitter.write(menuXml, menuOutputPath);
     }
 }
 
-std::string Application::outputDirectory(const std::string& fqn,
-                                         const std::string& outputRootDir,
-                                         const bool isClassMember) const
+std::string Application::makeDocPageOutputDirectory(const std::string& fqn,
+                                                    const std::string& outputRootDir,
+                                                    const bool isClassMember) const
 {
     std::string relativeDir(fqn);
     std::replace(relativeDir.begin(), relativeDir.end(), '.', '/');
@@ -297,16 +291,20 @@ std::string Application::outputDirectory(const std::string& fqn,
     return absoluteDir;
 }
 
+std::string Application::makeMenuFileOutputDirectory(const std::string& outputDir,
+                                                     const std::string& outputRootDir) const
+{
+    const std::string menuRootDir = outputRootDir + "menus/";
+    const bool beginsWithRootDir = outputDir.find(outputRootDir) == 0;
+    assert(beginsWithRootDir && "outputDir needs to begin with outputRootDir in order to strip outputRootDir");
+    const std::string menuRelativeDir = removeDirectoryPrefix(outputDir, outputRootDir);
+    const std::string menuOutputDir = menuRootDir + menuRelativeDir;
+
+    return menuOutputDir;
+}
+
 std::string Application::removeDirectoryPrefix(const std::string& path,
                                                const std::string& prefix) const
 {
-    std::string result = path;
-
-    const bool hasDirectoryPrefix = path.find_first_of(prefix) !=
-                                    std::string::npos;
-    if (hasDirectoryPrefix) {
-        result.erase(0, prefix.size());
-    }
-
-    return result;
+    return path.substr(prefix.size());
 }
