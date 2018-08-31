@@ -27,6 +27,10 @@ namespace utils
      */
     std::vector<std::string> splitLines(const std::string& s);
     /**
+     * Returns 'true' if the provided character is a whitespace character.
+     */
+    bool isWhitespace(const char32_t c);
+    /**
      * Removes whitespace from the beginning and end of a string.
      */
     std::string trimWhitespace(const std::string &s);

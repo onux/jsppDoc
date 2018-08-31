@@ -135,6 +135,19 @@ TEST_CASE("jspp::docgen::CommentParser") {
         REQUIRE(tags->summary == "Implementing the IComparable<T> interface allows objects to be compared and sorted.");
     }
 
+    SECTION("Multi-line auto-generated summary (from description) is merged into one line") {
+        auto xml = generate(
+            "/**"
+            " * Implementing the IComparable<T> interface allows objects\n"
+            " * to be compared and sorted.\n"
+            " */"
+            "module Foo {}"
+        );
+
+        std::string summary = xml->child("module").child_value("summary");
+        REQUIRE(summary == "<p>Implementing the IComparable<T> interface allows objects to be compared and sorted.</p>");
+    }
+
     SECTION("parseDocCommentBodyText") {
         std::string body1 = parser.parseDocCommentBodyText(
             parser.parseDocCommentText(

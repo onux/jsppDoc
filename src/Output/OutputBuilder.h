@@ -105,8 +105,8 @@ namespace docgen
         /**
          * Adds a <example> tag to the output XML document.
          *
-         * @param The title of the example.
-         * @param The code for the example.
+         * @param title The title of the example.
+         * @param code The code for the example.
          */
         void addExample(const std::string& title, const std::string& code);
         /**
@@ -149,6 +149,40 @@ namespace docgen
          * Returns the Markdown-formatted text for a given string.
          */
         std::string markdown(const std::string& text) const;
+        /**
+         * Generates a summary for the output XML document.
+         *
+         * If 'summary' is provided, the value is returned. Otherwise, a
+         * truncated value of 'description' is returned.
+         *
+         * @param summary The user-provided summary from the @summary tag.
+         * @param description The user-provided documentation body text.
+         */
+        std::string generateSummary(const std::string& summary,
+                                    const std::string& description) const;
+        /**
+         * When generating the summary and the user did not provide an @summary
+         * tag, then we have to truncate the description. This method will merge
+         * all the truncated description lines into one line.
+         */
+        std::string mergeDescriptionLinesForSummary(const std::vector<std::string>& lines) const;
+        /**
+         * Function for generating a single merged description line for the
+         * summary. If the line does not end with a whitespace character, we
+         * must add it so:
+         *
+         * the
+         * fox
+         *
+         * becomes:
+         *
+         * the fox
+         *
+         * rather than:
+         *
+         * thefox
+         */
+        std::string mergeSingleDescriptionLineForSummary(const std::string& line) const;
     };
 }
 }

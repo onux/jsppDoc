@@ -81,7 +81,7 @@ TEST_CASE("Module Summary - If @summary tag is unavailable, use snippet of descr
             /**
              * This is the long description with no period
              *
-             * Some more text goes here
+             * and should continue seamlessly.
              */
             module Foo
             {
@@ -94,9 +94,7 @@ TEST_CASE("Module Summary - If @summary tag is unavailable, use snippet of descr
         REQUIRE(
             summary
             ==
-            "<p>This is the long description with no period</p>"
-            "\n\n"
-            "<p>Some more text goes here</p>"
+            "<p>This is the long description with no period and should continue seamlessly.</p>"
         );
     }
 }

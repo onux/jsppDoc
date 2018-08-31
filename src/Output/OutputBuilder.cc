@@ -20,9 +20,7 @@ void OutputBuilder::buildModule(const ModuleCommentData& comment) {
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
-    this->addSummary(
-        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
-    );
+    this->addSummary(this->generateSummary(tags.summary, description));
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
         this->addDeprecated(tags.deprecated_reason);
@@ -50,9 +48,7 @@ void OutputBuilder::buildClass(const ClassCommentData& comment) {
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
-    this->addSummary(
-        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
-    );
+    this->addSummary(this->generateSummary(tags.summary, description));
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
         this->addDeprecated(tags.deprecated_reason);
@@ -80,9 +76,7 @@ void OutputBuilder::buildInterface(const InterfaceCommentData& comment) {
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
-    this->addSummary(
-        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
-    );
+    this->addSummary(this->generateSummary(tags.summary, description));
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
         this->addDeprecated(tags.deprecated_reason);
@@ -109,7 +103,7 @@ void OutputBuilder::buildFunctions(const MethodCommentData& comment) {
     this->output << "<menu file=\"Developers\" />";
     const std::string description = comment.getBodyText();
     const std::string summary = tags.summary;
-    this->addSummary(summary != "" ? summary : utils::truncate(description, 250));
+    this->addSummary(this->generateSummary(summary, description));
 
     this->output << "<overload>";
     /* #region: Individual <overload> Generation */
@@ -212,7 +206,7 @@ void OutputBuilder::buildFunctions(const ConstructorCommentData& comment) {
     this->output << "<menu file=\"Developers\" />";
     const std::string description = comment.getBodyText();
     const std::string summary = tags.summary;
-    this->addSummary(summary != "" ? summary : utils::truncate(description, 250));
+    this->addSummary(this->generateSummary(summary, description));
 
     this->output << "<overload>";
     /* #region: Individual <overload> Generation */
@@ -305,9 +299,7 @@ void OutputBuilder::buildField(const FieldCommentData& comment) {
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
-    this->addSummary(
-        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
-    );
+    this->addSummary(this->generateSummary(tags.summary, description));
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
         this->addDeprecated(tags.deprecated_reason);
@@ -335,9 +327,7 @@ void OutputBuilder::buildEnumeration(const EnumCommentData& comment) {
     this->output << "<modifiers>";
     this->addModifiers(*comment.getModifiers());
     this->output << "</modifiers>";
-    this->addSummary(
-        tags.summary != "" ? tags.summary : utils::truncate(description, 250)
-    );
+    this->addSummary(this->generateSummary(tags.summary, description));
     this->addDescription(description);
     if (tags.deprecated_reason != "") {
         this->addDeprecated(tags.deprecated_reason);
@@ -466,4 +456,50 @@ void jspp::docgen::OutputBuilder::addClass(const std::string& text) {
 
 std::string OutputBuilder::markdown(const std::string& text) const {
     return utils::trimWhitespace(sundown::parse(utils::trimWhitespace(text)));
+}
+
+std::string OutputBuilder::generateSummary(const std::string& summary,
+                                           const std::string& description) const {
+    if (summary != "") {
+        return summary;
+    }
+
+    std::string truncated = utils::truncate(description, 250);
+    std::vector<std::string> lines = utils::splitLines(truncated);
+
+    const bool firstLineEndsWithPeriod = lines.size()    != 0 &&
+                                         lines[0].size() != 0 &&
+                                         lines[0].back() == '.';
+    if (firstLineEndsWithPeriod) {
+        return truncated;
+    }
+    else {
+        return this->mergeDescriptionLinesForSummary(lines);
+    }
+}
+
+std::string OutputBuilder::mergeDescriptionLinesForSummary(const std::vector<std::string>& lines) const {
+    std::string result;
+
+    for(auto it = lines.begin(); it != lines.end(); ++it) {
+        const std::string& line = *it;
+        if (line != "") {
+            result += this->mergeSingleDescriptionLineForSummary(line);
+        }
+    }
+
+    return result;
+}
+
+std::string OutputBuilder::mergeSingleDescriptionLineForSummary(const std::string& line) const {
+    const bool lineEndsWithWhitespace = line.size() != 0 &&
+                                        utils::isWhitespace(line.back());
+    const std::string trimmedLine = utils::trimWhitespace(line);
+
+    if (lineEndsWithWhitespace) {
+        return trimmedLine;
+    }
+    else {
+        return trimmedLine + " ";
+    }
 }

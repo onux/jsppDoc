@@ -68,17 +68,18 @@ std::vector<std::string> utils::splitLines(const std::string& s) {
     return lines;
 }
 
+bool utils::isWhitespace(const char32_t c) {
+    // Feel free to handle all Unicode whitespace characters if desired
+    return c == ' '  ||
+           c == '\t' ||
+           c == '\n' ||
+           c == '\r';
+}
+
 std::string utils::trimWhitespace(const std::string &s) {
     if (s.size() == 0) return "";
 
-    auto fn_isWhitespace = [](char32_t c) {
-        // Feel free to handle all Unicode whitespace characters if desired
-        const bool isWhitespace = c == ' '  ||
-                                  c == '\t' ||
-                                  c == '\n' ||
-                                  c == '\r';
-        return isWhitespace;
-    };
+    auto fn_isWhitespace = [](char32_t c) { return isWhitespace(c); };
 
     auto trimLeft = std::find_if_not(s.begin(), s.end(), fn_isWhitespace);
     auto trimRight = std::find_if_not(s.rbegin(), s.rend(), fn_isWhitespace);
